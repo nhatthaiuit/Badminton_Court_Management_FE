@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { bookingsApi } from "../../api/bookingsApi";
 import { courtsApi } from "../../api/courtsApi";
-import { ChevronLeft, ChevronRight, Calendar, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Plus, PhoneCall, CheckCircle, AlertCircle } from "lucide-react";
 import Modal from "../../components/ui/Modal";
 import toast from "react-hot-toast";
 
@@ -16,7 +16,7 @@ const CourtScheduleDashboard = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Modal State
+  // Create Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const initialForm = {
@@ -29,6 +29,9 @@ const CourtScheduleDashboard = () => {
     note: "",
   };
   const [formData, setFormData] = useState(initialForm);
+
+  // View/Edit Modal State
+  const [selectedBooking, setSelectedBooking] = useState(null);
 
   const fetchScheduleData = async () => {
     setLoading(true);
@@ -83,7 +86,6 @@ const CourtScheduleDashboard = () => {
     e.preventDefault();
     setSubmitting(true);
     try {
-      // Simple frontend validation
       if (formData.start_time >= formData.end_time) {
         toast.error("End time must be after start time");
         setSubmitting(false);
@@ -93,11 +95,23 @@ const CourtScheduleDashboard = () => {
       await bookingsApi.create(formData);
       toast.success("Booking created successfully!");
       setIsModalOpen(false);
-      fetchScheduleData(); // Refresh grid
+      fetchScheduleData();
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to create booking");
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const handleMarkAsPaid = async () => {
+    if (!selectedBooking) return;
+    try {
+      await bookingsApi.updateStatus(selectedBooking.booking_id, "confirmed"); // 'confirmed' implies paid in this context
+      toast.success("Payment marked as PAID (Confirmed)!");
+      setSelectedBooking(null);
+      fetchScheduleData();
+    } catch (error) {
+      toast.error("Failed to update status");
     }
   };
 
@@ -125,17 +139,17 @@ const CourtScheduleDashboard = () => {
 
         <div className="flex items-center gap-6">
           <div className="flex items-center gap-4 text-sm">
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-green-100 border border-green-300"></div>
-              <span className="text-gray-600">Empty</span>
+             <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-red-100 border border-red-400"></div>
+              <span className="text-gray-600">Action Required</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full bg-yellow-100 border border-yellow-300"></div>
-              <span className="text-gray-600">Booked</span>
+              <span className="text-gray-600">Pending</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-gray-100 border border-gray-300 border-dashed"></div>
-              <span className="text-gray-600">Maintenance</span>
+              <div className="w-3 h-3 rounded-full bg-green-100 border border-green-300"></div>
+              <span className="text-gray-600">Paid/Confirmed</span>
             </div>
           </div>
           <button 
@@ -201,18 +215,37 @@ const CourtScheduleDashboard = () => {
                         </div>
                       ) : (
                         <>
-                          {/* Render Bookings (Yellow) */}
+                          {/* Render Bookings */}
                           {courtBookings.map((booking) => {
                             const styles = getPositionStyles(booking.start_time, booking.end_time);
+                            
+                            // Check if pending and close to start time (within 1 hour)
+                            const now = dayjs();
+                            const bookingStart = dayjs(`${booking.booking_date} ${booking.start_time}`);
+                            const isCloseToStart = bookingStart.diff(now, 'minute') <= 60 && bookingStart.diff(now, 'minute') > -60;
+                            const needsAction = booking.status === 'pending' && isCloseToStart && booking.booking_date === dayjs().format("YYYY-MM-DD");
+
+                            let bgClass = "bg-yellow-100 border-yellow-300 text-yellow-800"; // pending
+                            if (booking.status === 'confirmed' || booking.status === 'completed') {
+                              bgClass = "bg-green-100 border-green-300 text-green-800";
+                            }
+                            if (needsAction) {
+                              bgClass = "bg-red-50 border-red-400 text-red-800 shadow-sm animate-pulse";
+                            }
+
                             return (
                               <div
                                 key={booking.booking_id}
-                                className="absolute top-1 bottom-1 bg-yellow-100 border border-yellow-300 rounded-md px-2 py-1 overflow-hidden z-10 hover:shadow-md transition shadow-sm cursor-pointer"
+                                onClick={() => setSelectedBooking(booking)}
+                                className={`absolute top-1 bottom-1 border rounded-md px-2 py-1 overflow-hidden z-10 hover:shadow-md transition cursor-pointer ${bgClass}`}
                                 style={styles}
                                 title={`${booking.customer_name} (${booking.start_time.slice(0,5)} - ${booking.end_time.slice(0,5)})`}
                               >
-                                <div className="text-xs font-bold text-yellow-800 truncate">{booking.customer_name}</div>
-                                <div className="text-[10px] text-yellow-600 truncate">{booking.start_time.slice(0,5)} - {booking.end_time.slice(0,5)}</div>
+                                <div className="text-xs font-bold truncate flex items-center justify-between">
+                                  {booking.customer_name}
+                                  {needsAction && <AlertCircle className="h-3 w-3 text-red-500" />}
+                                </div>
+                                <div className="text-[10px] truncate opacity-80">{booking.start_time.slice(0,5)} - {booking.end_time.slice(0,5)}</div>
                               </div>
                             );
                           })}
@@ -267,11 +300,6 @@ const CourtScheduleDashboard = () => {
             </div>
           </div>
 
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Note (Optional)</label>
-            <textarea name="note" value={formData.note} onChange={handleChange} rows="2" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Any special requests..."></textarea>
-          </div>
-
           <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
             <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
               Cancel
@@ -282,6 +310,63 @@ const CourtScheduleDashboard = () => {
           </div>
         </form>
       </Modal>
+
+      {/* Booking Details / Payment Modal */}
+      {selectedBooking && (
+        <Modal isOpen={!!selectedBooking} onClose={() => setSelectedBooking(null)} title="Booking Details">
+          <div className="space-y-6">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-lg font-bold text-gray-900">{selectedBooking.customer_name}</h3>
+                  <div className="flex items-center gap-2 text-gray-600 mt-1">
+                    <PhoneCall className="h-4 w-4" />
+                    <a href={`tel:${selectedBooking.customer_phone}`} className="hover:text-blue-600 font-medium">{selectedBooking.customer_phone}</a>
+                  </div>
+                </div>
+                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                  selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                }`}>
+                  {selectedBooking.status === 'pending' ? 'Pending Payment' : 'Paid'}
+                </span>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <p className="text-gray-500 mb-1">Time Slot</p>
+                <p className="font-semibold text-gray-900">{selectedBooking.start_time.slice(0,5)} - {selectedBooking.end_time.slice(0,5)}</p>
+              </div>
+              <div>
+                <p className="text-gray-500 mb-1">Total Price</p>
+                <p className="font-bold text-gray-900 text-lg">{parseInt(selectedBooking.total_price).toLocaleString()} VND</p>
+              </div>
+            </div>
+
+            {selectedBooking.status === 'pending' && dayjs(`${selectedBooking.booking_date} ${selectedBooking.start_time}`).diff(dayjs(), 'minute') <= 60 && (
+              <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex gap-3 text-red-800">
+                <AlertCircle className="h-5 w-5 flex-shrink-0" />
+                <p className="text-sm">This booking starts soon and is not paid. Please call the customer to confirm their arrival.</p>
+              </div>
+            )}
+
+            <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+              <button onClick={() => setSelectedBooking(null)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
+                Close
+              </button>
+              {selectedBooking.status === 'pending' && (
+                <button 
+                  onClick={handleMarkAsPaid} 
+                  className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2 shadow-sm"
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  Mark as PAID
+                </button>
+              )}
+            </div>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 };
