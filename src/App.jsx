@@ -10,6 +10,7 @@ import Dashboard from "./pages/Dashboard/Dashboard";
 import NotFound from "./pages/NotFound/NotFound";
 import Bookings from "./pages/Bookings/Bookings";
 import Courts from "./pages/Courts/Courts";
+import Users from "./pages/Users/Users";
 
 function App() {
   return (
@@ -34,7 +35,7 @@ function App() {
 
               {/* Admin only routes */}
               <Route element={<ProtectedRoute requiredRoles={["admin"]} />}>
-                <Route path="/users" element={<div className="p-4">Users Page (Coming Soon)</div>} />
+                <Route path="/users" element={<Users />} />
               </Route>
             </Route>
           </Route>
