@@ -8,8 +8,8 @@ import MainLayout from "./components/layout/MainLayout";
 import Login from "./pages/Auth/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import NotFound from "./pages/NotFound/NotFound";
-
 import Bookings from "./pages/Bookings/Bookings";
+import Courts from "./pages/Courts/Courts";
 
 function App() {
   return (
@@ -29,7 +29,7 @@ function App() {
               
               {/* Admin/Owner only routes */}
               <Route element={<ProtectedRoute requiredRoles={["admin", "owner"]} />}>
-                <Route path="/courts" element={<div className="p-4">Courts Page (Coming Soon)</div>} />
+                <Route path="/courts" element={<Courts />} />
               </Route>
 
               {/* Admin only routes */}
