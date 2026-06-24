@@ -3,6 +3,7 @@ import { Toaster } from "react-hot-toast";
 import { AuthProvider } from "./context/AuthContext";
 import ProtectedRoute from "./components/common/ProtectedRoute";
 import MainLayout from "./components/layout/MainLayout";
+import CustomerLayout from "./components/layout/CustomerLayout";
 
 // Pages
 import Login from "./pages/Auth/Login";
@@ -11,6 +12,7 @@ import NotFound from "./pages/NotFound/NotFound";
 import Bookings from "./pages/Bookings/Bookings";
 import Courts from "./pages/Courts/Courts";
 import Users from "./pages/Users/Users";
+import Portal from "./pages/CustomerPortal/Portal";
 
 import { useAuth } from "./hooks/useAuth";
 
@@ -18,6 +20,8 @@ const RootRedirect = () => {
   const { user } = useAuth();
   if (user?.role === "admin" || user?.role === "owner") {
     return <Navigate to="/dashboard" replace />;
+  } else if (user?.role === "customer") {
+    return <Navigate to="/portal" replace />;
   }
   return <Navigate to="/bookings" replace />;
 };
@@ -31,8 +35,15 @@ function App() {
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
 
-          {/* Protected Routes inside MainLayout */}
-          <Route element={<ProtectedRoute />}>
+          {/* Customer Portal Routes */}
+          <Route element={<ProtectedRoute requiredRoles={["customer"]} />}>
+            <Route element={<CustomerLayout />}>
+              <Route path="/portal" element={<Portal />} />
+            </Route>
+          </Route>
+
+          {/* Protected Routes inside MainLayout (Staff/Admin/Owner) */}
+          <Route element={<ProtectedRoute requiredRoles={["staff", "admin", "owner"]} />}>
             <Route element={<MainLayout />}>
               <Route path="/" element={<RootRedirect />} />
               <Route path="/dashboard" element={<Dashboard />} />
