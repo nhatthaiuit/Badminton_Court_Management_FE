@@ -6,7 +6,7 @@ import {
   Users,
   LogOut 
 } from "lucide-react";
-import { useAuth } from "../../../hooks/useAuth";
+import { useAuth } from "../../hooks/useAuth";
 
 const Sidebar = () => {
   const { user, logout } = useAuth();
