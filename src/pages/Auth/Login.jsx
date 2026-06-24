@@ -11,16 +11,25 @@ const Login = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Redirect to where user tried to go, or dashboard
-  const from = location.state?.from?.pathname || "/dashboard";
+  // Redirect to where user tried to go, or dynamically based on role
+  const from = location.state?.from?.pathname;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    const success = await login(email, password);
-    if (success) {
-      navigate(from, { replace: true });
+    const user = await login(email, password);
+    if (user) {
+      if (from) {
+        navigate(from, { replace: true });
+      } else {
+        // Default routing based on role
+        if (user.role === 'admin' || user.role === 'owner') {
+          navigate("/dashboard", { replace: true });
+        } else {
+          navigate("/bookings", { replace: true });
+        }
+      }
     }
     
     setIsSubmitting(false);

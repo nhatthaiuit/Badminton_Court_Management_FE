@@ -45,10 +45,10 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem("bcms_token", token);
       setUser(user);
       toast.success("Logged in successfully!");
-      return true;
+      return user; // Return user object for role-based redirect
     } catch (error) {
       toast.error(error.response?.data?.message || "Login failed");
-      return false;
+      return null;
     }
   };
 

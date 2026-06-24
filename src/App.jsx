@@ -12,6 +12,16 @@ import Bookings from "./pages/Bookings/Bookings";
 import Courts from "./pages/Courts/Courts";
 import Users from "./pages/Users/Users";
 
+import { useAuth } from "./hooks/useAuth";
+
+const RootRedirect = () => {
+  const { user } = useAuth();
+  if (user?.role === "admin" || user?.role === "owner") {
+    return <Navigate to="/dashboard" replace />;
+  }
+  return <Navigate to="/bookings" replace />;
+};
+
 function App() {
   return (
     <AuthProvider>
@@ -24,7 +34,7 @@ function App() {
           {/* Protected Routes inside MainLayout */}
           <Route element={<ProtectedRoute />}>
             <Route element={<MainLayout />}>
-              <Route path="/" element={<Navigate to="/dashboard" replace />} />
+              <Route path="/" element={<RootRedirect />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/bookings" element={<Bookings />} />
               
