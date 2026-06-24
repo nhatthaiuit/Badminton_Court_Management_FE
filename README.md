@@ -1,16 +1,96 @@
-# React + Vite
+# 🏸 BCMS — Badminton Court Management System (Frontend)
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+> Modern React-based frontend for the Badminton Court Management System.
 
-Currently, two official plugins are available:
+[![React](https://img.shields.io/badge/React-19-blue)](https://react.dev/)
+[![Vite](https://img.shields.io/badge/Vite-6-purple)](https://vitejs.dev/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0-06B6D4)](https://tailwindcss.com/)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## ✨ Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Responsive Dashboard** — Key metrics, revenue, and court occupancy.
+- **Visual Court Schedule** — Grid-based timeline view for daily court bookings.
+- **JWT Authentication** — Secure login and context-based protected routes.
+- **Modern Tech Stack** — Vite + React 19 + Tailwind CSS 4.
 
-## Expanding the Oxlint configuration
+---
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and Oxlint's TypeScript related rules in your project.
+## 🛠 Tech Stack
+
+| Technology            | Description                               |
+|-----------------------|-------------------------------------------|
+| **React 19**          | UI Library                                |
+| **Vite 6**            | Lightning fast build tool                 |
+| **Tailwind CSS 4**    | Utility-first CSS framework               |
+| **React Router v7**   | Client-side routing                       |
+| **Axios**             | HTTP Client with JWT interceptors         |
+| **Lucide React**      | Beautiful SVG icons                       |
+| **Day.js**            | Date/time manipulation                    |
+| **React Hot Toast**   | Notifications                             |
+
+---
+
+## 📁 Project Structure
+
+```
+├── public/                 # Static assets
+├── src/
+│   ├── api/                # Axios instance and API services
+│   ├── components/
+│   │   ├── common/         # ProtectedRoute, Reusable UI
+│   │   └── layout/         # Sidebar, Header, MainLayout
+│   ├── context/            # AuthContext
+│   ├── hooks/              # useAuth custom hook
+│   ├── pages/
+│   │   ├── Auth/           # Login screen
+│   │   ├── Bookings/       # Court Schedule Dashboard grid
+│   │   ├── Dashboard/      # Analytics overview
+│   │   └── NotFound/       # 404 page
+│   ├── App.jsx             # Main router configuration
+│   ├── index.css           # Tailwind base styles
+│   └── main.jsx            # React entry point
+├── .env.example            # Environment variables template
+└── vite.config.js          # Vite + Tailwind plugin config
+```
+
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+- Node.js >= 18
+- Backend API running locally (defaults to `http://localhost:5000/api/v1`)
+
+### 1. Clone the repository
+```bash
+git clone https://github.com/nhatthaiuit/Badminton_Court_Management_FE.git
+cd Badminton_Court_Management_FE
+```
+
+### 2. Install dependencies
+```bash
+npm install
+```
+
+### 3. Configure environment variables
+```bash
+cp .env.example .env
+# Ensure VITE_API_BASE_URL points to your backend
+```
+
+### 4. Start development server
+```bash
+npm run dev
+```
+
+Server starts at: `http://localhost:5173`
+
+---
+
+## 🔐 Default Credentials
+
+To test the application locally, use the default admin account provided in the backend seed data:
+- **Email**: `nhatthaiuit@gmail.com`
+- **Password**: `Admin@123`

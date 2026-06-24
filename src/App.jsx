@@ -9,6 +9,8 @@ import Login from "./pages/Auth/Login";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import NotFound from "./pages/NotFound/NotFound";
 
+import Bookings from "./pages/Bookings/Bookings";
+
 function App() {
   return (
     <AuthProvider>
@@ -23,9 +25,7 @@ function App() {
             <Route element={<MainLayout />}>
               <Route path="/" element={<Navigate to="/dashboard" replace />} />
               <Route path="/dashboard" element={<Dashboard />} />
-              
-              {/* Placeholders for upcoming pages */}
-              <Route path="/bookings" element={<div className="p-4">Bookings Page (Coming Soon)</div>} />
+              <Route path="/bookings" element={<Bookings />} />
               
               {/* Admin/Owner only routes */}
               <Route element={<ProtectedRoute requiredRoles={["admin", "owner"]} />}>
