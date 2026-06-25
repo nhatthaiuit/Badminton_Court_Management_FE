@@ -93,6 +93,14 @@ const CourtScheduleDashboard = () => {
         setSubmitting(false);
         return;
       }
+
+      // Prevent past bookings
+      const bookingDateTime = dayjs(`${formData.booking_date} ${formData.start_time}`);
+      if (bookingDateTime.isBefore(dayjs())) {
+        toast.error("Cannot book a time slot in the past");
+        setSubmitting(false);
+        return;
+      }
       
       let submitData = { ...formData };
       if (bookingType === "maintenance") {
