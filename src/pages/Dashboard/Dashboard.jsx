@@ -91,7 +91,7 @@ const Dashboard = () => {
               <span className="text-green-700 font-bold">{overview.courts.available}</span>
             </div>
             <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
-              <span className="text-yellow-700 font-medium">Under Maintenance</span>
+              <span className="text-yellow-700 font-medium">Maintenance Blocks (Today)</span>
               <span className="text-yellow-700 font-bold">{overview.courts.maintenance}</span>
             </div>
             <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
