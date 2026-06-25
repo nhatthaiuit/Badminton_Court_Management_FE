@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { bookingsApi } from "../../api/bookingsApi";
 import { courtsApi } from "../../api/courtsApi";
-import { ChevronLeft, ChevronRight, Calendar, Plus, PhoneCall, CheckCircle, AlertCircle } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Plus, PhoneCall, CheckCircle, AlertCircle, Wrench } from "lucide-react";
 import Modal from "../../components/ui/Modal";
 import toast from "react-hot-toast";
 
@@ -19,6 +19,8 @@ const CourtScheduleDashboard = () => {
   // Create Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [bookingType, setBookingType] = useState("booking"); // "booking" or "maintenance"
+  
   const initialForm = {
     customer_name: "",
     customer_phone: "",
@@ -36,7 +38,6 @@ const CourtScheduleDashboard = () => {
   const fetchScheduleData = async () => {
     setLoading(true);
     try {
-      // Fetch courts and bookings concurrently
       const [courtsRes, bookingsRes] = await Promise.all([
         courtsApi.getAll(),
         bookingsApi.getAll({ date: currentDate.format("YYYY-MM-DD") })
@@ -75,6 +76,7 @@ const CourtScheduleDashboard = () => {
 
   const handleOpenModal = () => {
     setFormData({ ...initialForm, booking_date: currentDate.format("YYYY-MM-DD") });
+    setBookingType("booking");
     setIsModalOpen(true);
   };
 
@@ -92,12 +94,25 @@ const CourtScheduleDashboard = () => {
         return;
       }
       
-      await bookingsApi.create(formData);
-      toast.success("Booking created successfully!");
+      let submitData = { ...formData };
+      if (bookingType === "maintenance") {
+        submitData.customer_name = "Maintenance Block";
+        submitData.customer_phone = "System";
+        submitData.note = `[MAINTENANCE] ${submitData.note}`;
+      }
+
+      const res = await bookingsApi.create(submitData);
+      
+      // If it's a maintenance block, auto-confirm it so it doesn't show up as pending action
+      if (bookingType === "maintenance") {
+         await bookingsApi.updateStatus(res.data.data.booking_id, "confirmed");
+      }
+
+      toast.success(bookingType === "maintenance" ? "Maintenance scheduled!" : "Booking created!");
       setIsModalOpen(false);
       fetchScheduleData();
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to create booking");
+      toast.error(error.response?.data?.message || "Failed to save");
     } finally {
       setSubmitting(false);
     }
@@ -106,12 +121,26 @@ const CourtScheduleDashboard = () => {
   const handleMarkAsPaid = async () => {
     if (!selectedBooking) return;
     try {
-      await bookingsApi.updateStatus(selectedBooking.booking_id, "confirmed"); // 'confirmed' implies paid in this context
+      await bookingsApi.updateStatus(selectedBooking.booking_id, "confirmed");
       toast.success("Payment marked as PAID (Confirmed)!");
       setSelectedBooking(null);
       fetchScheduleData();
     } catch (error) {
       toast.error("Failed to update status");
+    }
+  };
+
+  const handleCancelBooking = async () => {
+    if (!selectedBooking) return;
+    if (window.confirm("Are you sure you want to cancel this booking/maintenance?")) {
+      try {
+        await bookingsApi.cancel(selectedBooking.booking_id);
+        toast.success("Cancelled successfully!");
+        setSelectedBooking(null);
+        fetchScheduleData();
+      } catch (error) {
+        toast.error("Failed to cancel");
+      }
     }
   };
 
@@ -149,7 +178,11 @@ const CourtScheduleDashboard = () => {
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full bg-green-100 border border-green-300"></div>
-              <span className="text-gray-600">Paid/Confirmed</span>
+              <span className="text-gray-600">Paid</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-gray-100 border border-gray-300 border-dashed"></div>
+              <span className="text-gray-600">Maintenance</span>
             </div>
           </div>
           <button 
@@ -157,7 +190,7 @@ const CourtScheduleDashboard = () => {
             className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition"
           >
             <Plus className="h-4 w-4" />
-            New Booking
+            New Block
           </button>
         </div>
       </div>
@@ -209,17 +242,41 @@ const CourtScheduleDashboard = () => {
                         ></div>
                       ))}
 
-                      {court.status === "maintenance" ? (
+                      {/* If entire court is inactive */}
+                      {court.status === "inactive" ? (
                         <div className="absolute inset-y-1 inset-x-2 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 font-medium z-10">
-                          Maintenance
+                          Court Inactive
+                        </div>
+                      ) : court.status === "maintenance" ? (
+                        <div className="absolute inset-y-1 inset-x-2 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 font-medium z-10">
+                          Court Under Maintenance
                         </div>
                       ) : (
                         <>
-                          {/* Render Bookings */}
+                          {/* Render Bookings & Time-based Maintenance */}
                           {courtBookings.map((booking) => {
                             const styles = getPositionStyles(booking.start_time, booking.end_time);
                             
-                            // Check if pending and close to start time (within 1 hour)
+                            const isMaintenance = booking.customer_name === "Maintenance Block" || booking.note?.includes("[MAINTENANCE]");
+
+                            if (isMaintenance) {
+                              return (
+                                <div
+                                  key={booking.booking_id}
+                                  onClick={() => setSelectedBooking(booking)}
+                                  className="absolute top-1 bottom-1 bg-gray-100 border-2 border-dashed border-gray-300 text-gray-500 rounded-md px-2 py-1 overflow-hidden z-10 hover:shadow-md transition cursor-pointer flex items-center justify-center"
+                                  style={styles}
+                                  title={`Maintenance: ${booking.start_time.slice(0,5)} - ${booking.end_time.slice(0,5)}`}
+                                >
+                                  <div className="text-xs font-bold truncate flex items-center gap-1">
+                                    <Wrench className="h-3 w-3" />
+                                    Maintenance
+                                  </div>
+                                </div>
+                              );
+                            }
+                            
+                            // Normal Booking Check
                             const now = dayjs();
                             const bookingStart = dayjs(`${booking.booking_date} ${booking.start_time}`);
                             const isCloseToStart = bookingStart.diff(now, 'minute') <= 60 && bookingStart.diff(now, 'minute') > -60;
@@ -260,19 +317,47 @@ const CourtScheduleDashboard = () => {
         </div>
       )}
 
-      {/* New Booking Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create New Booking">
+      {/* New Booking / Maintenance Modal */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create New Block">
+        
+        <div className="flex mb-6 border-b border-gray-200">
+          <button 
+            type="button"
+            className={`flex-1 pb-3 font-medium text-sm border-b-2 transition-colors ${bookingType === "booking" ? "border-primary-600 text-primary-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}
+            onClick={() => setBookingType("booking")}
+          >
+            Customer Booking
+          </button>
+          <button 
+            type="button"
+            className={`flex-1 pb-3 font-medium text-sm border-b-2 transition-colors ${bookingType === "maintenance" ? "border-gray-800 text-gray-800" : "border-transparent text-gray-500 hover:text-gray-700"}`}
+            onClick={() => setBookingType("maintenance")}
+          >
+            Maintenance Slot
+          </button>
+        </div>
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Customer Name <span className="text-red-500">*</span></label>
-              <input type="text" name="customer_name" required value={formData.customer_name} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="John Doe" />
+          
+          {bookingType === "booking" && (
+            <div className="grid grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Customer Name <span className="text-red-500">*</span></label>
+                <input type="text" name="customer_name" required value={formData.customer_name} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="John Doe" />
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number <span className="text-red-500">*</span></label>
+                <input type="tel" name="customer_phone" required value={formData.customer_phone} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="0901234567" />
+              </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number <span className="text-red-500">*</span></label>
-              <input type="tel" name="customer_phone" required value={formData.customer_phone} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="0901234567" />
+          )}
+
+          {bookingType === "maintenance" && (
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 text-sm text-gray-600 flex items-start gap-2 mb-4">
+               <Wrench className="h-5 w-5 flex-shrink-0 text-gray-500" />
+               <p>Create a time-based maintenance block. Customers will not be able to book the court during this time.</p>
             </div>
-          </div>
+          )}
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Select Court <span className="text-red-500">*</span></label>
@@ -300,35 +385,52 @@ const CourtScheduleDashboard = () => {
             </div>
           </div>
 
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Note (Optional)</label>
+            <textarea name="note" value={formData.note} onChange={handleChange} rows="2" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder={bookingType === "maintenance" ? "Reason for maintenance..." : "Any special requests..."}></textarea>
+          </div>
+
           <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
             <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
               Cancel
             </button>
-            <button type="submit" disabled={submitting} className="px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-70 flex items-center">
-              {submitting ? "Saving..." : "Create Booking"}
+            <button type="submit" disabled={submitting} className={`px-4 py-2 text-white rounded-lg font-medium transition disabled:opacity-70 flex items-center ${bookingType === 'maintenance' ? 'bg-gray-800 hover:bg-gray-900' : 'bg-primary-600 hover:bg-primary-700'}`}>
+              {submitting ? "Saving..." : (bookingType === "maintenance" ? "Schedule Maintenance" : "Create Booking")}
             </button>
           </div>
         </form>
       </Modal>
 
-      {/* Booking Details / Payment Modal */}
+      {/* Booking Details / Payment / Maintenance Modal */}
       {selectedBooking && (
-        <Modal isOpen={!!selectedBooking} onClose={() => setSelectedBooking(null)} title="Booking Details">
+        <Modal 
+          isOpen={!!selectedBooking} 
+          onClose={() => setSelectedBooking(null)} 
+          title={selectedBooking.customer_name === "Maintenance Block" ? "Maintenance Details" : "Booking Details"}
+        >
           <div className="space-y-6">
             <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div className="flex justify-between items-start">
                 <div>
                   <h3 className="text-lg font-bold text-gray-900">{selectedBooking.customer_name}</h3>
-                  <div className="flex items-center gap-2 text-gray-600 mt-1">
-                    <PhoneCall className="h-4 w-4" />
-                    <a href={`tel:${selectedBooking.customer_phone}`} className="hover:text-blue-600 font-medium">{selectedBooking.customer_phone}</a>
-                  </div>
+                  {selectedBooking.customer_name !== "Maintenance Block" && (
+                    <div className="flex items-center gap-2 text-gray-600 mt-1">
+                      <PhoneCall className="h-4 w-4" />
+                      <a href={`tel:${selectedBooking.customer_phone}`} className="hover:text-blue-600 font-medium">{selectedBooking.customer_phone}</a>
+                    </div>
+                  )}
                 </div>
-                <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                  selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
-                }`}>
-                  {selectedBooking.status === 'pending' ? 'Pending Payment' : 'Paid'}
-                </span>
+                {selectedBooking.customer_name !== "Maintenance Block" ? (
+                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                    selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                  }`}>
+                    {selectedBooking.status === 'pending' ? 'Pending Payment' : 'Paid'}
+                  </span>
+                ) : (
+                  <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-gray-200 text-gray-800">
+                    Maintenance
+                  </span>
+                )}
               </div>
             </div>
 
@@ -337,13 +439,22 @@ const CourtScheduleDashboard = () => {
                 <p className="text-gray-500 mb-1">Time Slot</p>
                 <p className="font-semibold text-gray-900">{selectedBooking.start_time.slice(0,5)} - {selectedBooking.end_time.slice(0,5)}</p>
               </div>
-              <div>
-                <p className="text-gray-500 mb-1">Total Price</p>
-                <p className="font-bold text-gray-900 text-lg">{parseInt(selectedBooking.total_price).toLocaleString()} VND</p>
-              </div>
+              {selectedBooking.customer_name !== "Maintenance Block" && (
+                <div>
+                  <p className="text-gray-500 mb-1">Total Price</p>
+                  <p className="font-bold text-gray-900 text-lg">{parseInt(selectedBooking.total_price).toLocaleString()} VND</p>
+                </div>
+              )}
             </div>
+            
+            {selectedBooking.note && (
+              <div className="text-sm border-t border-gray-100 pt-4">
+                <p className="text-gray-500 mb-1">Notes:</p>
+                <p className="text-gray-800">{selectedBooking.note}</p>
+              </div>
+            )}
 
-            {selectedBooking.status === 'pending' && dayjs(`${selectedBooking.booking_date} ${selectedBooking.start_time}`).diff(dayjs(), 'minute') <= 60 && (
+            {selectedBooking.customer_name !== "Maintenance Block" && selectedBooking.status === 'pending' && dayjs(`${selectedBooking.booking_date} ${selectedBooking.start_time}`).diff(dayjs(), 'minute') <= 60 && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex gap-3 text-red-800">
                 <AlertCircle className="h-5 w-5 flex-shrink-0" />
                 <p className="text-sm">This booking starts soon and is not paid. Please call the customer to confirm their arrival.</p>
@@ -351,10 +462,18 @@ const CourtScheduleDashboard = () => {
             )}
 
             <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+              {/* Cancel Button (Soft Delete) */}
+              <button 
+                onClick={handleCancelBooking} 
+                className="mr-auto px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition flex items-center gap-2"
+              >
+                {selectedBooking.customer_name === "Maintenance Block" ? "Remove Maintenance" : "Cancel Booking"}
+              </button>
+
               <button onClick={() => setSelectedBooking(null)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
                 Close
               </button>
-              {selectedBooking.status === 'pending' && (
+              {selectedBooking.customer_name !== "Maintenance Block" && selectedBooking.status === 'pending' && (
                 <button 
                   onClick={handleMarkAsPaid} 
                   className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2 shadow-sm"
