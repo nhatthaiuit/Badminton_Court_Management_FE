@@ -64,10 +64,7 @@ const Courts = () => {
     
     try {
       if (isEditing) {
-        // Backend API doesn't fully support update yet in our scaffold, 
-        // but let's assume it does or we'll add it. 
-        // For now, let's just show a toast for edit.
-        // await courtsApi.update(formData.court_id, formData);
+        await courtsApi.update(formData.court_id, formData);
         toast.success("Court updated successfully");
       } else {
         await courtsApi.create(formData);
