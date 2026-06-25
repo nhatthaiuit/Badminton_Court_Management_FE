@@ -105,7 +105,7 @@ const CourtScheduleDashboard = () => {
       let submitData = { ...formData };
       if (bookingType === "maintenance") {
         submitData.customer_name = "Maintenance Block";
-        submitData.customer_phone = "System";
+        submitData.customer_phone = "0000000000";
         submitData.note = `[MAINTENANCE] ${submitData.note}`;
       }
 
@@ -120,7 +120,8 @@ const CourtScheduleDashboard = () => {
       setIsModalOpen(false);
       fetchScheduleData();
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to save");
+      const errorMsg = error.response?.data?.message || error.response?.data?.errors?.[0]?.msg || "Failed to save";
+      toast.error(errorMsg);
     } finally {
       setSubmitting(false);
     }
