@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { bookingsApi } from "../../api/bookingsApi";
 import { useAuth } from "../../hooks/useAuth";
 import dayjs from "dayjs";
@@ -6,6 +7,7 @@ import { Calendar, Clock, CreditCard } from "lucide-react";
 
 const MyBookings = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -103,8 +105,18 @@ const MyBookings = () => {
                   </div>
                 </div>
               </div>
-              <div className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center h-12 w-12 rounded-full bg-primary-50 text-primary-600">
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+              <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
+                {booking.status === "pending" && (
+                  <button
+                    onClick={() => navigate(`/portal/payment/${booking.booking_id}`)}
+                    className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-xl shadow hover:shadow-md transition-all hover:scale-105 whitespace-nowrap"
+                  >
+                    Pay Now
+                  </button>
+                )}
+                <div className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center h-12 w-12 rounded-full bg-primary-50 text-primary-600">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                </div>
               </div>
             </div>
           ))

@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { courtsApi } from "../../api/courtsApi";
 import { bookingsApi } from "../../api/bookingsApi";
@@ -11,6 +12,7 @@ import { Calendar, CheckCircle, AlertCircle } from "lucide-react";
 
 const Portal = () => {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(dayjs().format("YYYY-MM-DD"));
   const [courts, setCourts] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -79,7 +81,7 @@ const Portal = () => {
     setIsSubmitting(true);
 
     try {
-      await bookingsApi.create({
+      const res = await bookingsApi.create({
         court_id: selectedSlot.court.court_id,
         customer_name: user?.full_name || "Customer",
         customer_phone: user?.phone || "0000000000",
@@ -89,9 +91,10 @@ const Portal = () => {
         note: "Booked via Customer Portal"
       });
       
-      toast.success("Booking submitted successfully!");
+      const newBookingId = res.data.data.booking_id;
+      toast.success("Slot secured! Please complete payment.");
       setIsModalOpen(false);
-      fetchData(); // Refresh grid
+      navigate(`/portal/payment/${newBookingId}`);
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to book court");
     } finally {
@@ -168,8 +171,8 @@ const Portal = () => {
             <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200 flex gap-3">
               <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
               <div className="text-sm text-yellow-800 space-y-1">
-                <p><strong>Payment Required:</strong> Please complete your bank transfer within 15 minutes. Our staff will verify and update your booking status.</p>
-                <p><strong>Cancellation Policy:</strong> Cancellations must be made at least 2 hours in advance to be eligible for a refund.</p>
+                <p><strong>Payment Required:</strong> You will be redirected to the payment page. Please complete your payment within 15 minutes to secure your slot.</p>
+                <p><strong>Strict Policy:</strong> Bookings are strictly non-refundable once confirmed.</p>
               </div>
             </div>
 

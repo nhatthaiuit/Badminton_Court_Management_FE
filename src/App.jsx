@@ -14,6 +14,7 @@ import Courts from "./pages/Courts/Courts";
 import Users from "./pages/Users/Users";
 import Portal from "./pages/CustomerPortal/Portal";
 import MyBookings from "./pages/CustomerPortal/MyBookings";
+import Payment from "./pages/CustomerPortal/Payment";
 
 import { useAuth } from "./hooks/useAuth";
 
@@ -41,6 +42,7 @@ function App() {
             <Route element={<CustomerLayout />}>
               <Route path="/portal" element={<Portal />} />
               <Route path="/portal/my-bookings" element={<MyBookings />} />
+              <Route path="/portal/payment/:bookingId" element={<Payment />} />
             </Route>
           </Route>
 
