@@ -15,10 +15,17 @@ const CustomerLayout = () => {
           </div>
 
           <nav className="hidden md:flex space-x-8">
-            <NavLink to="/portal" className="text-gray-900 font-medium hover:text-primary-600 transition-colors">
+            <NavLink 
+              to="/portal" 
+              end
+              className={({ isActive }) => `transition-colors ${isActive ? 'text-gray-900 font-bold' : 'text-gray-500 font-medium hover:text-primary-600'}`}
+            >
               Book Court
             </NavLink>
-            <NavLink to="/portal/my-bookings" className="text-gray-500 font-medium hover:text-primary-600 transition-colors">
+            <NavLink 
+              to="/portal/my-bookings" 
+              className={({ isActive }) => `transition-colors ${isActive ? 'text-gray-900 font-bold' : 'text-gray-500 font-medium hover:text-primary-600'}`}
+            >
               My Bookings
             </NavLink>
           </nav>
