@@ -139,6 +139,7 @@ const Portal = () => {
           bookings={bookings}
           loading={loading}
           role="customer"
+          selectedDate={selectedDate}
           onEmptySlotClick={handleSlotClick}
         />
       </div>

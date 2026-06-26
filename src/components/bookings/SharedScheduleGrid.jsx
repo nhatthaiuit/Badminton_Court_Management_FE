@@ -13,6 +13,7 @@ const SharedScheduleGrid = ({
   bookings = [],
   loading = false,
   role = "customer", // "customer", "staff", "admin", "owner"
+  selectedDate = dayjs().format("YYYY-MM-DD"), // Add selectedDate prop
   onEmptySlotClick = () => {},
   onBookingClick = () => {},
 }) => {
@@ -83,20 +84,28 @@ const SharedScheduleGrid = ({
                 
                 <div className="flex-1 relative h-16 cursor-crosshair">
                   {/* Background hour columns (clickable for empty slots) */}
-                  {HOURS.map((hour, idx) => (
-                    <div
-                      key={`bg-${hour}`}
-                      onClick={() => {
-                        const timeStr = `${hour.toString().padStart(2, "0")}:00`;
-                        onEmptySlotClick(court, timeStr);
-                      }}
-                      className="absolute top-0 bottom-0 border-r border-gray-100 hover:bg-primary-50 transition-colors"
-                      style={{ 
-                        left: `${idx * HOUR_WIDTH}px`,
-                        width: `${HOUR_WIDTH}px`
-                      }}
-                    ></div>
-                  ))}
+                  {HOURS.map((hour, idx) => {
+                    const timeStr = `${hour.toString().padStart(2, "0")}:00`;
+                    
+                    // Check if slot is in the past (only for today)
+                    const isPast = selectedDate === dayjs().format("YYYY-MM-DD") && timeStr < dayjs().format("HH:mm");
+
+                    return (
+                      <div
+                        key={`bg-${hour}`}
+                        onClick={() => onEmptySlotClick(court, timeStr)}
+                        className={`absolute top-0 bottom-0 border-r border-gray-100 transition-colors ${
+                          isPast 
+                            ? 'bg-gray-100 cursor-not-allowed bg-[url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMOCA4Wk04IDBMMCA4WiIgc3Ryb2tlPSIjZTllOWU5IiBzdHJva2Utd2lkdGg9IjEiPjwvcGF0aD4KPC9zdmc+")] opacity-60' 
+                            : 'hover:bg-primary-50'
+                        }`}
+                        style={{ 
+                          left: `${idx * HOUR_WIDTH}px`,
+                          width: `${HOUR_WIDTH}px`
+                        }}
+                      ></div>
+                    );
+                  })}
 
                   {/* If entire court is inactive */}
                   {court.status === "inactive" ? (

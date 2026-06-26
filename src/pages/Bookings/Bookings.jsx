@@ -225,6 +225,7 @@ const CourtScheduleDashboard = () => {
         bookings={bookings}
         loading={loading}
         role={user?.role || "staff"}
+        selectedDate={currentDate.format("YYYY-MM-DD")}
         onBookingClick={(booking) => setSelectedBooking(booking)}
       />
 
