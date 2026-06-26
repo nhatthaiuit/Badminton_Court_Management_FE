@@ -98,42 +98,43 @@ const Portal = () => {
       setIsSubmitting(false);
     }
   };
-
-
-
   return (
-    <div className="space-y-6">
+    <div className="space-y-8 animate-in fade-in duration-500">
       {/* Header Banner */}
-      <div className="bg-primary-600 rounded-2xl p-8 text-white shadow-lg relative overflow-hidden">
+      <div className="bg-gradient-to-br from-primary-600 via-blue-600 to-indigo-700 rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden">
         <div className="relative z-10">
-          <h1 className="text-3xl font-bold mb-2">Book Your Court</h1>
-          <p className="text-primary-100 max-w-xl">
+          <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 tracking-tight">Book Your Court</h1>
+          <p className="text-blue-100 max-w-xl text-lg">
             Select a date, find an available court, and start playing! All bookings are subject to confirmation at the facility.
           </p>
         </div>
-        <div className="absolute top-0 right-0 opacity-10 pointer-events-none transform translate-x-1/4 -translate-y-1/4">
-           {/* Decorative circles */}
-           <div className="w-64 h-64 rounded-full bg-white blur-3xl"></div>
-        </div>
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl transform translate-x-1/4 -translate-y-1/4"></div>
+        <div className="absolute bottom-0 right-1/3 w-48 h-48 bg-indigo-300 opacity-20 rounded-full blur-2xl transform translate-y-1/3"></div>
       </div>
 
       {/* Date Selector */}
-      <div className="bg-white p-4 rounded-xl shadow-sm border border-gray-200 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <Calendar className="h-5 w-5 text-gray-400" />
-          <h2 className="font-semibold text-gray-700">Select Date</h2>
+      <div className="bg-white/80 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
+        <div className="flex items-center gap-4">
+          <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary-600 shadow-inner border border-blue-100/50">
+            <Calendar className="h-6 w-6" />
+          </div>
+          <div>
+            <h2 className="font-bold text-gray-800 text-lg">Select Date</h2>
+            <p className="text-sm text-gray-500">Pick a day to view court availability</p>
+          </div>
         </div>
         <input 
           type="date" 
           value={selectedDate}
           min={dayjs().format("YYYY-MM-DD")}
           onChange={(e) => setSelectedDate(e.target.value)}
-          className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
+          className="px-5 py-2.5 bg-white border border-gray-200 rounded-xl font-medium text-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none shadow-sm cursor-pointer transition-shadow hover:shadow"
         />
       </div>
 
       {/* Grid */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col max-h-[600px]">
+      <div className="bg-white rounded-3xl shadow-lg border-0 ring-1 ring-gray-100 overflow-hidden flex flex-col max-h-[600px] transition-all hover:shadow-xl">
         <SharedScheduleGrid 
           courts={courts}
           bookings={bookings}

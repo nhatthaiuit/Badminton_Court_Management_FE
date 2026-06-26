@@ -53,44 +53,58 @@ const MyBookings = () => {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="bg-white rounded-2xl p-6 shadow-sm border border-gray-200">
-        <h1 className="text-2xl font-bold text-gray-800 mb-2">My Bookings</h1>
-        <p className="text-gray-500">View and manage your court reservations.</p>
+    <div className="space-y-8 animate-in fade-in duration-500">
+      {/* Premium Header Banner */}
+      <div className="bg-gradient-to-r from-blue-700 via-primary-600 to-indigo-600 rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden">
+        <div className="relative z-10">
+          <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 tracking-tight text-white">My Bookings</h1>
+          <p className="text-blue-100 max-w-xl text-lg">
+            Track and manage your court reservations in one place.
+          </p>
+        </div>
+        {/* Decorative elements */}
+        <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-5 rounded-full blur-3xl transform translate-x-1/2 -translate-y-1/4"></div>
+        <div className="absolute bottom-0 right-1/4 w-48 h-48 bg-indigo-400 opacity-20 rounded-full blur-2xl transform translate-y-1/2"></div>
       </div>
 
       <div className="grid gap-6">
         {bookings.length === 0 ? (
-          <div className="bg-white rounded-xl p-12 text-center shadow-sm border border-gray-200">
-            <div className="w-16 h-16 bg-gray-50 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Calendar className="h-8 w-8 text-gray-400" />
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-16 text-center shadow-sm border border-gray-100">
+            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
+              <Calendar className="h-10 w-10 text-blue-400" />
             </div>
-            <h3 className="text-lg font-medium text-gray-900 mb-1">No bookings found</h3>
-            <p className="text-gray-500">You haven't made any court reservations yet.</p>
+            <h3 className="text-xl font-bold text-gray-800 mb-2">No bookings yet</h3>
+            <p className="text-gray-500 max-w-sm mx-auto">You haven't made any court reservations. Head over to the Book Court page to get started!</p>
           </div>
         ) : (
           bookings.map((booking) => (
-            <div key={booking.booking_id} className="bg-white rounded-xl p-6 shadow-sm border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition hover:shadow-md">
-              <div className="space-y-2">
-                <div className="flex items-center gap-3">
-                  <h3 className="text-lg font-bold text-gray-900">{booking.court_name}</h3>
+            <div 
+              key={booking.booking_id} 
+              className="group bg-white rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-xl border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:-translate-y-1"
+            >
+              <div className="space-y-4">
+                <div className="flex items-center gap-4">
+                  <h3 className="text-xl font-extrabold text-gray-900 group-hover:text-primary-600 transition-colors">{booking.court_name}</h3>
                   {getStatusBadge(booking.status)}
                 </div>
                 
-                <div className="flex flex-wrap gap-4 text-sm text-gray-600">
-                  <div className="flex items-center gap-1.5">
-                    <Calendar className="h-4 w-4 text-gray-400" />
-                    {dayjs(booking.booking_date).format("dddd, MMM D, YYYY")}
+                <div className="flex flex-wrap gap-6 text-sm text-gray-600">
+                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                    <Calendar className="h-4 w-4 text-primary-500" />
+                    <span className="font-medium text-gray-700">{dayjs(booking.booking_date).format("dddd, MMM D, YYYY")}</span>
                   </div>
-                  <div className="flex items-center gap-1.5">
-                    <Clock className="h-4 w-4 text-gray-400" />
-                    {booking.start_time.slice(0, 5)} - {booking.end_time.slice(0, 5)}
+                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                    <Clock className="h-4 w-4 text-primary-500" />
+                    <span className="font-medium text-gray-700">{booking.start_time.slice(0, 5)} - {booking.end_time.slice(0, 5)}</span>
                   </div>
-                  <div className="flex items-center gap-1.5 font-medium text-primary-700">
+                  <div className="flex items-center gap-2 bg-green-50 px-3 py-1.5 rounded-lg border border-green-100 text-green-700 font-bold">
                     <CreditCard className="h-4 w-4" />
-                    ${parseFloat(booking.total_price).toFixed(2)}
+                    {parseInt(booking.total_price).toLocaleString()} VND
                   </div>
                 </div>
+              </div>
+              <div className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center h-12 w-12 rounded-full bg-primary-50 text-primary-600">
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
               </div>
             </div>
           ))
