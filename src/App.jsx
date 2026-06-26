@@ -42,10 +42,11 @@ function App() {
             </Route>
           </Route>
 
+          <Route path="/" element={<RootRedirect />} />
+
           {/* Protected Routes inside MainLayout (Staff/Admin/Owner) */}
           <Route element={<ProtectedRoute requiredRoles={["staff", "admin", "owner"]} />}>
             <Route element={<MainLayout />}>
-              <Route path="/" element={<RootRedirect />} />
               <Route path="/dashboard" element={<Dashboard />} />
               <Route path="/bookings" element={<Bookings />} />
               

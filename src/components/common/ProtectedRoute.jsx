@@ -26,7 +26,7 @@ const ProtectedRoute = ({ requiredRoles = [] }) => {
 
   // Check roles if requiredRoles is provided
   if (requiredRoles.length > 0 && !requiredRoles.includes(user.role)) {
-    return <Navigate to="/dashboard" replace />;
+    return <Navigate to="/" replace />;
   }
 
   return <Outlet />;
