@@ -23,7 +23,7 @@ const Sidebar = () => {
       {/* Logo Area */}
       <div className="h-16 flex items-center px-6 border-b border-gray-800 font-bold text-xl tracking-wider text-blue-400">
         <div className="flex items-center gap-3">
-          <CalendarDays className="h-6 w-6" />
+          <img src="/logo.png" alt="BCMS Logo" className="h-8 w-8 object-contain" />
           <span>BCMS</span>
         </div>
       </div>

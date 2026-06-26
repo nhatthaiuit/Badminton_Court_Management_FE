@@ -10,8 +10,8 @@ const CustomerLayout = () => {
       <header className="h-16 bg-white border-b border-gray-200 shadow-sm sticky top-0 z-30">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full flex justify-between items-center">
           <div className="flex items-center gap-3 text-primary-600">
-            <CalendarDays className="h-8 w-8" />
-            <span className="text-xl font-bold tracking-tight">BCMS Portal</span>
+            <img src="/logo.png" alt="BCMS Logo" className="h-10 w-10 object-contain" />
+            <span className="text-xl font-bold tracking-tight">BCMS</span>
           </div>
 
           <nav className="hidden md:flex space-x-8">

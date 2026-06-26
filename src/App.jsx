@@ -13,6 +13,7 @@ import Bookings from "./pages/Bookings/Bookings";
 import Courts from "./pages/Courts/Courts";
 import Users from "./pages/Users/Users";
 import Portal from "./pages/CustomerPortal/Portal";
+import MyBookings from "./pages/CustomerPortal/MyBookings";
 
 import { useAuth } from "./hooks/useAuth";
 
@@ -39,6 +40,7 @@ function App() {
           <Route element={<ProtectedRoute requiredRoles={["customer"]} />}>
             <Route element={<CustomerLayout />}>
               <Route path="/portal" element={<Portal />} />
+              <Route path="/portal/my-bookings" element={<MyBookings />} />
             </Route>
           </Route>
 

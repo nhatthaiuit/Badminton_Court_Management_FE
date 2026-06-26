@@ -64,7 +64,10 @@ const Portal = () => {
     const isPast = selectedDate === dayjs().format("YYYY-MM-DD") && 
                    time < dayjs().format("HH:mm");
 
-    if (isBooked || isPast) return;
+    if (isBooked || isPast) {
+      toast.error(isBooked ? "This slot is already booked." : "Cannot book past time slots.");
+      return;
+    }
 
     const endTime = `${(parseInt(time) + 1).toString().padStart(2, "0")}:00`;
     setSelectedSlot({ court, startTime: time, endTime });
