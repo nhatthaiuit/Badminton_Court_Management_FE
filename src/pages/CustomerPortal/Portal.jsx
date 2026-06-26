@@ -166,10 +166,11 @@ const Portal = () => {
             </div>
 
             <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200 flex gap-3">
-              <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0" />
-              <p className="text-sm text-yellow-800">
-                Payment will be collected at the facility. Please arrive 10 minutes early. Cancellations must be made at least 2 hours in advance.
-              </p>
+              <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
+              <div className="text-sm text-yellow-800 space-y-1">
+                <p><strong>Payment Required:</strong> Please complete your bank transfer within 15 minutes. Our staff will verify and update your booking status.</p>
+                <p><strong>Cancellation Policy:</strong> Cancellations must be made at least 2 hours in advance to be eligible for a refund.</p>
+              </div>
             </div>
 
             <form onSubmit={handleBookingConfirm}>
