@@ -163,17 +163,14 @@ const Payment = () => {
           </div>
           
           <div className="bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center border border-dashed border-gray-300">
-            <div className="w-40 h-40 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center justify-center mb-4">
-               {/* Placeholder for QR Code */}
-               <div className="text-center">
-                 <div className="w-24 h-24 bg-gray-200 mx-auto mb-2 grid grid-cols-2 gap-1 p-1">
-                   <div className="bg-gray-400"></div><div className="bg-gray-400"></div>
-                   <div className="bg-gray-400"></div><div className="bg-gray-400"></div>
-                 </div>
-                 <span className="text-xs text-gray-500">Mock QR Code</span>
-               </div>
+            <div className="w-56 h-56 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center justify-center mb-4 overflow-hidden p-2">
+               <img 
+                 src={`https://img.vietqr.io/image/vcb-0123456789-compact2.png?amount=${Number(booking.total_price)}&addInfo=Thanh toan booking ${bookingId}&accountName=NGUYEN VAN A`} 
+                 alt="VietQR Code" 
+                 className="w-full h-full object-contain"
+               />
             </div>
-            <p className="text-sm text-gray-600 text-center">Scan with your banking app or use the mock button below to simulate success.</p>
+            <p className="text-sm text-gray-600 text-center">Scan with any banking app (Momo, ZaloPay, Vietcombank...).</p>
           </div>
 
           <button

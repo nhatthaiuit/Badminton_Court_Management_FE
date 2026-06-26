@@ -11,4 +11,5 @@ export const bookingsApi = {
   create: (data) => api.post("/bookings", data),
   updateStatus: (id, status) => api.patch(`/bookings/${id}/status`, { status }),
   cancel: (id) => api.delete(`/bookings/${id}`),
+  processRefund: (id) => api.post(`/bookings/${id}/refund`),
 };

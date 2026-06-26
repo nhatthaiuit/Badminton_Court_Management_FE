@@ -156,14 +156,28 @@ const CourtScheduleDashboard = () => {
 
   const handleCancelBooking = async () => {
     if (!selectedBooking) return;
-    if (window.confirm("Are you sure you want to cancel this booking/maintenance?")) {
+    if (window.confirm("Are you sure you want to remove this maintenance block?")) {
       try {
         await bookingsApi.cancel(selectedBooking.booking_id);
-        toast.success("Cancelled successfully!");
+        toast.success("Removed successfully!");
         setSelectedBooking(null);
         fetchScheduleData();
       } catch (error) {
         toast.error("Failed to cancel");
+      }
+    }
+  };
+
+  const handleProcessRefund = async () => {
+    if (!selectedBooking) return;
+    if (window.confirm("Have you successfully transferred the refund back to the customer?")) {
+      try {
+        await bookingsApi.processRefund(selectedBooking.booking_id);
+        toast.success("Refund processed successfully!");
+        setSelectedBooking(null);
+        fetchScheduleData();
+      } catch (error) {
+        toast.error("Failed to process refund");
       }
     }
   };
@@ -203,6 +217,10 @@ const CourtScheduleDashboard = () => {
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full bg-green-100 border border-green-300"></div>
               <span className="text-gray-600">Paid</span>
+            </div>
+            <div className="flex items-center gap-1.5">
+              <div className="w-3 h-3 rounded-full bg-purple-100 border border-purple-300"></div>
+              <span className="text-gray-600">Refunding</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full bg-gray-100 border border-gray-300 border-dashed"></div>
@@ -334,9 +352,17 @@ const CourtScheduleDashboard = () => {
                 </div>
                 {selectedBooking.customer_name !== "Maintenance Block" ? (
                   <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                    selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-green-100 text-green-800'
+                    selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' 
+                    : selectedBooking.status === 'confirmed' ? 'bg-green-100 text-green-800'
+                    : selectedBooking.status === 'refunding' ? 'bg-purple-100 text-purple-800'
+                    : selectedBooking.status === 'refunded' ? 'bg-gray-100 text-gray-800'
+                    : 'bg-red-100 text-red-800'
                   }`}>
-                    {selectedBooking.status === 'pending' ? 'Pending Payment' : 'Paid'}
+                    {selectedBooking.status === 'pending' ? 'Pending Payment' 
+                     : selectedBooking.status === 'confirmed' ? 'Paid'
+                     : selectedBooking.status === 'refunding' ? 'Refunding'
+                     : selectedBooking.status === 'refunded' ? 'Refunded'
+                     : 'Cancelled'}
                   </span>
                 ) : (
                   <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-gray-200 text-gray-800">
@@ -374,13 +400,14 @@ const CourtScheduleDashboard = () => {
             )}
 
             <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
-              {/* Cancel Button (Soft Delete) */}
-              <button 
-                onClick={handleCancelBooking} 
-                className="mr-auto px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition flex items-center gap-2"
-              >
-                {selectedBooking.customer_name === "Maintenance Block" ? "Remove Maintenance" : "Cancel Booking"}
-              </button>
+              {selectedBooking.customer_name === "Maintenance Block" && (
+                <button 
+                  onClick={handleCancelBooking} 
+                  className="mr-auto px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition flex items-center gap-2"
+                >
+                  Remove Maintenance
+                </button>
+              )}
 
               <button onClick={() => setSelectedBooking(null)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
                 Close
@@ -392,6 +419,15 @@ const CourtScheduleDashboard = () => {
                 >
                   <CheckCircle className="h-4 w-4" />
                   Mark as PAID
+                </button>
+              )}
+              {selectedBooking.status === 'refunding' && (
+                <button 
+                  onClick={handleProcessRefund} 
+                  className="px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2 shadow-sm"
+                >
+                  <CheckCircle className="h-4 w-4" />
+                  Confirm Refund Sent
                 </button>
               )}
             </div>

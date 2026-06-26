@@ -3,7 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { bookingsApi } from "../../api/bookingsApi";
 import { useAuth } from "../../hooks/useAuth";
 import dayjs from "dayjs";
-import { Calendar, Clock, CreditCard } from "lucide-react";
+import { Calendar, Clock, CreditCard, XCircle } from "lucide-react";
+import toast from "react-hot-toast";
 
 const MyBookings = () => {
   const { user } = useAuth();
@@ -31,6 +32,21 @@ const MyBookings = () => {
     fetchMyBookings();
   }, []);
 
+  const handleCancel = async (booking) => {
+    const confirmCancel = window.confirm(
+      "Are you sure you want to cancel this booking? If eligible, your refund will be processed manually within 3-5 days."
+    );
+    if (!confirmCancel) return;
+    
+    try {
+      await bookingsApi.delete(booking.booking_id);
+      toast.success("Booking cancelled. Status updated to Refunding.");
+      fetchMyBookings();
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to cancel booking");
+    }
+  };
+
   const getStatusBadge = (status) => {
     switch (status) {
       case "pending":
@@ -41,6 +57,10 @@ const MyBookings = () => {
         return <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">Completed</span>;
       case "cancelled":
         return <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold">Cancelled</span>;
+      case "refunding":
+        return <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">Refunding</span>;
+      case "refunded":
+        return <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold">Refunded</span>;
       default:
         return <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold">{status}</span>;
     }
@@ -112,6 +132,15 @@ const MyBookings = () => {
                     className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-xl shadow hover:shadow-md transition-all hover:scale-105 whitespace-nowrap"
                   >
                     Pay Now
+                  </button>
+                )}
+                
+                {booking.status === "confirmed" && dayjs(`${dayjs(booking.booking_date).format('YYYY-MM-DD')}T${booking.start_time}`).diff(dayjs(), 'hour') >= 2 && (
+                  <button
+                    onClick={() => handleCancel(booking)}
+                    className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-red-100 text-red-600 hover:bg-red-50 font-bold rounded-xl shadow-sm hover:shadow transition-all whitespace-nowrap"
+                  >
+                    <XCircle className="h-4 w-4" /> Cancel
                   </button>
                 )}
                 <div className="hidden sm:flex opacity-0 group-hover:opacity-100 transition-opacity duration-300 items-center justify-center h-12 w-12 rounded-full bg-primary-50 text-primary-600">
