@@ -4,8 +4,10 @@ import { courtsApi } from "../../api/courtsApi";
 import { bookingsApi } from "../../api/bookingsApi";
 import { useAuth } from "../../hooks/useAuth";
 import Modal from "../../components/ui/Modal";
+import SharedScheduleGrid from "../../components/bookings/SharedScheduleGrid";
+import { socket } from "../../api/socket";
 import toast from "react-hot-toast";
-import { Calendar, Clock, CheckCircle, AlertCircle } from "lucide-react";
+import { Calendar, CheckCircle, AlertCircle } from "lucide-react";
 
 const Portal = () => {
   const { user } = useAuth();
@@ -18,12 +20,6 @@ const Portal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Generate time slots from 06:00 to 22:00
-  const timeSlots = Array.from({ length: 16 }, (_, i) => {
-    const start = i + 6;
-    return `${start.toString().padStart(2, "0")}:00`;
-  });
 
   const fetchData = async () => {
     setLoading(true);
@@ -44,6 +40,18 @@ const Portal = () => {
 
   useEffect(() => {
     fetchData();
+  }, [selectedDate]);
+
+  // Socket.io Listener
+  useEffect(() => {
+    socket.connect();
+    socket.on("schedule_updated", () => {
+      fetchData(); // Refresh data on event
+    });
+    return () => {
+      socket.off("schedule_updated");
+      socket.disconnect();
+    };
   }, [selectedDate]);
 
   const handleSlotClick = (court, time) => {
@@ -88,17 +96,7 @@ const Portal = () => {
     }
   };
 
-  const getSlotStatus = (courtId, time) => {
-    const isBooked = bookings.some(
-      b => b.court_id === courtId && b.start_time.startsWith(time)
-    );
-    const isPast = selectedDate === dayjs().format("YYYY-MM-DD") && 
-                   time < dayjs().format("HH:mm");
 
-    if (isBooked) return "booked";
-    if (isPast) return "past";
-    return "available";
-  };
 
   return (
     <div className="space-y-6">
@@ -132,76 +130,21 @@ const Portal = () => {
       </div>
 
       {/* Grid */}
-      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        {loading ? (
-          <div className="p-12 flex justify-center">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-          </div>
-        ) : courts.length === 0 ? (
-          <div className="p-12 text-center text-gray-500">
-            No courts available.
-          </div>
-        ) : (
-          <div className="overflow-x-auto">
-            <table className="min-w-full divide-y divide-gray-200">
-              <thead className="bg-gray-50">
-                <tr>
-                  <th className="px-6 py-4 text-left text-xs font-bold text-gray-500 uppercase tracking-wider sticky left-0 bg-gray-50 z-10 w-24">
-                    Time
-                  </th>
-                  {courts.map((court) => (
-                    <th key={court.court_id} className="px-6 py-4 text-center text-sm font-bold text-gray-700 uppercase tracking-wider">
-                      {court.name}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="bg-white divide-y divide-gray-200">
-                {timeSlots.map((time) => (
-                  <tr key={time} className="hover:bg-gray-50 transition-colors">
-                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-500 sticky left-0 bg-white group-hover:bg-gray-50">
-                      <div className="flex items-center gap-2">
-                        <Clock className="h-4 w-4" />
-                        {time}
-                      </div>
-                    </td>
-                    {courts.map((court) => {
-                      const status = getSlotStatus(court.court_id, time);
-                      
-                      return (
-                        <td key={`${court.court_id}-${time}`} className="px-2 py-2 text-center">
-                          {status === "booked" ? (
-                            <div className="mx-auto w-full max-w-[120px] bg-red-100 text-red-800 text-xs font-semibold px-2 py-3 rounded-lg border border-red-200 cursor-not-allowed">
-                              Booked
-                            </div>
-                          ) : status === "past" ? (
-                            <div className="mx-auto w-full max-w-[120px] bg-gray-100 text-gray-400 text-xs font-semibold px-2 py-3 rounded-lg border border-gray-200 cursor-not-allowed">
-                              Past
-                            </div>
-                          ) : (
-                            <button 
-                              onClick={() => handleSlotClick(court, time)}
-                              className="mx-auto w-full max-w-[120px] bg-white text-primary-600 hover:bg-primary-600 hover:text-white text-xs font-semibold px-2 py-3 rounded-lg border border-primary-200 transition-colors"
-                            >
-                              Available
-                            </button>
-                          )}
-                        </td>
-                      );
-                    })}
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
+      <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col h-[600px]">
+        <SharedScheduleGrid 
+          courts={courts}
+          bookings={bookings}
+          loading={loading}
+          role="customer"
+          onEmptySlotClick={handleSlotClick}
+        />
       </div>
 
       {/* Legend */}
       <div className="flex gap-6 justify-center text-sm text-gray-600">
         <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-white border border-primary-200"></span> Available</div>
-        <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-red-100 border border-red-200"></span> Booked</div>
-        <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-gray-100 border border-gray-200"></span> Past</div>
+        <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-red-100 border border-red-300"></span> Booked</div>
+        <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-gray-100 border border-dashed border-gray-300"></span> Maintenance</div>
       </div>
 
       {/* Booking Confirmation Modal */}

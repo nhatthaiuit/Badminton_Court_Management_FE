@@ -4,6 +4,8 @@ import { bookingsApi } from "../../api/bookingsApi";
 import { courtsApi } from "../../api/courtsApi";
 import { ChevronLeft, ChevronRight, Calendar, Plus, PhoneCall, CheckCircle, AlertCircle, Wrench } from "lucide-react";
 import Modal from "../../components/ui/Modal";
+import SharedScheduleGrid from "../../components/bookings/SharedScheduleGrid";
+import { socket } from "../../api/socket";
 import toast from "react-hot-toast";
 
 // Grid configuration
@@ -11,6 +13,7 @@ const HOURS = Array.from({ length: 13 }, (_, i) => i + 9); // 09:00 - 21:00
 const HOUR_WIDTH = 112; // 112px per hour
 
 const CourtScheduleDashboard = () => {
+  const { user } = useAuth();
   const [currentDate, setCurrentDate] = useState(dayjs());
   const [courts, setCourts] = useState([]);
   const [bookings, setBookings] = useState([]);
@@ -54,6 +57,18 @@ const CourtScheduleDashboard = () => {
   useEffect(() => {
     fetchScheduleData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [currentDate]);
+
+  // Socket.io Listener
+  useEffect(() => {
+    socket.connect();
+    socket.on("schedule_updated", () => {
+      fetchScheduleData(); // Refresh data on event
+    });
+    return () => {
+      socket.off("schedule_updated");
+      socket.disconnect();
+    };
   }, [currentDate]);
 
   const getPositionStyles = (startTime, endTime) => {
@@ -205,126 +220,13 @@ const CourtScheduleDashboard = () => {
       </div>
 
       {/* Grid Container */}
-      {loading ? (
-        <div className="flex-1 flex items-center justify-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary-600"></div>
-        </div>
-      ) : (
-        <div className="flex-1 overflow-auto relative custom-scrollbar">
-          <div className="min-w-max">
-            {/* Header Timeline */}
-            <div className="flex border-b border-gray-200 sticky top-0 z-10 bg-gray-50 shadow-sm">
-              <div className="w-32 flex-shrink-0 border-r border-gray-200 p-3 bg-gray-50 font-semibold text-gray-700 sticky left-0 z-20">
-                Courts
-              </div>
-              <div className="flex flex-1">
-                {HOURS.map((hour) => (
-                  <div
-                    key={hour}
-                    className="flex-shrink-0 text-center py-3 text-sm font-medium text-gray-500 border-r border-gray-200"
-                    style={{ width: `${HOUR_WIDTH}px` }}
-                  >
-                    {`${hour.toString().padStart(2, "0")}:00`}
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Court Rows */}
-            <div className="relative">
-              {courts.map((court) => {
-                const courtBookings = bookings.filter(b => b.court_id === court.court_id && b.status !== 'cancelled');
-                
-                return (
-                  <div key={court.court_id} className="flex border-b border-gray-100 group hover:bg-gray-50 transition-colors">
-                    <div className="w-32 flex-shrink-0 border-r border-gray-200 p-4 bg-white group-hover:bg-gray-50 sticky left-0 z-10 font-medium text-gray-800">
-                      {court.name}
-                    </div>
-                    
-                    <div className="flex-1 relative h-16 cursor-crosshair">
-                      {/* Background hour columns lines */}
-                      {HOURS.map((hour, idx) => (
-                        <div
-                          key={`bg-${hour}`}
-                          className="absolute top-0 bottom-0 border-r border-gray-100"
-                          style={{ left: `${(idx + 1) * HOUR_WIDTH}px` }}
-                        ></div>
-                      ))}
-
-                      {/* If entire court is inactive */}
-                      {court.status === "inactive" ? (
-                        <div className="absolute inset-y-1 inset-x-2 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 font-medium z-10">
-                          Court Inactive
-                        </div>
-                      ) : court.status === "maintenance" ? (
-                        <div className="absolute inset-y-1 inset-x-2 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 font-medium z-10">
-                          Court Under Maintenance
-                        </div>
-                      ) : (
-                        <>
-                          {/* Render Bookings & Time-based Maintenance */}
-                          {courtBookings.map((booking) => {
-                            const styles = getPositionStyles(booking.start_time, booking.end_time);
-                            
-                            const isMaintenance = booking.customer_name === "Maintenance Block" || booking.note?.includes("[MAINTENANCE]");
-
-                            if (isMaintenance) {
-                              return (
-                                <div
-                                  key={booking.booking_id}
-                                  onClick={() => setSelectedBooking(booking)}
-                                  className="absolute top-1 bottom-1 bg-gray-100 border-2 border-dashed border-gray-300 text-gray-500 rounded-md px-2 py-1 overflow-hidden z-10 hover:shadow-md transition cursor-pointer flex items-center justify-center"
-                                  style={styles}
-                                  title={`Maintenance: ${booking.start_time.slice(0,5)} - ${booking.end_time.slice(0,5)}`}
-                                >
-                                  <div className="text-xs font-bold truncate flex items-center gap-1">
-                                    <Wrench className="h-3 w-3" />
-                                    Maintenance
-                                  </div>
-                                </div>
-                              );
-                            }
-                            
-                            // Normal Booking Check
-                            const now = dayjs();
-                            const bookingStart = dayjs(`${booking.booking_date} ${booking.start_time}`);
-                            const isCloseToStart = bookingStart.diff(now, 'minute') <= 60 && bookingStart.diff(now, 'minute') > -60;
-                            const needsAction = booking.status === 'pending' && isCloseToStart && booking.booking_date === dayjs().format("YYYY-MM-DD");
-
-                            let bgClass = "bg-yellow-100 border-yellow-300 text-yellow-800"; // pending
-                            if (booking.status === 'confirmed' || booking.status === 'completed') {
-                              bgClass = "bg-green-100 border-green-300 text-green-800";
-                            }
-                            if (needsAction) {
-                              bgClass = "bg-red-50 border-red-400 text-red-800 shadow-sm animate-pulse";
-                            }
-
-                            return (
-                              <div
-                                key={booking.booking_id}
-                                onClick={() => setSelectedBooking(booking)}
-                                className={`absolute top-1 bottom-1 border rounded-md px-2 py-1 overflow-hidden z-10 hover:shadow-md transition cursor-pointer ${bgClass}`}
-                                style={styles}
-                                title={`${booking.customer_name} (${booking.start_time.slice(0,5)} - ${booking.end_time.slice(0,5)})`}
-                              >
-                                <div className="text-xs font-bold truncate flex items-center justify-between">
-                                  {booking.customer_name}
-                                  {needsAction && <AlertCircle className="h-3 w-3 text-red-500" />}
-                                </div>
-                                <div className="text-[10px] truncate opacity-80">{booking.start_time.slice(0,5)} - {booking.end_time.slice(0,5)}</div>
-                              </div>
-                            );
-                          })}
-                        </>
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-        </div>
-      )}
+      <SharedScheduleGrid 
+        courts={courts}
+        bookings={bookings}
+        loading={loading}
+        role={user?.role || "staff"}
+        onBookingClick={(booking) => setSelectedBooking(booking)}
+      />
 
       {/* New Booking / Maintenance Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create New Block">
