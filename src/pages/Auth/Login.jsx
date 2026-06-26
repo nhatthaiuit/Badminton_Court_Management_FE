@@ -75,8 +75,8 @@ const Login = () => {
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center">
-          <img src="/logo2.png" alt="BCMS Logo" className="h-28 w-28 object-contain drop-shadow-lg animate-in zoom-in duration-500" />
+        <div className="flex justify-center -mt-8 mb-4">
+          <img src="/logo2.png" alt="BCMS Logo" className="h-48 w-48 object-contain drop-shadow-xl animate-in zoom-in duration-500 hover:scale-105 transition-transform" />
         </div>
         <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
           {isLoginView ? "Sign in to BCMS" : "Create Customer Account"}
