@@ -3,8 +3,9 @@ import { useNavigate } from "react-router-dom";
 import { bookingsApi } from "../../api/bookingsApi";
 import { useAuth } from "../../hooks/useAuth";
 import dayjs from "dayjs";
-import { Calendar, Clock, CreditCard, XCircle } from "lucide-react";
+import { Calendar, Clock, CreditCard, XCircle, AlertCircle } from "lucide-react";
 import toast from "react-hot-toast";
+import Modal from "../../components/ui/Modal";
 
 const MyBookings = () => {
   const { user } = useAuth();
@@ -28,22 +29,40 @@ const MyBookings = () => {
     }
   };
 
+  const [isCancelModalOpen, setIsCancelModalOpen] = useState(false);
+  const [cancellingBooking, setCancellingBooking] = useState(null);
+  const [refundInfo, setRefundInfo] = useState({ bank_name: "", account_number: "", account_name: "" });
+  const [submitting, setSubmitting] = useState(false);
+
   useEffect(() => {
     fetchMyBookings();
   }, []);
 
-  const handleCancel = async (booking) => {
-    const confirmCancel = window.confirm(
-      "Are you sure you want to cancel this booking? If eligible, your refund will be processed manually within 3-5 days."
-    );
-    if (!confirmCancel) return;
+  const initiateCancel = (booking) => {
+    setCancellingBooking(booking);
+    setRefundInfo({ bank_name: "", account_number: "", account_name: "" });
+    setIsCancelModalOpen(true);
+  };
+
+  const submitCancel = async (e) => {
+    e.preventDefault();
+    if (!refundInfo.bank_name || !refundInfo.account_number || !refundInfo.account_name) {
+      toast.error("Please fill in all bank details for refund.");
+      return;
+    }
+
+    setSubmitting(true);
+    const refund_account = `${refundInfo.bank_name} - ${refundInfo.account_number} - ${refundInfo.account_name}`;
     
     try {
-      await bookingsApi.delete(booking.booking_id);
+      await bookingsApi.requestCancel(cancellingBooking.booking_id, { refund_account });
       toast.success("Booking cancelled. Status updated to Refunding.");
+      setIsCancelModalOpen(false);
       fetchMyBookings();
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to cancel booking");
+    } finally {
+      setSubmitting(false);
     }
   };
 
@@ -137,7 +156,7 @@ const MyBookings = () => {
                 
                 {booking.status === "confirmed" && dayjs(`${dayjs(booking.booking_date).format('YYYY-MM-DD')}T${booking.start_time}`).diff(dayjs(), 'hour') >= 2 && (
                   <button
-                    onClick={() => handleCancel(booking)}
+                    onClick={() => initiateCancel(booking)}
                     className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-red-100 text-red-600 hover:bg-red-50 font-bold rounded-xl shadow-sm hover:shadow transition-all whitespace-nowrap"
                   >
                     <XCircle className="h-4 w-4" /> Cancel
@@ -151,6 +170,59 @@ const MyBookings = () => {
           ))
         )}
       </div>
+
+      {/* Cancel & Refund Modal */}
+      <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)} title="Cancel Booking & Refund">
+        <form onSubmit={submitCancel} className="space-y-4">
+          <div className="bg-orange-50 border border-orange-200 p-3 rounded-lg flex gap-3 text-orange-800 text-sm mb-4">
+            <AlertCircle className="h-5 w-5 flex-shrink-0" />
+            <p>You are cancelling a paid booking. Please provide your bank details below so we can process your refund within 3-5 working days.</p>
+          </div>
+          
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Bank Name <span className="text-red-500">*</span></label>
+            <input 
+              type="text" 
+              required 
+              placeholder="e.g. Vietcombank" 
+              value={refundInfo.bank_name} 
+              onChange={(e) => setRefundInfo({...refundInfo, bank_name: e.target.value})} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Account Number <span className="text-red-500">*</span></label>
+            <input 
+              type="text" 
+              required 
+              placeholder="e.g. 0123456789" 
+              value={refundInfo.account_number} 
+              onChange={(e) => setRefundInfo({...refundInfo, account_number: e.target.value})} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none"
+            />
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Account Holder Name <span className="text-red-500">*</span></label>
+            <input 
+              type="text" 
+              required 
+              placeholder="e.g. NGUYEN VAN A" 
+              value={refundInfo.account_name} 
+              onChange={(e) => setRefundInfo({...refundInfo, account_name: e.target.value})} 
+              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none uppercase"
+            />
+          </div>
+
+          <div className="pt-4 flex justify-end gap-3 border-t border-gray-100 mt-6">
+            <button type="button" onClick={() => setIsCancelModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
+              Keep Booking
+            </button>
+            <button type="submit" disabled={submitting} className="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition disabled:opacity-70">
+              {submitting ? "Processing..." : "Confirm Cancellation"}
+            </button>
+          </div>
+        </form>
+      </Modal>
     </div>
   );
 };

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { bookingsApi } from "../../api/bookingsApi";
 import { courtsApi } from "../../api/courtsApi";
-import { ChevronLeft, ChevronRight, Calendar, Plus, PhoneCall, CheckCircle, AlertCircle, Wrench } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Plus, PhoneCall, CheckCircle, AlertCircle, Wrench, Wallet } from "lucide-react";
 import Modal from "../../components/ui/Modal";
 import SharedScheduleGrid from "../../components/bookings/SharedScheduleGrid";
 import { socket } from "../../api/socket";
@@ -389,6 +389,19 @@ const CourtScheduleDashboard = () => {
               <div className="text-sm border-t border-gray-100 pt-4">
                 <p className="text-gray-500 mb-1">Notes:</p>
                 <p className="text-gray-800">{selectedBooking.note}</p>
+              </div>
+            )}
+
+            {selectedBooking.status === 'refunding' && selectedBooking.refund_account && (
+              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 text-sm mt-4">
+                <div className="flex items-center gap-2 text-purple-800 font-bold mb-2">
+                  <Wallet className="h-4 w-4" />
+                  <p>Customer Refund Account Details:</p>
+                </div>
+                <div className="text-purple-900 bg-white p-3 rounded border border-purple-100 whitespace-pre-wrap font-mono">
+                  {selectedBooking.refund_account}
+                </div>
+                <p className="text-purple-600 mt-2 text-xs">Please manually transfer the refund to this account, then click "Confirm Refund Sent" below.</p>
               </div>
             )}
 
