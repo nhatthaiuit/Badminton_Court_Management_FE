@@ -37,9 +37,9 @@ export const AuthProvider = ({ children }) => {
     loadUser();
   }, []);
 
-  const login = async (email, password) => {
+  const login = async (phone, password) => {
     try {
-      const response = await authApi.login({ email, password });
+      const response = await authApi.login({ phone, password });
       const { user, token } = response.data.data;
       
       localStorage.setItem("bcms_token", token);
@@ -47,7 +47,12 @@ export const AuthProvider = ({ children }) => {
       toast.success("Logged in successfully!");
       return user; // Return user object for role-based redirect
     } catch (error) {
-      toast.error(error.response?.data?.message || "Login failed");
+      const data = error.response?.data;
+      if (data?.errors && data.errors.length > 0) {
+        toast.error(data.errors[0].msg);
+      } else {
+        toast.error(data?.message || "Login failed");
+      }
       return null;
     }
   };

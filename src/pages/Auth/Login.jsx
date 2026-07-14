@@ -9,13 +9,12 @@ const Login = () => {
   const [isLoginView, setIsLoginView] = useState(true);
   
   // Login State
-  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   
   // Register State
   const [regName, setRegName] = useState("");
   const [regPhone, setRegPhone] = useState("");
-  const [regEmail, setRegEmail] = useState("");
   const [regPassword, setRegPassword] = useState("");
 
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -30,7 +29,7 @@ const Login = () => {
     e.preventDefault();
     setIsSubmitting(true);
     
-    const user = await login(email, password);
+    const user = await login(phone, password);
     if (user) {
       if (from) {
         navigate(from, { replace: true });
@@ -58,15 +57,19 @@ const Login = () => {
       await authApi.register({
         full_name: regName,
         phone: regPhone,
-        email: regEmail,
         password: regPassword
       });
       toast.success("Account created! Logging you in...");
       // Auto login after register
-      await login(regEmail, regPassword);
+      await login(regPhone, regPassword);
       navigate("/portal", { replace: true });
     } catch (error) {
-      toast.error(error.response?.data?.message || "Registration failed");
+      const data = error.response?.data;
+      if (data?.errors && data.errors.length > 0) {
+        toast.error(data.errors[0].msg);
+      } else {
+        toast.error(data?.message || "Registration failed");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -109,12 +112,12 @@ const Login = () => {
             // LOGIN FORM
             <form className="space-y-6" onSubmit={handleLoginSubmit}>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Email address</label>
+                <label className="block text-sm font-medium text-gray-700">Phone number</label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
+                    <Phone className="h-5 w-5 text-gray-400" />
                   </div>
-                  <input type="email" required value={email} onChange={(e) => setEmail(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="admin@example.com" />
+                  <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="0901234567" />
                 </div>
               </div>
 
@@ -154,16 +157,6 @@ const Login = () => {
                     <Phone className="h-5 w-5 text-gray-400" />
                   </div>
                   <input type="tel" required value={regPhone} onChange={(e) => setRegPhone(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="0901234567" />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-sm font-medium text-gray-700">Email address</label>
-                <div className="mt-1 relative rounded-md shadow-sm">
-                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <Mail className="h-5 w-5 text-gray-400" />
-                  </div>
-                  <input type="email" required value={regEmail} onChange={(e) => setRegEmail(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="john@example.com" />
                 </div>
               </div>
 
