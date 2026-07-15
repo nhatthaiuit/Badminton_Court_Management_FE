@@ -10,6 +10,9 @@ A modern, real-time Badminton Court Booking and Management System built with Rea
 ## 📖 Comprehensive Documentation
 For detailed system architecture, diagrams, flowcharts, and full project descriptions, please visit our **[Notion Workspace](https://app.notion.com/p/Badminton-Court-Management-System-3849f49bca6d8032a1b6d16c2a71ce08?source=copy_link)**.
 
+## 🌐 Live Demo
+**[Insert your live Vercel link here once deployed]**
+
 ## 🚀 Features
 
 - **Real-Time Schedule Syncing**: Powered by Socket.io, the court schedule updates instantly across all active clients when a booking is made or canceled.
@@ -57,11 +60,15 @@ For detailed system architecture, diagrams, flowcharts, and full project descrip
    npm run dev
    ```
 
-## 🌐 Deployment (Vercel)
+## 📁 Project Structure
 
-This frontend can be easily deployed to [Vercel](https://vercel.com/):
-1. Push your code to GitHub.
-2. Import the repository in Vercel.
-3. Set the Build Command to `npm run build` and Output Directory to `dist`.
-4. Add the `VITE_API_URL` and `VITE_SOCKET_URL` environment variables pointing to your deployed backend.
-5. Deploy!
+```
+src/
+├── api/             # Axios instance and API call functions
+├── assets/          # Static files (images, icons)
+├── components/      # Reusable UI components (Modals, Grids, Layouts)
+├── context/         # React Context (e.g., AuthContext)
+├── hooks/           # Custom React hooks
+├── pages/           # Page components (Auth, Bookings, Dashboard, etc.)
+└── utils/           # Helper functions
+```
