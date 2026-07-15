@@ -7,6 +7,7 @@ import toast from "react-hot-toast";
 
 const Login = () => {
   const [isLoginView, setIsLoginView] = useState(true);
+  const [isForgotView, setIsForgotView] = useState(false);
   
   // Login State
   const [phone, setPhone] = useState("");
@@ -14,6 +15,7 @@ const Login = () => {
   
   // Register State
   const [regName, setRegName] = useState("");
+  const [regEmail, setRegEmail] = useState("");
   const [regPhone, setRegPhone] = useState("");
   const [regPassword, setRegPassword] = useState("");
 
@@ -56,6 +58,7 @@ const Login = () => {
       // By default, backend authController sets role="customer"
       await authApi.register({
         full_name: regName,
+        email: regEmail,
         phone: regPhone,
         password: regPassword
       });
@@ -70,6 +73,20 @@ const Login = () => {
       } else {
         toast.error(data?.message || "Registration failed");
       }
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleForgotSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await authApi.forgotPassword(phone);
+      toast.success("Password reset link sent to your email!");
+      setIsForgotView(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to send reset link");
     } finally {
       setIsSubmitting(false);
     }
@@ -93,22 +110,48 @@ const Login = () => {
         <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-200">
           
           {/* Tabs */}
-          <div className="flex mb-6 border-b border-gray-200">
-            <button 
-              className={`flex-1 pb-3 font-medium text-sm border-b-2 transition-colors ${isLoginView ? "border-primary-600 text-primary-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}
-              onClick={() => setIsLoginView(true)}
-            >
-              Sign In
-            </button>
-            <button 
-              className={`flex-1 pb-3 font-medium text-sm border-b-2 transition-colors ${!isLoginView ? "border-primary-600 text-primary-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}
-              onClick={() => setIsLoginView(false)}
-            >
-              Register
-            </button>
-          </div>
+          {!isForgotView && (
+            <div className="flex mb-6 border-b border-gray-200">
+              <button 
+                className={`flex-1 pb-3 font-medium text-sm border-b-2 transition-colors ${isLoginView ? "border-primary-600 text-primary-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}
+                onClick={() => setIsLoginView(true)}
+              >
+                Sign In
+              </button>
+              <button 
+                className={`flex-1 pb-3 font-medium text-sm border-b-2 transition-colors ${!isLoginView ? "border-primary-600 text-primary-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}
+                onClick={() => setIsLoginView(false)}
+              >
+                Register
+              </button>
+            </div>
+          )}
 
-          {isLoginView ? (
+          {isForgotView ? (
+            // FORGOT PASSWORD FORM
+            <form className="space-y-6" onSubmit={handleForgotSubmit}>
+              <div className="text-sm text-gray-600 text-center mb-4">
+                Enter your phone number and we'll send a reset link to your email.
+              </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Phone number</label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Phone className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="0901234567" />
+                </div>
+              </div>
+              <div>
+                <button type="submit" disabled={isSubmitting} className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 transition-colors">
+                  {isSubmitting ? "Sending..." : "Send Reset Link"}
+                </button>
+              </div>
+              <div className="text-center mt-4">
+                <button type="button" onClick={() => setIsForgotView(false)} className="text-sm text-primary-600 hover:text-primary-500">Back to Login</button>
+              </div>
+            </form>
+          ) : isLoginView ? (
             // LOGIN FORM
             <form className="space-y-6" onSubmit={handleLoginSubmit}>
               <div>
@@ -131,6 +174,14 @@ const Login = () => {
                 </div>
               </div>
 
+              <div className="flex items-center justify-between">
+                <div className="text-sm">
+                  <button type="button" onClick={() => setIsForgotView(true)} className="font-medium text-primary-600 hover:text-primary-500">
+                    Forgot your password?
+                  </button>
+                </div>
+              </div>
+
               <div>
                 <button type="submit" disabled={isSubmitting} className="w-full flex justify-center py-2.5 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:bg-primary-400 transition-colors">
                   {isSubmitting ? "Signing in..." : "Sign in"}
@@ -147,6 +198,16 @@ const Login = () => {
                     <User className="h-5 w-5 text-gray-400" />
                   </div>
                   <input type="text" required value={regName} onChange={(e) => setRegName(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="John Doe" />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700">Email Address</label>
+                <div className="mt-1 relative rounded-md shadow-sm">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                    <Mail className="h-5 w-5 text-gray-400" />
+                  </div>
+                  <input type="email" required value={regEmail} onChange={(e) => setRegEmail(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="you@example.com" />
                 </div>
               </div>
 

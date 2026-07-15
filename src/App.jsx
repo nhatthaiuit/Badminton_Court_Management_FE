@@ -7,6 +7,7 @@ import CustomerLayout from "./components/layout/CustomerLayout";
 
 // Pages
 import Login from "./pages/Auth/Login";
+import ResetPassword from "./pages/Auth/ResetPassword";
 import Dashboard from "./pages/Dashboard/Dashboard";
 import NotFound from "./pages/NotFound/NotFound";
 import Bookings from "./pages/Bookings/Bookings";
@@ -36,6 +37,7 @@ function App() {
         <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
 
           {/* Customer Portal Routes */}
           <Route element={<ProtectedRoute requiredRoles={["customer"]} />}>
