@@ -2,7 +2,7 @@ import { NavLink } from "react-router-dom";
 import { 
   LayoutDashboard, 
   CalendarDays, 
-  Settings2, 
+  Map, 
   Users,
   LogOut 
 } from "lucide-react";
@@ -15,7 +15,7 @@ const Sidebar = () => {
     { name: "Court Schedule", path: "/bookings", icon: CalendarDays },
     { name: "Statistics", path: "/dashboard", icon: LayoutDashboard },
     { name: "Users", path: "/users", icon: Users, roles: ["admin"] },
-    { name: "Settings", path: "/courts", icon: Settings2, roles: ["admin", "owner"] },
+    { name: "Courts", path: "/courts", icon: Map, roles: ["admin", "owner"] },
   ];
 
   return (

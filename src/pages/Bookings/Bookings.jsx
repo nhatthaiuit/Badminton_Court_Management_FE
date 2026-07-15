@@ -7,6 +7,7 @@ import Modal from "../../components/ui/Modal";
 import SharedScheduleGrid from "../../components/bookings/SharedScheduleGrid";
 import { socket } from "../../api/socket";
 import toast from "react-hot-toast";
+import { useAuth } from "../../hooks/useAuth";
 
 // Grid configuration
 const HOURS = Array.from({ length: 13 }, (_, i) => i + 9); // 09:00 - 21:00
