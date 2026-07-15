@@ -22,6 +22,7 @@ const Portal = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [note, setNote] = useState("");
 
   const fetchData = async () => {
     setLoading(true);
@@ -86,6 +87,7 @@ const Portal = () => {
     }
 
     setSelectedSlot({ court, startTime, endTime });
+    setNote("");
     setIsModalOpen(true);
   };
 
@@ -101,7 +103,7 @@ const Portal = () => {
         booking_date: selectedDate,
         start_time: selectedSlot.startTime,
         end_time: selectedSlot.endTime,
-        note: "Booked via Customer Portal"
+        note: note.trim() || "Booked via Customer Portal"
       });
       
       const newBookingId = res.data.data.booking_id;
@@ -190,6 +192,17 @@ const Portal = () => {
             </div>
 
             <form onSubmit={handleBookingConfirm}>
+              <div className="mb-4">
+                <label className="block text-sm font-medium text-gray-700 mb-1">Note to Staff (Optional)</label>
+                <textarea 
+                  value={note} 
+                  onChange={(e) => setNote(e.target.value)} 
+                  rows="2" 
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" 
+                  placeholder="E.g. I need to rent 2 rackets..."
+                ></textarea>
+              </div>
+
               <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
                 <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
                   Cancel
