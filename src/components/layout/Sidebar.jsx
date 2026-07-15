@@ -14,7 +14,7 @@ const Sidebar = () => {
   const navItems = [
     { name: "Court Schedule", path: "/bookings", icon: CalendarDays },
     { name: "Statistics", path: "/dashboard", icon: LayoutDashboard },
-    { name: "Users", path: "/users", icon: Users, roles: ["admin"] },
+    { name: "Users", path: "/users", icon: Users, roles: ["admin", "owner", "staff"] },
     { name: "Courts", path: "/courts", icon: Map, roles: ["admin", "owner"] },
   ];
 
