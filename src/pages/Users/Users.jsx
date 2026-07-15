@@ -42,6 +42,10 @@ const Users = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!formData.email.endsWith("@gmail.com")) {
+      toast.error("Email must end with @gmail.com");
+      return;
+    }
     setSubmitting(true);
     try {
       await usersApi.create(formData);

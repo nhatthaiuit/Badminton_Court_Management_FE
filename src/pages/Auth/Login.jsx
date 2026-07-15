@@ -52,6 +52,10 @@ const Login = () => {
 
   const handleRegisterSubmit = async (e) => {
     e.preventDefault();
+    if (!regEmail.endsWith("@gmail.com")) {
+      toast.error("Email must end with @gmail.com");
+      return;
+    }
     setIsSubmitting(true);
 
     try {
