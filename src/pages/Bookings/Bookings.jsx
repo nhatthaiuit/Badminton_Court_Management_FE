@@ -96,6 +96,18 @@ const CourtScheduleDashboard = () => {
     setIsModalOpen(true);
   };
 
+  const handleSlotSelect = (court, startTime, endTime) => {
+    setFormData({ 
+      ...initialForm, 
+      court_id: court.court_id,
+      booking_date: currentDate.format("YYYY-MM-DD"),
+      start_time: startTime,
+      end_time: endTime
+    });
+    setBookingType("booking");
+    setIsModalOpen(true);
+  };
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -245,6 +257,7 @@ const CourtScheduleDashboard = () => {
         loading={loading}
         role={user?.role || "staff"}
         selectedDate={currentDate.format("YYYY-MM-DD")}
+        onSlotSelect={handleSlotSelect}
         onBookingClick={(booking) => setSelectedBooking(booking)}
       />
 

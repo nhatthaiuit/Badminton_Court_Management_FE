@@ -56,23 +56,36 @@ const Portal = () => {
     };
   }, [selectedDate]);
 
-  const handleSlotClick = (court, time) => {
-    // Check if slot is already booked
-    const isBooked = bookings.some(
-      b => b.court_id === court.court_id && b.start_time.startsWith(time)
-    );
-    
+  const handleSlotSelect = (court, startTime, endTime) => {
     // Check if slot is in the past (for today)
     const isPast = selectedDate === dayjs().format("YYYY-MM-DD") && 
-                   time < dayjs().format("HH:mm");
+                   startTime < dayjs().format("HH:mm");
 
-    if (isBooked || isPast) {
-      toast.error(isBooked ? "This slot is already booked." : "Cannot book past time slots.");
+    if (isPast) {
+      toast.error("Cannot book past time slots.");
       return;
     }
 
-    const endTime = `${(parseInt(time) + 1).toString().padStart(2, "0")}:00`;
-    setSelectedSlot({ court, startTime: time, endTime });
+    // Check for overlap with existing bookings
+    const startHour = parseInt(startTime.split(":")[0]);
+    const endHour = parseInt(endTime.split(":")[0]);
+    let hasOverlap = false;
+
+    for (let i = startHour; i < endHour; i++) {
+       const timeStr = `${i.toString().padStart(2, "0")}:00`;
+       const isBooked = bookings.some(b => b.court_id === court.court_id && b.start_time.startsWith(timeStr));
+       if (isBooked) {
+          hasOverlap = true;
+          break;
+       }
+    }
+
+    if (hasOverlap) {
+      toast.error("One or more selected slots are already booked.");
+      return;
+    }
+
+    setSelectedSlot({ court, startTime, endTime });
     setIsModalOpen(true);
   };
 
@@ -144,7 +157,7 @@ const Portal = () => {
           loading={loading}
           role="customer"
           selectedDate={selectedDate}
-          onEmptySlotClick={handleSlotClick}
+          onSlotSelect={handleSlotSelect}
         />
       </div>
 

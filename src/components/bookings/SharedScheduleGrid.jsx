@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { AlertCircle, Wrench } from "lucide-react";
 import dayjs from "dayjs";
 
@@ -14,9 +15,47 @@ const SharedScheduleGrid = ({
   loading = false,
   role = "customer", // "customer", "staff", "admin", "owner"
   selectedDate = dayjs().format("YYYY-MM-DD"), // Add selectedDate prop
-  onEmptySlotClick = () => {},
+  onSlotSelect = () => {},
   onBookingClick = () => {},
 }) => {
+  const [selectionStart, setSelectionStart] = useState(null);
+  const [selectionCurrent, setSelectionCurrent] = useState(null);
+
+  useEffect(() => {
+    const handleGlobalMouseUp = () => {
+      if (selectionStart && selectionCurrent) {
+        const minHour = Math.min(selectionStart.hour, selectionCurrent.hour);
+        const maxHour = Math.max(selectionStart.hour, selectionCurrent.hour);
+        const startTime = `${minHour.toString().padStart(2, "0")}:00`;
+        const endTime = `${(maxHour + 1).toString().padStart(2, "0")}:00`;
+
+        const court = courts.find(c => c.court_id === selectionStart.courtId);
+        if (court) {
+          onSlotSelect(court, startTime, endTime);
+        }
+      }
+      setSelectionStart(null);
+      setSelectionCurrent(null);
+    };
+
+    if (selectionStart) {
+      window.addEventListener("mouseup", handleGlobalMouseUp);
+    }
+    return () => {
+      window.removeEventListener("mouseup", handleGlobalMouseUp);
+    };
+  }, [selectionStart, selectionCurrent, courts, onSlotSelect]);
+
+  const handleMouseDown = (courtId, hour) => {
+    setSelectionStart({ courtId, hour });
+    setSelectionCurrent({ courtId, hour });
+  };
+
+  const handleMouseEnter = (courtId, hour) => {
+    if (selectionStart && selectionStart.courtId === courtId) {
+      setSelectionCurrent({ courtId, hour });
+    }
+  };
 
   const getPositionStyles = (startTime, endTime) => {
     const startObj = dayjs(`2000-01-01 ${startTime}`, "YYYY-MM-DD HH:mm:ss");
@@ -93,11 +132,12 @@ const SharedScheduleGrid = ({
                     return (
                       <div
                         key={`bg-${hour}`}
-                        onClick={() => onEmptySlotClick(court, timeStr)}
+                        onMouseDown={() => !isPast && handleMouseDown(court.court_id, hour)}
+                        onMouseEnter={() => !isPast && handleMouseEnter(court.court_id, hour)}
                         className={`absolute top-0 bottom-0 border-r border-gray-100 transition-colors ${
                           isPast 
                             ? 'bg-gray-100 cursor-not-allowed bg-[url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMOCA4Wk04IDBMMCA4WiIgc3Ryb2tlPSIjZTllOWU5IiBzdHJva2Utd2lkdGg9IjEiPjwvcGF0aD4KPC9zdmc+")] opacity-60' 
-                            : 'hover:bg-primary-50'
+                            : 'hover:bg-primary-50 cursor-crosshair'
                         }`}
                         style={{ 
                           left: `${idx * HOUR_WIDTH}px`,
@@ -180,6 +220,17 @@ const SharedScheduleGrid = ({
                           </div>
                         );
                       })}
+
+                      {/* Drag Selection Overlay */}
+                      {selectionStart && selectionCurrent && selectionStart.courtId === court.court_id && (
+                        <div
+                          className="absolute top-1 bottom-1 bg-primary-100 border-2 border-primary-400 opacity-60 z-20 pointer-events-none rounded-md"
+                          style={{
+                            left: `${(Math.min(selectionStart.hour, selectionCurrent.hour) - START_HOUR) * HOUR_WIDTH}px`,
+                            width: `${(Math.abs(selectionStart.hour - selectionCurrent.hour) + 1) * HOUR_WIDTH}px`
+                          }}
+                        ></div>
+                      )}
                     </>
                   )}
                 </div>
