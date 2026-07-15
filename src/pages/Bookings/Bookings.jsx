@@ -181,20 +181,6 @@ const CourtScheduleDashboard = () => {
     }
   };
 
-  const handleProcessRefund = async () => {
-    if (!selectedBooking) return;
-    if (window.confirm("Have you successfully transferred the refund back to the customer?")) {
-      try {
-        await bookingsApi.processRefund(selectedBooking.booking_id);
-        toast.success("Refund processed successfully!");
-        setSelectedBooking(null);
-        fetchScheduleData();
-      } catch (error) {
-        toast.error("Failed to process refund");
-      }
-    }
-  };
-
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col max-h-[calc(100vh-8rem)]">
       {/* Toolbar */}
@@ -230,10 +216,6 @@ const CourtScheduleDashboard = () => {
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full bg-green-100 border border-green-300"></div>
               <span className="text-gray-600">Paid</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-purple-100 border border-purple-300"></div>
-              <span className="text-gray-600">Refunding</span>
             </div>
             <div className="flex items-center gap-1.5">
               <div className="w-3 h-3 rounded-full bg-gray-100 border border-gray-300 border-dashed"></div>
@@ -368,14 +350,10 @@ const CourtScheduleDashboard = () => {
                   <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
                     selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' 
                     : selectedBooking.status === 'confirmed' ? 'bg-green-100 text-green-800'
-                    : selectedBooking.status === 'refunding' ? 'bg-purple-100 text-purple-800'
-                    : selectedBooking.status === 'refunded' ? 'bg-gray-100 text-gray-800'
                     : 'bg-red-100 text-red-800'
                   }`}>
                     {selectedBooking.status === 'pending' ? 'Pending Payment' 
                      : selectedBooking.status === 'confirmed' ? 'Paid'
-                     : selectedBooking.status === 'refunding' ? 'Refunding'
-                     : selectedBooking.status === 'refunded' ? 'Refunded'
                      : 'Cancelled'}
                   </span>
                 ) : (
@@ -406,19 +384,6 @@ const CourtScheduleDashboard = () => {
               </div>
             )}
 
-            {selectedBooking.status === 'refunding' && selectedBooking.refund_account && (
-              <div className="bg-purple-50 border border-purple-200 rounded-lg p-4 text-sm mt-4">
-                <div className="flex items-center gap-2 text-purple-800 font-bold mb-2">
-                  <Wallet className="h-4 w-4" />
-                  <p>Customer Refund Account Details:</p>
-                </div>
-                <div className="text-purple-900 bg-white p-3 rounded border border-purple-100 whitespace-pre-wrap font-mono">
-                  {selectedBooking.refund_account}
-                </div>
-                <p className="text-purple-600 mt-2 text-xs">Please manually transfer the refund to this account, then click "Confirm Refund Sent" below.</p>
-              </div>
-            )}
-
             {selectedBooking.customer_name !== "Maintenance Block" && selectedBooking.status === 'pending' && dayjs(`${selectedBooking.booking_date} ${selectedBooking.start_time}`).diff(dayjs(), 'minute') <= 60 && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex gap-3 text-red-800">
                 <AlertCircle className="h-5 w-5 flex-shrink-0" />
@@ -446,15 +411,6 @@ const CourtScheduleDashboard = () => {
                 >
                   <CheckCircle className="h-4 w-4" />
                   Mark as PAID
-                </button>
-              )}
-              {selectedBooking.status === 'refunding' && (
-                <button 
-                  onClick={handleProcessRefund} 
-                  className="px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition flex items-center gap-2 shadow-sm"
-                >
-                  <CheckCircle className="h-4 w-4" />
-                  Confirm Refund Sent
                 </button>
               )}
             </div>
