@@ -13,6 +13,7 @@ const Users = () => {
   // Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [editingUserId, setEditingUserId] = useState(null);
   
   const initialForm = {
     full_name: "",
@@ -42,20 +43,47 @@ const Users = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const canEditUser = (targetRole) => {
+    if (user?.role === "admin") return true;
+    if (user?.role === "owner" && (targetRole === "staff" || targetRole === "customer")) return true;
+    if (user?.role === "staff" && targetRole === "customer") return true;
+    return false;
+  };
+
+  const openEditModal = (targetUser) => {
+    setEditingUserId(targetUser.user_id);
+    setFormData({
+      full_name: targetUser.full_name,
+      email: targetUser.email,
+      phone: targetUser.phone,
+      password: "", // Leave empty if not changing
+      role: targetUser.role
+    });
+    setIsModalOpen(true);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!formData.email.endsWith("@gmail.com")) {
+    if (formData.email && !formData.email.endsWith("@gmail.com")) {
       toast.error("Email must end with @gmail.com");
       return;
     }
     setSubmitting(true);
     try {
-      await usersApi.create(formData);
-      toast.success("User created successfully!");
+      if (editingUserId) {
+        // If password is empty, don't send it to avoid overwriting with empty string
+        const submitData = { ...formData };
+        if (!submitData.password) delete submitData.password;
+        await usersApi.update(editingUserId, submitData);
+        toast.success("User updated successfully!");
+      } else {
+        await usersApi.create(formData);
+        toast.success("User created successfully!");
+      }
       setIsModalOpen(false);
       fetchUsers();
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to create user");
+      toast.error(error.response?.data?.message || "Failed to save user");
     } finally {
       setSubmitting(false);
     }
@@ -79,6 +107,7 @@ const Users = () => {
           </div>
           <button 
             onClick={() => {
+              setEditingUserId(null);
               setFormData(initialForm);
               setIsModalOpen(true);
             }}
@@ -132,12 +161,16 @@ const Users = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                    <button className="text-blue-600 hover:text-blue-900 mr-4 transition-colors" title="Edit Role">
-                      <ShieldAlert className="h-4 w-4 inline" />
-                    </button>
-                    <button className="text-gray-400 hover:text-gray-900 transition-colors" title="Edit User">
-                      <Edit2 className="h-4 w-4 inline" />
-                    </button>
+                    {canEditUser(user.role) && (
+                      <>
+                        <button onClick={() => openEditModal(user)} className="text-blue-600 hover:text-blue-900 mr-4 transition-colors" title="Edit Role">
+                          <ShieldAlert className="h-4 w-4 inline" />
+                        </button>
+                        <button onClick={() => openEditModal(user)} className="text-gray-400 hover:text-gray-900 transition-colors" title="Edit User">
+                          <Edit2 className="h-4 w-4 inline" />
+                        </button>
+                      </>
+                    )}
                   </td>
                 </tr>
               ))}
@@ -146,8 +179,8 @@ const Users = () => {
         </div>
       </div>
 
-      {/* Add User Modal */}
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Add New User">
+      {/* Add/Edit User Modal */}
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingUserId ? "Edit User" : "Add New User"}>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Full Name <span className="text-red-500">*</span></label>
@@ -182,8 +215,8 @@ const Users = () => {
               </select>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Password <span className="text-red-500">*</span></label>
-              <input type="password" name="password" required value={formData.password} onChange={handleChange} minLength="6" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Min 6 chars" />
+              <label className="block text-sm font-medium text-gray-700 mb-1">Password {editingUserId ? "" : <span className="text-red-500">*</span>}</label>
+              <input type="password" name="password" required={!editingUserId} value={formData.password} onChange={handleChange} minLength="6" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder={editingUserId ? "Leave empty to keep" : "Min 6 chars"} />
             </div>
           </div>
 
@@ -192,7 +225,7 @@ const Users = () => {
               Cancel
             </button>
             <button type="submit" disabled={submitting} className="px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-70">
-              {submitting ? "Saving..." : "Create User"}
+              {submitting ? "Saving..." : (editingUserId ? "Save Changes" : "Create User")}
             </button>
           </div>
         </form>
