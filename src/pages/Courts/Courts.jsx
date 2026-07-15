@@ -22,7 +22,8 @@ const Courts = () => {
   const fetchCourts = async () => {
     try {
       const res = await courtsApi.getAll();
-      setCourts(res.data.data);
+      const courtsData = res.data?.data || res.data || [];
+      setCourts(Array.isArray(courtsData) ? courtsData : []);
     } catch (error) {
       console.error("Failed to fetch courts", error);
     } finally {
@@ -126,7 +127,7 @@ const Courts = () => {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {courts.map((court) => (
+              {(courts || []).map((court) => (
                 <tr key={court.court_id} className="hover:bg-gray-50 transition-colors">
                   <td className="px-6 py-4 whitespace-nowrap">
                     <div className="text-sm font-bold text-gray-900">{court.name}</div>
@@ -155,7 +156,7 @@ const Courts = () => {
                   </td>
                 </tr>
               ))}
-              {courts.length === 0 && (
+              {(courts || []).length === 0 && (
                 <tr>
                   <td colSpan="3" className="px-6 py-8 text-center text-gray-500">
                     No courts found. Click "Add Court" to create one.
