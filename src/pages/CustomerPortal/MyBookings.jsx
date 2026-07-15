@@ -33,6 +33,9 @@ const MyBookings = () => {
   const [cancellingBooking, setCancellingBooking] = useState(null);
   const [refundInfo, setRefundInfo] = useState({ bank_name: "", account_number: "", account_name: "" });
   const [submitting, setSubmitting] = useState(false);
+  
+  // View Details Modal
+  const [viewBooking, setViewBooking] = useState(null);
 
   useEffect(() => {
     fetchMyBookings();
@@ -121,7 +124,8 @@ const MyBookings = () => {
           bookings.map((booking) => (
             <div 
               key={booking.booking_id} 
-              className="group bg-white rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-xl border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:-translate-y-1"
+              onClick={() => setViewBooking(booking)}
+              className="group bg-white rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-xl border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -147,8 +151,8 @@ const MyBookings = () => {
               <div className="flex flex-col sm:flex-row gap-3 mt-4 sm:mt-0">
                 {booking.status === "pending" && (
                   <button
-                    onClick={() => navigate(`/portal/payment/${booking.booking_id}`)}
-                    className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-xl shadow hover:shadow-md transition-all hover:scale-105 whitespace-nowrap"
+                    onClick={(e) => { e.stopPropagation(); navigate(`/portal/payment/${booking.booking_id}`); }}
+                    className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-500 text-white font-bold rounded-xl shadow hover:shadow-md transition-all hover:scale-105 whitespace-nowrap z-10"
                   >
                     Pay Now
                   </button>
@@ -156,8 +160,8 @@ const MyBookings = () => {
                 
                 {booking.status === "confirmed" && dayjs(`${dayjs(booking.booking_date).format('YYYY-MM-DD')}T${booking.start_time}`).diff(dayjs(), 'hour') >= 2 && (
                   <button
-                    onClick={() => initiateCancel(booking)}
-                    className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-red-100 text-red-600 hover:bg-red-50 font-bold rounded-xl shadow-sm hover:shadow transition-all whitespace-nowrap"
+                    onClick={(e) => { e.stopPropagation(); initiateCancel(booking); }}
+                    className="flex items-center gap-2 px-4 py-2 bg-white border-2 border-red-100 text-red-600 hover:bg-red-50 font-bold rounded-xl shadow-sm hover:shadow transition-all whitespace-nowrap z-10"
                   >
                     <XCircle className="h-4 w-4" /> Cancel
                   </button>
@@ -170,6 +174,55 @@ const MyBookings = () => {
           ))
         )}
       </div>
+
+      {/* View Booking Details Modal */}
+      {viewBooking && (
+        <Modal isOpen={!!viewBooking} onClose={() => setViewBooking(null)} title="Booking Details">
+          <div className="space-y-6">
+            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
+              <div className="flex justify-between items-start mb-4">
+                <h3 className="text-xl font-bold text-gray-900">{viewBooking.court_name}</h3>
+                {getStatusBadge(viewBooking.status)}
+              </div>
+              <div className="grid grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="text-gray-500 mb-1">Date</p>
+                  <p className="font-semibold text-gray-900">{dayjs(viewBooking.booking_date).format("dddd, MMM D, YYYY")}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 mb-1">Time</p>
+                  <p className="font-semibold text-gray-900">{viewBooking.start_time.slice(0,5)} - {viewBooking.end_time.slice(0,5)}</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 mb-1">Total Price</p>
+                  <p className="font-bold text-primary-600 text-lg">{parseInt(viewBooking.total_price).toLocaleString()} VND</p>
+                </div>
+                <div>
+                  <p className="text-gray-500 mb-1">Booking ID</p>
+                  <p className="font-semibold text-gray-900">#{viewBooking.booking_id}</p>
+                </div>
+              </div>
+            </div>
+
+            {viewBooking.note && (
+              <div className="text-sm border-t border-gray-100 pt-4">
+                <p className="text-gray-500 mb-1">Notes:</p>
+                <p className="text-gray-800 bg-gray-50 p-3 rounded-lg border border-gray-100">{viewBooking.note}</p>
+              </div>
+            )}
+            
+            <div className="text-xs text-gray-400 text-right">
+               Created at: {dayjs(viewBooking.created_at).format("DD/MM/YYYY HH:mm")}
+            </div>
+
+            <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+              <button type="button" onClick={() => setViewBooking(null)} className="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
+                Close
+              </button>
+            </div>
+          </div>
+        </Modal>
+      )}
 
       {/* Cancel & Refund Modal */}
       <Modal isOpen={isCancelModalOpen} onClose={() => setIsCancelModalOpen(false)} title="Cancel Booking & Refund">
