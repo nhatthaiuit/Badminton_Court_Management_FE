@@ -2,15 +2,13 @@ import { useState, useEffect } from "react";
 import dayjs from "dayjs";
 import { bookingsApi } from "../../api/bookingsApi";
 import { courtsApi } from "../../api/courtsApi";
-import { ChevronLeft, ChevronRight, Calendar, Plus, PhoneCall, CheckCircle, AlertCircle, Wrench, Wallet } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Plus, PhoneCall, CheckCircle, AlertCircle, Wrench } from "lucide-react";
 import Modal from "../../components/ui/Modal";
 import SharedScheduleGrid from "../../components/bookings/SharedScheduleGrid";
 import { socket } from "../../api/socket";
 import toast from "react-hot-toast";
 import { useAuth } from "../../hooks/useAuth";
 
-// Grid configuration
-const HOURS = Array.from({ length: 13 }, (_, i) => i + 9); // 09:00 - 21:00
 const HOUR_WIDTH = 112; // 112px per hour
 
 const CourtScheduleDashboard = () => {
@@ -70,21 +68,7 @@ const CourtScheduleDashboard = () => {
       socket.off("schedule_updated");
       socket.disconnect();
     };
-  }, [currentDate]);
-
-  const getPositionStyles = (startTime, endTime) => {
-    const startObj = dayjs(`2000-01-01 ${startTime}`, "YYYY-MM-DD HH:mm:ss");
-    const endObj = dayjs(`2000-01-01 ${endTime}`, "YYYY-MM-DD HH:mm:ss");
-    const baseObj = dayjs(`2000-01-01 09:00:00`, "YYYY-MM-DD HH:mm:ss");
-    const startMinutes = startObj.diff(baseObj, "minute");
-    const durationMinutes = endObj.diff(startObj, "minute");
-    const pixelsPerMinute = HOUR_WIDTH / 60;
-
-    return {
-      left: `${startMinutes * pixelsPerMinute}px`,
-      width: `${durationMinutes * pixelsPerMinute}px`,
-    };
-  };
+  }, [fetchScheduleData]);
 
   const nextDay = () => setCurrentDate((prev) => prev.add(1, "day"));
   const prevDay = () => setCurrentDate((prev) => prev.subtract(1, "day"));
@@ -162,7 +146,8 @@ const CourtScheduleDashboard = () => {
       toast.success("Payment marked as PAID (Confirmed)!");
       setSelectedBooking(null);
       fetchScheduleData();
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       toast.error("Failed to update status");
     }
   };
@@ -175,7 +160,8 @@ const CourtScheduleDashboard = () => {
         toast.success("Removed successfully!");
         setSelectedBooking(null);
         fetchScheduleData();
-      } catch (error) {
+      } catch (err) {
+        console.error(err);
         toast.error("Failed to cancel");
       }
     }

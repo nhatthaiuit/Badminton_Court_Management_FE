@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axiosInstance from "../../api/axiosInstance";
-import { Clock, CreditCard, CheckCircle, AlertCircle, ArrowRight } from "lucide-react";
+import { Clock, CreditCard, AlertCircle, ArrowRight } from "lucide-react";
 import toast from "react-hot-toast";
 import dayjs from "dayjs";
 
@@ -16,7 +16,7 @@ const Payment = () => {
 
   useEffect(() => {
     fetchBookingDetails();
-  }, [bookingId]);
+  }, [bookingId, fetchBookingDetails]);
 
   const fetchBookingDetails = async () => {
     try {
@@ -43,7 +43,8 @@ const Payment = () => {
         toast.error("Payment timeout. Booking cancelled.");
         navigate("/portal/my-bookings", { replace: true });
       }
-    } catch (error) {
+    } catch (err) {
+      console.error(err);
       toast.error("Failed to load booking details");
       navigate("/portal", { replace: true });
     } finally {

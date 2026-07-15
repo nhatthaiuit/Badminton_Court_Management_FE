@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import dayjs from "dayjs";
 import { courtsApi } from "../../api/courtsApi";
@@ -24,7 +24,7 @@ const Portal = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [note, setNote] = useState("");
 
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     setLoading(true);
     try {
       const [courtsRes, bookingsRes] = await Promise.all([
@@ -39,11 +39,11 @@ const Portal = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedDate]);
 
   useEffect(() => {
     fetchData();
-  }, [selectedDate]);
+  }, [fetchData]);
 
   // Socket.io Listener
   useEffect(() => {
@@ -55,7 +55,7 @@ const Portal = () => {
       socket.off("schedule_updated");
       socket.disconnect();
     };
-  }, [selectedDate]);
+  }, [fetchData]);
 
   const handleSlotSelect = (court, startTime, endTime) => {
     // Check if slot is in the past (for today)

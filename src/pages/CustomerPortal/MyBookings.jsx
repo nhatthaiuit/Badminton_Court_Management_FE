@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { bookingsApi } from "../../api/bookingsApi";
 import { useAuth } from "../../hooks/useAuth";
 import dayjs from "dayjs";
-import { Calendar, Clock, CreditCard, XCircle, AlertCircle } from "lucide-react";
-import toast from "react-hot-toast";
+import { Calendar, Clock, CreditCard } from "lucide-react";
 import Modal from "../../components/ui/Modal";
 
 const MyBookings = () => {
@@ -29,14 +28,14 @@ const MyBookings = () => {
     }
   };
 
-  const [submitting, setSubmitting] = useState(false);
+
   
   // View Details Modal
   const [viewBooking, setViewBooking] = useState(null);
 
   useEffect(() => {
     fetchMyBookings();
-  }, []);
+  }, [fetchMyBookings]);
 
   const getStatusBadge = (status) => {
     switch (status) {
