@@ -7,6 +7,9 @@
 
 A modern, real-time Badminton Court Booking and Management System built with React, Vite, and Tailwind CSS.
 
+## 📖 Comprehensive Documentation
+For detailed system architecture, diagrams, flowcharts, and full project descriptions, please visit our **[Notion Workspace](https://app.notion.com/p/Badminton-Court-Management-System-3849f49bca6d8032a1b6d16c2a71ce08?source=copy_link)**.
+
 ## 🚀 Features
 
 - **Real-Time Schedule Syncing**: Powered by Socket.io, the court schedule updates instantly across all active clients when a booking is made or canceled.
