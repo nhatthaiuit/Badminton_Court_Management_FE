@@ -14,7 +14,7 @@ For detailed system architecture, diagrams, flowcharts, and full project descrip
 **[https://badminton-court-management.vercel.app](https://badminton-court-management.vercel.app)**
 
 ### 🔐 Test Accounts (For Recruiters/Testers)
-- **Admin**: `nhatthaiuit@gmail.com` / `Admin@123`
+- **Admin**: `0388874855` / `123456`
 - **Customer**: Feel free to register a new account via the `/auth/register` API or the Sign Up page.
 
 ## 🚀 Features
