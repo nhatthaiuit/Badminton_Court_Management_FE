@@ -13,6 +13,10 @@ For detailed system architecture, diagrams, flowcharts, and full project descrip
 ## 🌐 Live Demo
 **[https://badminton-court-management.vercel.app](https://badminton-court-management.vercel.app)**
 
+### 🔐 Test Accounts (For Recruiters/Testers)
+- **Admin**: `nhatthaiuit@gmail.com` / `Admin@123`
+- **Customer**: Feel free to register a new account via the `/auth/register` API or the Sign Up page.
+
 ## 🚀 Features
 
 - **Real-Time Schedule Syncing**: Powered by Socket.io, the court schedule updates instantly across all active clients when a booking is made or canceled.
