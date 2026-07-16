@@ -156,13 +156,13 @@ const CourtScheduleDashboard = () => {
     if (!selectedBooking) return;
     if (window.confirm("Are you sure you want to remove this maintenance block?")) {
       try {
-        await bookingsApi.cancel(selectedBooking.booking_id);
+        await bookingsApi.updateStatus(selectedBooking.booking_id, "cancelled");
         toast.success("Removed successfully!");
         setSelectedBooking(null);
         fetchScheduleData();
       } catch (err) {
         console.error(err);
-        toast.error("Failed to cancel");
+        toast.error("Failed to remove maintenance block");
       }
     }
   };

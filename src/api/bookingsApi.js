@@ -10,6 +10,4 @@ export const bookingsApi = {
   getById: (id) => api.get(`/bookings/${id}`),
   create: (data) => api.post("/bookings", data),
   updateStatus: (id, status) => api.patch(`/bookings/${id}/status`, { status }),
-  requestCancel: (id, data) => api.patch(`/bookings/${id}/cancel`, data),
-  processRefund: (id) => api.post(`/bookings/${id}/refund`),
 };
