@@ -11,7 +11,7 @@ A modern, real-time Badminton Court Booking and Management System built with Rea
 For detailed system architecture, diagrams, flowcharts, and full project descriptions, please visit our **[Notion Workspace](https://app.notion.com/p/Badminton-Court-Management-System-3849f49bca6d8032a1b6d16c2a71ce08?source=copy_link)**.
 
 ## 🌐 Live Demo
-**[Insert your live Vercel link here once deployed]**
+**[https://badminton-court-management.vercel.app](https://badminton-court-management.vercel.app)**
 
 ## 🚀 Features
 
@@ -39,7 +39,7 @@ For detailed system architecture, diagrams, flowcharts, and full project descrip
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/Badminton_Court_Management_FE.git
+   git clone https://github.com/nhatthaiuit/Badminton_Court_Management_FE.git
    cd Badminton_Court_Management_FE
    ```
 
