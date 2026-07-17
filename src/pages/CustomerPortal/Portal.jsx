@@ -214,7 +214,7 @@ const Portal = () => {
             <p className="text-sm text-gray-500">Pick a day to view court availability</p>
           </div>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto mt-4 sm:mt-0">
           <input 
             type="date" 
             value={selectedDate}

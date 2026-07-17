@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Outlet, NavLink } from "react-router-dom";
-import { CalendarDays, LogOut, User as UserIcon } from "lucide-react";
+import { LogOut, User as UserIcon, Menu, X } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
 const CustomerLayout = () => {
   const { user, logout } = useAuth();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-gray-50 to-blue-50/50 flex flex-col font-sans">
@@ -43,7 +45,7 @@ const CustomerLayout = () => {
                 </div>
                 <button
                   onClick={logout}
-                  className="p-2 text-gray-400 hover:text-red-600 transition-colors"
+                  className="p-2 text-gray-400 hover:text-red-600 transition-colors hidden md:block"
                   title="Logout"
                 >
                   <LogOut className="h-5 w-5" />
@@ -52,14 +54,66 @@ const CustomerLayout = () => {
             ) : (
               <NavLink
                 to="/login"
-                className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition"
+                className="hidden md:flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition"
               >
                 <UserIcon className="h-4 w-4" />
                 Sign In
               </NavLink>
             )}
+
+            {/* Mobile Menu Toggle */}
+            <button 
+              className="md:hidden p-2 text-gray-600 hover:text-primary-600 transition-colors"
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+            >
+              {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+            </button>
           </div>
         </div>
+
+        {/* Mobile Navigation Menu */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden absolute top-16 left-0 right-0 bg-white border-b border-gray-200 shadow-lg animate-in slide-in-from-top-2">
+            <nav className="flex flex-col p-4 space-y-2">
+              <NavLink 
+                to="/portal" 
+                end
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) => `px-4 py-3 rounded-lg transition-colors ${isActive ? 'bg-primary-50 text-primary-700 font-bold' : 'text-gray-600 font-medium hover:bg-gray-50'}`}
+              >
+                Book Court
+              </NavLink>
+              <NavLink 
+                to="/portal/my-bookings" 
+                onClick={() => setIsMobileMenuOpen(false)}
+                className={({ isActive }) => `px-4 py-3 rounded-lg transition-colors ${isActive ? 'bg-primary-50 text-primary-700 font-bold' : 'text-gray-600 font-medium hover:bg-gray-50'}`}
+              >
+                My Bookings
+              </NavLink>
+              
+              {!user && (
+                <NavLink
+                  to="/login"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                  className="flex items-center gap-2 px-4 py-3 mt-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition"
+                >
+                  <UserIcon className="h-4 w-4" />
+                  Sign In
+                </NavLink>
+              )}
+              
+              {user && (
+                <button
+                  onClick={() => { logout(); setIsMobileMenuOpen(false); }}
+                  className="flex items-center gap-2 px-4 py-3 mt-2 text-red-600 hover:bg-red-50 rounded-lg font-medium transition-colors text-left"
+                >
+                  <LogOut className="h-4 w-4" />
+                  Logout
+                </button>
+              )}
+            </nav>
+          </div>
+        )}
       </header>
 
       <main className="flex-1 max-w-7xl w-full mx-auto p-4 sm:p-6 lg:p-8">

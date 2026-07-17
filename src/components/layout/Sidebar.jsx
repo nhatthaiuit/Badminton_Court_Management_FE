@@ -8,7 +8,7 @@ import {
 } from "lucide-react";
 import { useAuth } from "../../hooks/useAuth";
 
-const Sidebar = () => {
+const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
   const { user, logout } = useAuth();
 
   const navItems = [
@@ -19,7 +19,15 @@ const Sidebar = () => {
   ];
 
   return (
-    <aside className="w-64 bg-[#1e293b] text-white flex flex-col h-screen fixed left-0 top-0 hidden md:flex z-50">
+    <>
+      {/* Mobile backdrop */}
+      {isMobileMenuOpen && (
+        <div 
+          className="fixed inset-0 bg-black/50 z-40 md:hidden transition-opacity"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+      <aside className={`w-64 bg-[#1e293b] text-white flex flex-col h-screen fixed left-0 top-0 z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Logo Area */}
       <div className="h-20 flex items-center px-6 border-b border-gray-800 font-bold tracking-wider">
         <div className="flex items-center gap-3">
@@ -40,6 +48,7 @@ const Sidebar = () => {
             <NavLink
               key={item.name}
               to={item.path}
+              onClick={() => setIsMobileMenuOpen && setIsMobileMenuOpen(false)}
               className={({ isActive }) =>
                 `flex items-center gap-3 px-4 py-3 rounded-lg font-medium transition-colors ${
                   isActive
@@ -69,6 +78,7 @@ const Sidebar = () => {
         </div>
       </div>
     </aside>
+    </>
   );
 };
 
