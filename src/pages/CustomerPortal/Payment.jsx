@@ -28,11 +28,18 @@ const Payment = () => {
         
         setBooking(data);
         
-        // Calculate time left based on created_at
-        const createdTime = dayjs(data.created_at);
-        const now = dayjs();
-        const diffSecs = now.diff(createdTime, "second");
-        const remaining = Math.max(0, 900 - diffSecs);
+        // Calculate time left safely bypassing timezone mismatches
+        let remaining = 0;
+        if (data.remaining_seconds !== undefined && data.remaining_seconds !== null) {
+          remaining = Math.max(0, data.remaining_seconds);
+        } else {
+          // Fallback: Assume DB string is UTC by appending 'Z'
+          const createdString = data.created_at.includes('Z') ? data.created_at : data.created_at + 'Z';
+          const createdTime = dayjs(createdString);
+          const now = dayjs();
+          const diffSecs = now.diff(createdTime, "second");
+          remaining = Math.max(0, 900 - diffSecs);
+        }
         
         setTimeLeft(remaining);
         
