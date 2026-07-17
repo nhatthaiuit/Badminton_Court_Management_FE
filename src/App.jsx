@@ -19,6 +19,8 @@ import Payment from "./pages/CustomerPortal/Payment";
 
 import { useAuth } from "./hooks/useAuth";
 
+import ErrorBoundary from "./components/common/ErrorBoundary";
+
 const RootRedirect = () => {
   const { user } = useAuth();
   if (user?.role === "admin" || user?.role === "owner") {
@@ -31,10 +33,11 @@ const RootRedirect = () => {
 
 function App() {
   return (
-    <AuthProvider>
-      <BrowserRouter>
-        <Toaster position="top-right" />
-        <Routes>
+    <ErrorBoundary>
+      <AuthProvider>
+        <BrowserRouter>
+          <Toaster position="top-right" />
+          <Routes>
           {/* Public Routes */}
           <Route path="/login" element={<Login />} />
           <Route path="/reset-password" element={<ResetPassword />} />
@@ -71,8 +74,9 @@ function App() {
           {/* Catch all 404 */}
           <Route path="*" element={<NotFound />} />
         </Routes>
-      </BrowserRouter>
-    </AuthProvider>
+        </BrowserRouter>
+      </AuthProvider>
+    </ErrorBoundary>
   );
 }
 

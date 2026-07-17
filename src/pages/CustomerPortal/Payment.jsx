@@ -15,42 +15,43 @@ const Payment = () => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
-    fetchBookingDetails();
-  }, [bookingId, fetchBookingDetails]);
+    const fetchBookingDetails = async () => {
+      try {
+        const response = await axiosInstance.get(`/bookings/${bookingId}`);
+        const data = response.data.data;
+        
+        if (data.status !== "pending") {
+          toast.error("This booking has already been processed.");
+          navigate("/portal/my-bookings", { replace: true });
+          return;
+        }
+        
+        setBooking(data);
+        
+        // Calculate time left based on created_at
+        const createdTime = dayjs(data.created_at);
+        const now = dayjs();
+        const diffSecs = now.diff(createdTime, "second");
+        const remaining = Math.max(0, 900 - diffSecs);
+        
+        setTimeLeft(remaining);
+        
+        if (remaining === 0) {
+          toast.error("Payment timeout. Booking cancelled.");
+          navigate("/portal/my-bookings", { replace: true });
+        }
+      } catch (err) {
+        console.error(err);
+        toast.error("Failed to load booking details");
+        navigate("/portal", { replace: true });
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const fetchBookingDetails = async () => {
-    try {
-      const response = await axiosInstance.get(`/bookings/${bookingId}`);
-      const data = response.data.data;
-      
-      if (data.status !== "pending") {
-        toast.error("This booking has already been processed.");
-        navigate("/portal/my-bookings", { replace: true });
-        return;
-      }
-      
-      setBooking(data);
-      
-      // Calculate time left based on created_at
-      const createdTime = dayjs(data.created_at);
-      const now = dayjs();
-      const diffSecs = now.diff(createdTime, "second");
-      const remaining = Math.max(0, 900 - diffSecs);
-      
-      setTimeLeft(remaining);
-      
-      if (remaining === 0) {
-        toast.error("Payment timeout. Booking cancelled.");
-        navigate("/portal/my-bookings", { replace: true });
-      }
-    } catch (err) {
-      console.error(err);
-      toast.error("Failed to load booking details");
-      navigate("/portal", { replace: true });
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchBookingDetails();
+  }, [bookingId, navigate]);
+  // Removed duplicate fetchBookingDetails
 
   useEffect(() => {
     if (loading || !booking) return;
