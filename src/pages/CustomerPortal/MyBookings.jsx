@@ -19,7 +19,7 @@ const MyBookings = () => {
       const res = await bookingsApi.getAll();
       const userBookings = res.data.data.filter(
         (b) => b.customer_phone === user?.phone
-      ).sort((a, b) => dayjs(`${b.booking_date} ${b.start_time}`).diff(dayjs(`${a.booking_date} ${a.start_time}`)));
+      ).sort((a, b) => b.booking_id - a.booking_id);
       setBookings(userBookings);
     } catch (error) {
       console.error("Failed to fetch my bookings", error);
