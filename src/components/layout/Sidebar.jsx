@@ -21,7 +21,7 @@ const Sidebar = () => {
   return (
     <aside className="w-64 bg-[#1e293b] text-white flex flex-col h-screen fixed left-0 top-0 hidden md:flex z-50">
       {/* Logo Area */}
-      <div className="h-16 flex items-center px-6 border-b border-gray-800 font-bold tracking-wider">
+      <div className="h-20 flex items-center px-6 border-b border-gray-800 font-bold tracking-wider">
         <div className="flex items-center gap-3">
           <div className="bg-white rounded-full p-1 shadow-sm">
             <img src="/logo2.png" alt="BCMS Logo" className="h-12 w-12 object-contain" />

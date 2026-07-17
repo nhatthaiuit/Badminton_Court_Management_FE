@@ -4,9 +4,9 @@ import dayjs from "dayjs";
 
 const HOUR_WIDTH = 112; // 112px per hour
 
-// Start at 06:00, end at 22:00 (17 slots)
-const START_HOUR = 6;
-const END_HOUR = 22;
+// Start at 05:00, end at 23:30 (slots up to 23:00 column)
+const START_HOUR = 5;
+const END_HOUR = 23;
 const HOURS = Array.from({ length: END_HOUR - START_HOUR + 1 }, (_, i) => i + START_HOUR);
 
 const SharedScheduleGrid = ({
@@ -27,7 +27,13 @@ const SharedScheduleGrid = ({
         const minHour = Math.min(selectionStart.hour, selectionCurrent.hour);
         const maxHour = Math.max(selectionStart.hour, selectionCurrent.hour);
         const startTime = `${minHour.toString().padStart(2, "0")}:00`;
-        const endTime = `${(maxHour + 1).toString().padStart(2, "0")}:00`;
+        let endH = maxHour + 1;
+        let endTime = `${endH.toString().padStart(2, "0")}:00`;
+        
+        // Support closing at 23:30
+        if (endH === 24) {
+          endTime = "23:30";
+        }
 
         const court = courts.find(c => c.court_id === selectionStart.courtId);
         if (court) {
