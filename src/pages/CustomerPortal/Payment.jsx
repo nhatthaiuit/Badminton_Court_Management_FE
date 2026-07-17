@@ -128,14 +128,14 @@ const Payment = () => {
             <div className="flex justify-between items-start">
               <div>
                 <p className="text-sm text-gray-500">Time Slot</p>
-                <p className="font-semibold text-gray-900">{booking.start_time.slice(0,5)} - {booking.end_time.slice(0,5)}</p>
+                <p className="font-semibold text-gray-900">{booking?.start_time?.toString().slice(0,5)} - {booking?.end_time?.toString().slice(0,5)}</p>
               </div>
             </div>
           </div>
           
           <div className="border-t border-gray-100 pt-4 flex justify-between items-center">
             <span className="font-medium text-gray-600">Total Amount</span>
-            <span className="text-2xl font-bold text-primary-600">${Number(booking.total_price).toFixed(2)}</span>
+            <span className="text-2xl font-bold text-primary-600">${Number(booking?.total_price || 0).toFixed(2)}</span>
           </div>
         </div>
 
@@ -166,7 +166,7 @@ const Payment = () => {
           <div className="bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center border border-dashed border-gray-300">
             <div className="w-56 h-56 bg-white rounded-xl shadow-sm border border-gray-200 flex items-center justify-center mb-4 overflow-hidden p-2">
                <img 
-                 src={`https://img.vietqr.io/image/vcb-0123456789-compact2.png?amount=${Number(booking.total_price)}&addInfo=Thanh toan booking ${bookingId}&accountName=NGUYEN VAN A`} 
+                 src={`https://img.vietqr.io/image/vcb-0123456789-compact2.png?amount=${Number(booking?.total_price || 0)}&addInfo=Thanh toan booking ${bookingId}&accountName=NGUYEN VAN A`} 
                  alt="VietQR Code" 
                  className="w-full h-full object-contain"
                />
