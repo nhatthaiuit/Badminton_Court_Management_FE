@@ -29,7 +29,9 @@ For detailed system architecture, diagrams, flowcharts, and full project descrip
 
 ## 📸 Screenshots
 
-*(Add screenshots or GIFs of your Drag-to-Select and Real-time syncing here)*
+### 1. Real-Time Schedule Syncing & Drag-to-Select Booking
+<img width="800" height="500" alt="Real-time Booking Sync" src="https://github.com/user-attachments/assets/b0c995be-e931-4628-a209-773a7ef71b95" />
+> Lịch sân tự động đồng bộ ngay lập tức giữa Admin và Customer khi có người đặt sân mà không cần tải lại trang. Kèm theo trải nghiệm kéo thả để đặt lịch mượt mà.
 
 ## 🛠 Tech Stack
 
