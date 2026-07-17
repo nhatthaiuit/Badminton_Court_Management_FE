@@ -118,7 +118,7 @@ const SharedScheduleGrid = ({
             
             return (
               <div key={court.court_id} className="flex border-b border-gray-100 group hover:bg-gray-50 transition-colors">
-                <div className="w-32 flex-shrink-0 border-r border-gray-200 p-4 bg-white group-hover:bg-gray-50 sticky left-0 z-10 font-medium text-gray-800">
+                <div className="w-32 flex-shrink-0 border-r border-gray-200 p-4 bg-white group-hover:bg-gray-50 sticky left-0 z-20 font-medium text-gray-800">
                   {court.name}
                 </div>
                 
@@ -150,11 +150,11 @@ const SharedScheduleGrid = ({
 
                   {/* If entire court is inactive */}
                   {court.status === "inactive" ? (
-                    <div className="absolute inset-y-1 inset-x-2 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 font-medium z-10 pointer-events-none">
+                    <div className="absolute inset-y-1 inset-x-2 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 font-medium z-0 pointer-events-none">
                       Court Inactive
                     </div>
                   ) : court.status === "maintenance" ? (
-                    <div className="absolute inset-y-1 inset-x-2 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 font-medium z-10 pointer-events-none">
+                    <div className="absolute inset-y-1 inset-x-2 bg-gray-100 border-2 border-dashed border-gray-300 rounded-md flex items-center justify-center text-gray-500 font-medium z-0 pointer-events-none">
                       Court Under Maintenance
                     </div>
                   ) : (
