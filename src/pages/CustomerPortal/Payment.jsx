@@ -143,7 +143,7 @@ const Payment = () => {
           
           <div className="border-t border-gray-100 pt-4 flex justify-between items-center">
             <span className="font-medium text-gray-600">Total Amount</span>
-            <span className="text-2xl font-bold text-primary-600">${Number(booking?.total_price || 0).toFixed(2)}</span>
+            <span className="text-2xl font-bold text-primary-600">{Number(booking?.total_price || 0).toLocaleString()} VND</span>
           </div>
         </div>
 
