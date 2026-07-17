@@ -289,11 +289,11 @@ const CourtScheduleDashboard = () => {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Start Time <span className="text-red-500">*</span></label>
-              <input type="time" name="start_time" required value={formData.start_time} onChange={handleChange} min="05:00" max="23:30" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
+              <input type="time" name="start_time" required value={formData.start_time} onChange={handleChange} min="05:00" max="23:59" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">End Time <span className="text-red-500">*</span></label>
-              <input type="time" name="end_time" required value={formData.end_time} onChange={handleChange} min="05:00" max="23:30" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
+              <input type="time" name="end_time" required value={formData.end_time} onChange={handleChange} min="05:00" max="23:59" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
             </div>
           </div>
 

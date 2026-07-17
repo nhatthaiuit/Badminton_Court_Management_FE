@@ -29,11 +29,6 @@ const SharedScheduleGrid = ({
         const startTime = `${minHour.toString().padStart(2, "0")}:00`;
         let endH = maxHour + 1;
         let endTime = `${endH.toString().padStart(2, "0")}:00`;
-        
-        // Support closing at 23:30
-        if (endH === 24) {
-          endTime = "23:30";
-        }
 
         const court = courts.find(c => c.court_id === selectionStart.courtId);
         if (court) {
