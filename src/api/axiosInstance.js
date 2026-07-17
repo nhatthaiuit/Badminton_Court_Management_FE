@@ -36,7 +36,9 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response,
   (error) => {
-    if (error.response?.status === 401) {
+    const originalRequest = error.config;
+    // Do not intercept 401 for login endpoint so that the login form can show the error properly
+    if (error.response?.status === 401 && originalRequest.url !== '/auth/login') {
       localStorage.removeItem("bcms_token");
       localStorage.removeItem("bcms_user");
       window.location.href = "/login";
