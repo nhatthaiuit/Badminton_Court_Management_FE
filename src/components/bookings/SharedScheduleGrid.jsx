@@ -129,16 +129,20 @@ const SharedScheduleGrid = ({
                     
                     // Check if slot is in the past (only for today)
                     const isPast = selectedDate === dayjs().format("YYYY-MM-DD") && timeStr < dayjs().format("HH:mm");
+                    const isActive = court.status === "active";
+                    const isInteractable = !isPast && isActive;
 
                     return (
                       <div
                         key={`bg-${hour}`}
-                        onMouseDown={() => !isPast && handleMouseDown(court.court_id, hour)}
-                        onMouseEnter={() => !isPast && handleMouseEnter(court.court_id, hour)}
+                        onMouseDown={() => isInteractable && handleMouseDown(court.court_id, hour)}
+                        onMouseEnter={() => isInteractable && handleMouseEnter(court.court_id, hour)}
                         className={`absolute top-0 bottom-0 border-r border-gray-100 transition-colors ${
-                          isPast 
-                            ? 'bg-gray-100 cursor-not-allowed bg-[url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMOCA4Wk04IDBMMCA4WiIgc3Ryb2tlPSIjZTllOWU5IiBzdHJva2Utd2lkdGg9IjEiPjwvcGF0aD4KPC9zdmc+")] opacity-60' 
-                            : 'hover:bg-primary-50 cursor-crosshair'
+                          !isActive
+                            ? 'bg-gray-50'
+                            : isPast 
+                              ? 'bg-gray-100 cursor-not-allowed bg-[url("data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI4IiBoZWlnaHQ9IjgiPgo8cmVjdCB3aWR0aD0iOCIgaGVpZ2h0PSI4IiBmaWxsPSIjZmZmIj48L3JlY3Q+CjxwYXRoIGQ9Ik0wIDBMOCA4Wk04IDBMMCA4WiIgc3Ryb2tlPSIjZTllOWU5IiBzdHJva2Utd2lkdGg9IjEiPjwvcGF0aD4KPC9zdmc+")] opacity-60' 
+                              : 'hover:bg-primary-50 cursor-crosshair'
                         }`}
                         style={{ 
                           left: `${idx * HOUR_WIDTH}px`,
