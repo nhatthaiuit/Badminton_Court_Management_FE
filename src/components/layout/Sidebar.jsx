@@ -21,10 +21,12 @@ const Sidebar = () => {
   return (
     <aside className="w-64 bg-[#1e293b] text-white flex flex-col h-screen fixed left-0 top-0 hidden md:flex z-50">
       {/* Logo Area */}
-      <div className="h-16 flex items-center px-6 border-b border-gray-800 font-bold text-xl tracking-wider text-blue-400">
+      <div className="h-16 flex items-center px-6 border-b border-gray-800 font-bold tracking-wider">
         <div className="flex items-center gap-3">
-          <img src="/logo2.png" alt="BCMS Logo" className="h-12 w-12 object-contain" />
-          <span>BCMS</span>
+          <div className="bg-white rounded-full p-1 shadow-sm">
+            <img src="/logo2.png" alt="BCMS Logo" className="h-10 w-10 object-contain" />
+          </div>
+          <span className="text-2xl text-blue-400">BCMS</span>
         </div>
       </div>
 
