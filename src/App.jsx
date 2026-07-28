@@ -23,9 +23,14 @@ import ErrorBoundary from "./components/common/ErrorBoundary";
 
 const RootRedirect = () => {
   const { user } = useAuth();
-  if (user?.role === "admin" || user?.role === "owner") {
+  
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  
+  if (user.role === "admin" || user.role === "owner") {
     return <Navigate to="/dashboard" replace />;
-  } else if (user?.role === "customer") {
+  } else if (user.role === "customer") {
     return <Navigate to="/portal" replace />;
   }
   return <Navigate to="/bookings" replace />;

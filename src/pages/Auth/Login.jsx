@@ -143,7 +143,7 @@ const Login = () => {
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Phone className="h-5 w-5 text-gray-400" />
                   </div>
-                  <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="0901234567" />
+                  <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="0388874855" />
                 </div>
               </div>
               <div>
@@ -164,7 +164,7 @@ const Login = () => {
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Phone className="h-5 w-5 text-gray-400" />
                   </div>
-                  <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="0901234567" />
+                  <input type="tel" required value={phone} onChange={(e) => setPhone(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="0388874855" />
                 </div>
               </div>
 
@@ -201,7 +201,7 @@ const Login = () => {
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <User className="h-5 w-5 text-gray-400" />
                   </div>
-                  <input type="text" required value={regName} onChange={(e) => setRegName(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="John Doe" />
+                  <input type="text" required value={regName} onChange={(e) => setRegName(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="Nhat Thai" />
                 </div>
               </div>
 
@@ -221,7 +221,7 @@ const Login = () => {
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Phone className="h-5 w-5 text-gray-400" />
                   </div>
-                  <input type="tel" required value={regPhone} onChange={(e) => setRegPhone(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="0901234567" />
+                  <input type="tel" required value={regPhone} onChange={(e) => setRegPhone(e.target.value)} className="focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 sm:text-sm border-gray-300 rounded-md py-2 border" placeholder="0388874855" />
                 </div>
               </div>
 
