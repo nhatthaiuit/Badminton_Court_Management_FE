@@ -102,8 +102,8 @@ const Users = () => {
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
         <div className="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-50">
           <div>
-            <h2 className="text-xl font-bold text-gray-900">User Management</h2>
-            <p className="text-sm text-gray-500 mt-1">Manage staff and administrators</p>
+            <h2 className="text-xl font-bold text-gray-900">Account List</h2>
+            <p className="text-sm text-gray-500 mt-1">Manage customers, staff, and administrators</p>
           </div>
           <button 
             onClick={() => {
