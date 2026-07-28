@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { statsApi } from "../../api/statsApi";
+import { socket } from "../../api/socket";
 import { 
   Users, 
   Banknote, 
@@ -36,6 +37,26 @@ const Dashboard = () => {
     };
 
     fetchOverview();
+  }, []);
+
+  // Socket.io Listener for Real-time Updates
+  useEffect(() => {
+    socket.connect();
+    socket.on("schedule_updated", () => {
+      const refreshOverview = async () => {
+        try {
+          const response = await statsApi.getOverview();
+          setOverview(response.data.data);
+        } catch (error) {
+          console.error("Failed to refresh dashboard overview", error);
+        }
+      };
+      refreshOverview();
+    });
+    return () => {
+      socket.off("schedule_updated");
+      socket.disconnect();
+    };
   }, []);
 
   if (loading) {
