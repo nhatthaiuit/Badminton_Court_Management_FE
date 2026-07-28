@@ -163,9 +163,6 @@ const Users = () => {
                   <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                     {canEditUser(user.role) && (
                       <>
-                        <button onClick={() => openEditModal(user)} className="text-blue-600 hover:text-blue-900 mr-4 transition-colors" title="Edit Role">
-                          <ShieldAlert className="h-4 w-4 inline" />
-                        </button>
                         <button onClick={() => openEditModal(user)} className="text-gray-400 hover:text-gray-900 transition-colors" title="Edit User">
                           <Edit2 className="h-4 w-4 inline" />
                         </button>
