@@ -140,6 +140,13 @@ const Portal = () => {
       return;
     }
 
+    const startObj = dayjs(`1970-01-01T${manualFormData.start_time}`);
+    const endObj = dayjs(`1970-01-01T${manualFormData.end_time}`);
+    if (endObj.diff(startObj, 'minute') < 60) {
+      toast.error("Booking duration must be at least 1 hour");
+      return;
+    }
+
     const isPast = selectedDate === dayjs().format("YYYY-MM-DD") && 
                    manualFormData.start_time < dayjs().format("HH:mm");
 

@@ -106,6 +106,14 @@ const CourtScheduleDashboard = () => {
         return;
       }
 
+      const startObj = dayjs(`1970-01-01T${formData.start_time}`);
+      const endObj = dayjs(`1970-01-01T${formData.end_time}`);
+      if (endObj.diff(startObj, 'minute') < 60) {
+        toast.error("Booking duration must be at least 1 hour");
+        setSubmitting(false);
+        return;
+      }
+
       // Prevent past bookings
       const bookingDateTime = dayjs(`${formData.booking_date} ${formData.start_time}`);
       if (bookingDateTime.isBefore(dayjs())) {
