@@ -138,7 +138,7 @@ const Login = () => {
                 Enter your phone number and we'll send a reset link to your email.
               </div>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Phone number</label>
+                <label className="block text-sm font-medium text-gray-700">Phone number<span className="text-red-500"> *</span></label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Phone className="h-5 w-5 text-gray-400" />
@@ -159,7 +159,7 @@ const Login = () => {
             // LOGIN FORM
             <form className="space-y-6" onSubmit={handleLoginSubmit}>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Phone number</label>
+                <label className="block text-sm font-medium text-gray-700">Phone number<span className="text-red-500"> *</span></label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Phone className="h-5 w-5 text-gray-400" />
@@ -169,7 +169,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Password</label>
+                <label className="block text-sm font-medium text-gray-700">Password<span className="text-red-500"> *</span></label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Lock className="h-5 w-5 text-gray-400" />
@@ -196,7 +196,7 @@ const Login = () => {
             // REGISTER FORM
             <form className="space-y-4" onSubmit={handleRegisterSubmit}>
               <div>
-                <label className="block text-sm font-medium text-gray-700">Full Name</label>
+                <label className="block text-sm font-medium text-gray-700">Full Name<span className="text-red-500"> *</span></label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <User className="h-5 w-5 text-gray-400" />
@@ -206,7 +206,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Email Address</label>
+                <label className="block text-sm font-medium text-gray-700">Email Address<span className="text-red-500"> *</span></label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Mail className="h-5 w-5 text-gray-400" />
@@ -216,7 +216,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Phone</label>
+                <label className="block text-sm font-medium text-gray-700">Phone<span className="text-red-500"> *</span></label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Phone className="h-5 w-5 text-gray-400" />
@@ -226,7 +226,7 @@ const Login = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700">Password</label>
+                <label className="block text-sm font-medium text-gray-700">Password<span className="text-red-500"> *</span></label>
                 <div className="mt-1 relative rounded-md shadow-sm">
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <Lock className="h-5 w-5 text-gray-400" />
