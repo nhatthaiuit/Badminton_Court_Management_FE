@@ -194,7 +194,7 @@ const SharedScheduleGrid = ({
                         if (booking.status === 'confirmed') {
                           bgClass = "bg-green-100 border-green-300 text-green-800";
                         } else if (booking.status === 'completed') {
-                          bgClass = "bg-gray-200 border-gray-400 text-gray-700 opacity-90";
+                          bgClass = "bg-blue-100 border-blue-300 text-blue-800 opacity-90";
                         }
                         if (needsAction) {
                           bgClass = "bg-red-50 border-red-400 text-red-800 shadow-sm animate-pulse";

@@ -216,7 +216,7 @@ const CourtScheduleDashboard = () => {
               <span className="text-gray-600">Paid</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-gray-200 border border-gray-400"></div>
+              <div className="w-3 h-3 rounded-full bg-blue-100 border border-blue-300"></div>
               <span className="text-gray-600">Completed</span>
             </div>
             <div className="flex items-center gap-1.5">
@@ -352,7 +352,7 @@ const CourtScheduleDashboard = () => {
                   <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
                     selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' 
                     : selectedBooking.status === 'confirmed' ? 'bg-green-100 text-green-800'
-                    : selectedBooking.status === 'completed' ? 'bg-gray-200 text-gray-700'
+                    : selectedBooking.status === 'completed' ? 'bg-blue-100 text-blue-800'
                     : 'bg-red-100 text-red-800'
                   }`}>
                     {selectedBooking.status === 'pending' ? 'Pending Payment' 
