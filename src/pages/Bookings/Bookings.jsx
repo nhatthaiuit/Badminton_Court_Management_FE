@@ -162,15 +162,19 @@ const CourtScheduleDashboard = () => {
 
   const handleCancelBooking = async () => {
     if (!selectedBooking) return;
-    if (window.confirm("Are you sure you want to remove this maintenance block?")) {
+    const isMaintenance = selectedBooking.customer_name === "Maintenance Block";
+    const confirmMessage = isMaintenance 
+      ? "Are you sure you want to remove this maintenance block?" 
+      : "Are you sure you want to cancel this booking?";
+      
+    if (window.confirm(confirmMessage)) {
       try {
         await bookingsApi.updateStatus(selectedBooking.booking_id, "cancelled");
-        toast.success("Removed successfully!");
+        toast.success(isMaintenance ? "Maintenance block removed." : "Booking cancelled successfully.");
         setSelectedBooking(null);
         fetchScheduleData();
-      } catch (err) {
-        console.error(err);
-        toast.error("Failed to remove maintenance block");
+      } catch (error) {
+        toast.error(error.response?.data?.message || "Failed to cancel.");
       }
     }
   };
@@ -392,6 +396,14 @@ const CourtScheduleDashboard = () => {
                   className="mr-auto px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition flex items-center gap-2"
                 >
                   Remove Maintenance
+                </button>
+              )}
+              {selectedBooking.customer_name !== "Maintenance Block" && (selectedBooking.status === 'pending' || selectedBooking.status === 'confirmed') && (
+                <button 
+                  onClick={handleCancelBooking} 
+                  className="mr-auto px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition flex items-center gap-2"
+                >
+                  Cancel Booking
                 </button>
               )}
 
