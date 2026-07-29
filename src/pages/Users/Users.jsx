@@ -21,6 +21,7 @@ const Users = () => {
     phone: "",
     password: "",
     role: user?.role === "staff" ? "customer" : "staff",
+    status: "active",
   };
   const [formData, setFormData] = useState(initialForm);
 
@@ -57,7 +58,8 @@ const Users = () => {
       email: targetUser.email,
       phone: targetUser.phone,
       password: "", // Leave empty if not changing
-      role: targetUser.role
+      role: targetUser.role,
+      status: targetUser.status || "active",
     });
     setIsModalOpen(true);
   };
@@ -156,8 +158,10 @@ const Users = () => {
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className="px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-                      Active
+                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${
+                      user.status === 'inactive' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                    }`}>
+                      {user.status || 'active'}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap text-center text-sm font-medium">
@@ -212,6 +216,13 @@ const Users = () => {
               </select>
             </div>
             <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Status <span className="text-red-500">*</span></label>
+              <select name="status" value={formData.status} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none">
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+              </select>
+            </div>
+            <div className="col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-1">Password {editingUserId ? "" : <span className="text-red-500">*</span>}</label>
               <input type="password" name="password" required={!editingUserId} value={formData.password} onChange={handleChange} minLength="6" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder={editingUserId ? "Leave empty to keep" : "Min 6 chars"} />
             </div>
