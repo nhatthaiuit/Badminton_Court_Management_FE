@@ -390,11 +390,15 @@ const CourtScheduleDashboard = () => {
 
             <div className="grid grid-cols-2 gap-4 text-sm">
               <div>
+                <p className="text-gray-500 mb-1">Court</p>
+                <p className="font-semibold text-gray-900">{selectedBooking.court_name || `Court ${selectedBooking.court_id}`}</p>
+              </div>
+              <div>
                 <p className="text-gray-500 mb-1">Time Slot</p>
                 <p className="font-semibold text-gray-900">{selectedBooking.start_time.slice(0,5)} - {selectedBooking.end_time.slice(0,5)}</p>
               </div>
               {selectedBooking.customer_name !== "Maintenance Block" && (
-                <div>
+                <div className="col-span-2">
                   <p className="text-gray-500 mb-1">Total Price</p>
                   <p className="font-bold text-gray-900 text-lg">{parseInt(selectedBooking.total_price).toLocaleString()} VND</p>
                 </div>
@@ -422,14 +426,6 @@ const CourtScheduleDashboard = () => {
                   className="mr-auto px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition flex items-center gap-2"
                 >
                   Remove Maintenance
-                </button>
-              )}
-              {selectedBooking.customer_name !== "Maintenance Block" && (selectedBooking.status === 'pending' || selectedBooking.status === 'confirmed') && (
-                <button 
-                  onClick={handleCancelBooking} 
-                  className="mr-auto px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition flex items-center gap-2"
-                >
-                  Cancel Booking
                 </button>
               )}
 
