@@ -357,60 +357,74 @@ const CourtScheduleDashboard = () => {
           title={selectedBooking.customer_name === "Maintenance Block" ? "Maintenance Details" : "Booking Details"}
         >
           <div className="space-y-6">
-            <div className="bg-gray-50 rounded-lg p-4 border border-gray-200">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-lg font-bold text-gray-900">{selectedBooking.customer_name}</h3>
-                  {selectedBooking.customer_name !== "Maintenance Block" && (
-                    <div className="flex items-center gap-2 text-gray-600 mt-1">
-                      <PhoneCall className="h-4 w-4" />
-                      <a href={`tel:${selectedBooking.customer_phone}`} className="hover:text-blue-600 font-medium">{selectedBooking.customer_phone}</a>
-                    </div>
-                  )}
-                </div>
+            <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 shadow-sm">
+              <div className="flex justify-between items-center mb-6">
+                <h3 className="text-2xl font-bold text-gray-900">
+                  {selectedBooking.court_name || `Court ${selectedBooking.court_id}`}
+                </h3>
                 {selectedBooking.customer_name !== "Maintenance Block" ? (
-                  <span className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
+                  <span className={`px-4 py-1.5 rounded-full text-sm font-bold capitalize ${
                     selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' 
                     : selectedBooking.status === 'confirmed' ? 'bg-green-100 text-green-800'
                     : selectedBooking.status === 'completed' ? 'bg-blue-100 text-blue-800'
                     : 'bg-red-100 text-red-800'
                   }`}>
-                    {selectedBooking.status === 'pending' ? 'Pending Payment' 
-                     : selectedBooking.status === 'confirmed' ? 'Paid'
-                     : selectedBooking.status === 'completed' ? 'Completed'
-                     : 'Cancelled'}
+                    {selectedBooking.status === 'confirmed' ? 'Paid' : selectedBooking.status}
                   </span>
                 ) : (
-                  <span className="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-gray-200 text-gray-800">
+                  <span className="px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-gray-200 text-gray-800">
                     Maintenance
                   </span>
                 )}
               </div>
-            </div>
 
-            <div className="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <p className="text-gray-500 mb-1">Court</p>
-                <p className="font-semibold text-gray-900">{selectedBooking.court_name || `Court ${selectedBooking.court_id}`}</p>
-              </div>
-              <div>
-                <p className="text-gray-500 mb-1">Time Slot</p>
-                <p className="font-semibold text-gray-900">{selectedBooking.start_time.slice(0,5)} - {selectedBooking.end_time.slice(0,5)}</p>
-              </div>
-              {selectedBooking.customer_name !== "Maintenance Block" && (
-                <div className="col-span-2">
-                  <p className="text-gray-500 mb-1">Total Price</p>
-                  <p className="font-bold text-gray-900 text-lg">{parseInt(selectedBooking.total_price).toLocaleString()} VND</p>
+              <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+                <div>
+                  <p className="text-gray-500 mb-1 text-sm">Date</p>
+                  <p className="font-semibold text-gray-900">{dayjs(selectedBooking.booking_date).format("dddd, MMM DD, YYYY")}</p>
                 </div>
-              )}
+                <div>
+                  <p className="text-gray-500 mb-1 text-sm">Time</p>
+                  <p className="font-semibold text-gray-900">{selectedBooking.start_time.slice(0,5)} - {selectedBooking.end_time.slice(0,5)}</p>
+                </div>
+                {selectedBooking.customer_name !== "Maintenance Block" && (
+                  <>
+                    <div>
+                      <p className="text-gray-500 mb-1 text-sm">Total Price</p>
+                      <p className="font-bold text-primary-600 text-lg">{parseInt(selectedBooking.total_price).toLocaleString()} VND</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500 mb-1 text-sm">Booking ID</p>
+                      <p className="font-semibold text-gray-900">#{selectedBooking.booking_id}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500 mb-1 text-sm">Customer Name</p>
+                      <p className="font-semibold text-gray-900">{selectedBooking.customer_name}</p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500 mb-1 text-sm">Phone Number</p>
+                      <div className="flex items-center gap-1.5 text-gray-900 font-semibold">
+                        <PhoneCall className="h-4 w-4 text-gray-500" />
+                        <a href={`tel:${selectedBooking.customer_phone}`} className="hover:text-primary-600">{selectedBooking.customer_phone}</a>
+                      </div>
+                    </div>
+                  </>
+                )}
+              </div>
             </div>
             
             {selectedBooking.note && (
-              <div className="text-sm border-t border-gray-100 pt-4">
-                <p className="text-gray-500 mb-1">Notes:</p>
-                <p className="text-gray-800">{selectedBooking.note}</p>
+              <div className="space-y-2">
+                <p className="text-gray-600 font-medium">Notes:</p>
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 text-gray-800">
+                  {selectedBooking.note}
+                </div>
               </div>
             )}
+            
+            <div className="text-right text-sm text-gray-400 font-medium pb-2">
+              Created at: {dayjs(selectedBooking.created_at).format("DD/MM/YYYY HH:mm")}
+            </div>
 
             {selectedBooking.customer_name !== "Maintenance Block" && selectedBooking.status === 'pending' && dayjs(`${selectedBooking.booking_date} ${selectedBooking.start_time}`).diff(dayjs(), 'minute') <= 60 && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex gap-3 text-red-800">
@@ -429,13 +443,13 @@ const CourtScheduleDashboard = () => {
                 </button>
               )}
 
-              <button onClick={() => setSelectedBooking(null)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
+              <button onClick={() => setSelectedBooking(null)} className="px-5 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
                 Close
               </button>
               {selectedBooking.customer_name !== "Maintenance Block" && selectedBooking.status === 'pending' && (
                 <button 
                   onClick={handleMarkAsPaid} 
-                  className="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2 shadow-sm"
+                  className="px-5 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2 shadow-sm"
                 >
                   <CheckCircle className="h-4 w-4" />
                   Mark as PAID

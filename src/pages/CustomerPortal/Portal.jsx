@@ -18,12 +18,6 @@ const Portal = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // Booking Modal State
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedSlot, setSelectedSlot] = useState(null);
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [note, setNote] = useState("");
-
   // Manual Booking Modal State
   const [isManualModalOpen, setIsManualModalOpen] = useState(false);
   const [manualFormData, setManualFormData] = useState({
@@ -96,35 +90,13 @@ const Portal = () => {
       return;
     }
 
-    setSelectedSlot({ court, startTime, endTime });
-    setNote("");
-    setIsModalOpen(true);
-  };
-
-  const handleBookingConfirm = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const res = await bookingsApi.create({
-        court_id: selectedSlot.court.court_id,
-        customer_name: user?.full_name || "Customer",
-        customer_phone: user?.phone || "0000000000",
-        booking_date: selectedDate,
-        start_time: selectedSlot.startTime,
-        end_time: selectedSlot.endTime,
-        note: note.trim() || "Booked via Customer Portal"
-      });
-      
-      const newBookingId = res.data.data.booking_id;
-      toast.success("Slot secured! Please complete payment.");
-      setIsModalOpen(false);
-      navigate(`/portal/payment/${newBookingId}`);
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to book court");
-    } finally {
-      setIsSubmitting(false);
-    }
+    setManualFormData({
+      court_id: court.court_id,
+      start_time: startTime,
+      end_time: endTime,
+      note: ""
+    });
+    setIsManualModalOpen(true);
   };
 
   const handleManualChange = (e) => {
@@ -255,53 +227,6 @@ const Portal = () => {
         <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-gray-100 border border-dashed border-gray-300"></span> Maintenance</div>
       </div>
 
-      {/* Booking Confirmation Modal */}
-      {selectedSlot && (
-        <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Confirm Booking">
-          <div className="space-y-6">
-            <div className="bg-primary-50 rounded-lg p-4 border border-primary-100">
-              <h3 className="font-semibold text-primary-900 mb-2">Booking Summary</h3>
-              <ul className="space-y-2 text-sm text-primary-800">
-                <li><strong>Court:</strong> {selectedSlot.court.name}</li>
-                <li><strong>Date:</strong> {dayjs(selectedDate).format("dddd, MMMM D, YYYY")}</li>
-                <li><strong>Time:</strong> {selectedSlot.startTime} - {selectedSlot.endTime}</li>
-              </ul>
-            </div>
-
-            <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200 flex gap-3">
-              <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-              <div className="text-sm text-yellow-800 space-y-1">
-                <p><strong>Payment Required:</strong> You will be redirected to the payment page. Please complete your payment within 15 minutes to secure your slot.</p>
-                <p><strong>Strict Policy:</strong> Bookings are strictly non-refundable once confirmed.</p>
-              </div>
-            </div>
-
-            <form onSubmit={handleBookingConfirm}>
-              <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-1">Note to Staff (Optional)</label>
-                <textarea 
-                  value={note} 
-                  onChange={(e) => setNote(e.target.value)} 
-                  rows="2" 
-                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" 
-                  placeholder="E.g. I need to rent 2 rackets..."
-                ></textarea>
-              </div>
-
-              <div className="flex justify-end gap-3 pt-4 border-t border-gray-200">
-                <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
-                  Cancel
-                </button>
-                <button type="submit" disabled={isSubmitting} className="flex items-center gap-2 px-6 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-70">
-                  <CheckCircle className="h-4 w-4" />
-                  {isSubmitting ? "Confirming..." : "Confirm Booking"}
-                </button>
-              </div>
-            </form>
-          </div>
-        </Modal>
-      )}
-
       {/* Manual Booking Modal */}
       <Modal isOpen={isManualModalOpen} onClose={() => setIsManualModalOpen(false)} title="Create Booking">
         <form onSubmit={handleManualSubmit} className="space-y-4">
@@ -309,6 +234,7 @@ const Portal = () => {
              <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
              <div className="text-sm text-yellow-800 space-y-1">
                <p><strong>Payment Required:</strong> You will be redirected to the payment page. Please complete your payment within 15 minutes to secure your slot.</p>
+               <p><strong>Strict Policy:</strong> Bookings are strictly non-refundable once confirmed.</p>
              </div>
           </div>
 
