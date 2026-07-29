@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import dayjs from "dayjs";
 import { bookingsApi } from "../../api/bookingsApi";
 import { courtsApi } from "../../api/courtsApi";
@@ -21,6 +21,7 @@ const CourtScheduleDashboard = () => {
   // Create Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const dateInputRef = useRef(null);
   const [bookingType, setBookingType] = useState("booking"); // "booking" or "maintenance"
   
   const initialForm = {
@@ -179,6 +180,16 @@ const CourtScheduleDashboard = () => {
     }
   };
 
+  const handleCalendarClick = () => {
+    if (dateInputRef.current) {
+      if (dateInputRef.current.showPicker) {
+        dateInputRef.current.showPicker();
+      } else {
+        dateInputRef.current.focus();
+      }
+    }
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col max-h-[calc(100vh-8rem)]">
       {/* Toolbar */}
@@ -195,9 +206,18 @@ const CourtScheduleDashboard = () => {
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
-          <div className="flex items-center gap-2 text-lg font-bold text-gray-800">
-            <Calendar className="h-5 w-5 text-primary-600" />
-            {currentDate.format("dddd, DD MMM YYYY")}
+          <div className="flex items-center gap-2 text-lg font-bold text-gray-800 cursor-pointer hover:text-primary-700 transition group" onClick={handleCalendarClick}>
+            <Calendar className="h-5 w-5 text-primary-600 group-hover:scale-110 transition-transform" />
+            <span>{currentDate.format("dddd, DD MMM YYYY")}</span>
+            <input 
+              ref={dateInputRef}
+              type="date" 
+              className="absolute w-0 h-0 opacity-0 pointer-events-none"
+              value={currentDate.format("YYYY-MM-DD")}
+              onChange={(e) => {
+                if (e.target.value) setCurrentDate(dayjs(e.target.value));
+              }}
+            />
           </div>
         </div>
 
