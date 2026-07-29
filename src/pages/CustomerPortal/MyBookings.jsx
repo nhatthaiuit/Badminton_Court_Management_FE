@@ -44,7 +44,7 @@ const MyBookings = () => {
       case "confirmed":
         return <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">Confirmed</span>;
       case "completed":
-        return <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">Completed</span>;
+        return <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-xs font-semibold">Completed</span>;
       case "cancelled":
         return <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold">Cancelled</span>;
       case "refunding":

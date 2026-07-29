@@ -191,8 +191,10 @@ const SharedScheduleGrid = ({
                         const needsAction = !isCustomer && booking.status === 'pending' && isCloseToStart && booking.booking_date === dayjs().format("YYYY-MM-DD");
 
                         let bgClass = "bg-yellow-100 border-yellow-300 text-yellow-800"; // pending
-                        if (booking.status === 'confirmed' || booking.status === 'completed') {
+                        if (booking.status === 'confirmed') {
                           bgClass = "bg-green-100 border-green-300 text-green-800";
+                        } else if (booking.status === 'completed') {
+                          bgClass = "bg-gray-200 border-gray-400 text-gray-700 opacity-90";
                         }
                         if (needsAction) {
                           bgClass = "bg-red-50 border-red-400 text-red-800 shadow-sm animate-pulse";
