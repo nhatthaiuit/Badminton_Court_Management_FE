@@ -105,7 +105,11 @@ const Courts = () => {
   return (
     <>
       <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-        <div className="p-4 border-b border-gray-200 flex justify-end items-center bg-gray-50">
+        <div className="p-6 border-b border-gray-200 flex justify-between items-center bg-gray-50">
+          <div>
+            <h2 className="text-xl font-bold text-gray-900">Court List</h2>
+            <p className="text-sm text-gray-500 mt-1">Manage badminton courts and their status</p>
+          </div>
           <button 
             onClick={openAddModal}
             className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition"
