@@ -195,14 +195,14 @@ const CourtScheduleDashboard = () => {
       {/* Toolbar */}
       <div className="p-4 border-b border-gray-300 flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white z-20 sticky top-0">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full xl:w-auto">
-          <div className="flex items-center bg-gray-100 rounded-lg p-1 w-full sm:w-auto justify-between sm:justify-start">
-            <button onClick={prevDay} className="p-1.5 hover:bg-white rounded-md transition text-gray-600">
+          <div className="flex items-center bg-gray-100 rounded-lg p-1 w-full sm:w-auto justify-between sm:justify-start shadow-inner">
+            <button onClick={prevDay} className="p-1.5 hover:bg-gray-200 rounded-md transition text-gray-600">
               <ChevronLeft className="h-5 w-5" />
             </button>
-            <button onClick={goToday} className="px-3 py-1.5 hover:bg-white rounded-md transition text-sm font-medium text-gray-700 mx-1">
+            <button onClick={goToday} className="px-3 py-1.5 bg-white shadow-sm rounded-md transition text-sm font-medium text-gray-800 mx-1">
               Today
             </button>
-            <button onClick={nextDay} className="p-1.5 hover:bg-white rounded-md transition text-gray-600">
+            <button onClick={nextDay} className="p-1.5 hover:bg-gray-200 rounded-md transition text-gray-600">
               <ChevronRight className="h-5 w-5" />
             </button>
           </div>
