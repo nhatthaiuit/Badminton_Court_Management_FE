@@ -99,10 +99,10 @@ const SharedScheduleGrid = ({
             Courts
           </div>
           <div className="flex flex-1">
-            {HOURS.map((hour) => (
+            {HOURS.map((hour, hIdx) => (
               <div
                 key={hour}
-                className="flex-shrink-0 text-center py-3 text-sm font-medium text-gray-500 border-r border-gray-300 last:border-r-0"
+                className={`flex-shrink-0 text-center py-3 text-sm font-medium text-gray-500 border-gray-300 ${hIdx === HOURS.length - 1 ? '' : 'border-r'}`}
                 style={{ width: `${HOUR_WIDTH}px` }}
               >
                 {`${hour.toString().padStart(2, "0")}:00`}
@@ -113,16 +113,17 @@ const SharedScheduleGrid = ({
 
         {/* Court Rows */}
         <div className="relative">
-          {courts.map((court) => {
+          {courts.map((court, cIdx) => {
             const courtBookings = bookings.filter(b => b.court_id === court.court_id && b.status !== 'cancelled');
+            const isLastRow = cIdx === courts.length - 1;
             
             return (
-              <div key={court.court_id} className="flex group hover:bg-gray-50 transition-colors last:border-b-0">
-                <div className="w-32 flex-shrink-0 border-r border-b border-gray-300 p-4 bg-white group-hover:bg-gray-50 sticky left-0 z-20 font-medium text-gray-800 last:border-b-0">
+              <div key={court.court_id} className="flex group hover:bg-gray-50 transition-colors">
+                <div className={`w-32 flex-shrink-0 border-r border-gray-300 p-4 bg-white group-hover:bg-gray-50 sticky left-0 z-20 font-medium text-gray-800 ${isLastRow ? '' : 'border-b'}`}>
                   {court.name}
                 </div>
                 
-                <div className="flex-1 relative h-16 cursor-crosshair border-b border-gray-300 last:border-b-0">
+                <div className={`flex-1 relative h-16 cursor-crosshair border-gray-300 ${isLastRow ? '' : 'border-b'}`}>
                   {/* Background hour columns (clickable for empty slots) */}
                   {HOURS.map((hour, idx) => {
                     const timeStr = `${hour.toString().padStart(2, "0")}:00`;
@@ -135,7 +136,7 @@ const SharedScheduleGrid = ({
                         key={`bg-${hour}`}
                         onMouseDown={() => !isPast && handleMouseDown(court.court_id, hour)}
                         onMouseEnter={() => !isPast && handleMouseEnter(court.court_id, hour)}
-                        className={`absolute top-0 bottom-0 border-r border-gray-300 last:border-r-0 transition-colors ${
+                        className={`absolute top-0 bottom-0 border-gray-300 transition-colors ${idx === HOURS.length - 1 ? '' : 'border-r'} ${
                           isPast 
                             ? 'bg-gray-50 cursor-not-allowed bg-pattern-diagonal' 
                             : 'hover:bg-primary-50 cursor-crosshair'

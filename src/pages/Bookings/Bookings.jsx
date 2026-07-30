@@ -191,7 +191,7 @@ const CourtScheduleDashboard = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden flex flex-col max-h-[calc(100vh-8rem)]">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden isolate flex flex-col max-h-[calc(100vh-8rem)]">
       {/* Toolbar */}
       <div className="p-4 border-b border-gray-300 flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white z-20 sticky top-0">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full xl:w-auto">
@@ -255,7 +255,7 @@ const CourtScheduleDashboard = () => {
       </div>
 
       {/* Grid Container */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-300 overflow-hidden flex flex-col h-fit max-h-[calc(100vh-250px)]">
+      <div className="flex-1 flex flex-col min-h-0">
         <SharedScheduleGrid 
           courts={courts}
           bookings={bookings}
