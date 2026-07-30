@@ -110,7 +110,7 @@ const MyBookings = () => {
                     <Clock className="h-4 w-4 text-primary-500" />
                     <span className="font-medium text-gray-700">{booking.start_time.slice(0, 5)} - {booking.end_time.slice(0, 5)}</span>
                   </div>
-                  <div className="flex items-center gap-2 bg-green-50 px-3 py-1.5 rounded-lg border border-green-100 text-green-700 font-bold">
+                  <div className="flex items-center gap-2 bg-green-100 px-3 py-1.5 rounded-lg border border-green-300 text-green-800 font-bold">
                     <CreditCard className="h-4 w-4" />
                     {parseInt(booking.total_price).toLocaleString()} VND
                   </div>
