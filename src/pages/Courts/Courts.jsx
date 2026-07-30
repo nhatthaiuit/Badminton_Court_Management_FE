@@ -230,7 +230,7 @@ const Courts = () => {
             </select>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+          <div className="pt-4 flex justify-end gap-3 border-t border-gray-200">
             <button
               type="button"
               onClick={closeModal}

@@ -340,7 +340,7 @@ const CourtScheduleDashboard = () => {
             <textarea name="note" value={formData.note} onChange={handleChange} rows="2" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder={bookingType === "maintenance" ? "Reason for maintenance..." : "Any special requests..."}></textarea>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+          <div className="pt-4 flex justify-end gap-3 border-t border-gray-200">
             <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
               Cancel
             </button>
@@ -418,7 +418,7 @@ const CourtScheduleDashboard = () => {
             {selectedBooking.note && (
               <div className="space-y-2">
                 <p className="text-gray-600 font-medium">Notes:</p>
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-100 text-gray-800">
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 text-gray-800">
                   {selectedBooking.note}
                 </div>
               </div>
@@ -435,7 +435,7 @@ const CourtScheduleDashboard = () => {
               </div>
             )}
 
-            <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+            <div className="pt-4 flex justify-end gap-3 border-t border-gray-200">
               {selectedBooking.customer_name === "Maintenance Block" && (
                 <button 
                   onClick={handleCancelBooking} 

@@ -81,7 +81,7 @@ const MyBookings = () => {
 
       <div className="grid gap-6">
         {bookings.length === 0 ? (
-          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-16 text-center shadow-sm border border-gray-100">
+          <div className="bg-white/80 backdrop-blur-sm rounded-3xl p-16 text-center shadow-sm border border-gray-200">
             <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center mx-auto mb-6 shadow-inner">
               <Calendar className="h-10 w-10 text-blue-400" />
             </div>
@@ -93,7 +93,7 @@ const MyBookings = () => {
             <div 
               key={booking.booking_id} 
               onClick={() => setViewBooking(booking)}
-              className="group bg-white rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-xl border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
+              className="group bg-white rounded-2xl p-6 sm:p-8 shadow-sm hover:shadow-xl border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-6 transition-all duration-300 hover:-translate-y-1 cursor-pointer"
             >
               <div className="space-y-4">
                 <div className="flex items-center gap-4">
@@ -102,11 +102,11 @@ const MyBookings = () => {
                 </div>
                 
                 <div className="flex flex-wrap gap-6 text-sm text-gray-600">
-                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200">
                     <Calendar className="h-4 w-4 text-primary-500" />
                     <span className="font-medium text-gray-700">{dayjs(booking.booking_date).format("dddd, MMM D, YYYY")}</span>
                   </div>
-                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-100">
+                  <div className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-lg border border-gray-200">
                     <Clock className="h-4 w-4 text-primary-500" />
                     <span className="font-medium text-gray-700">{booking.start_time.slice(0, 5)} - {booking.end_time.slice(0, 5)}</span>
                   </div>
@@ -164,9 +164,9 @@ const MyBookings = () => {
             </div>
 
             {viewBooking.note && (
-              <div className="text-sm border-t border-gray-100 pt-4">
+              <div className="text-sm border-t border-gray-200 pt-4">
                 <p className="text-gray-500 mb-1">Notes:</p>
-                <p className="text-gray-800 bg-gray-50 p-3 rounded-lg border border-gray-100">{viewBooking.note}</p>
+                <p className="text-gray-800 bg-gray-50 p-3 rounded-lg border border-gray-200">{viewBooking.note}</p>
               </div>
             )}
             
@@ -174,7 +174,7 @@ const MyBookings = () => {
                Created at: {dayjs(viewBooking.created_at).format("DD/MM/YYYY HH:mm")}
             </div>
 
-            <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+            <div className="pt-4 flex justify-end gap-3 border-t border-gray-200">
               <button type="button" onClick={() => setViewBooking(null)} className="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
                 Close
               </button>

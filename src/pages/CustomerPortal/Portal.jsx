@@ -183,7 +183,7 @@ const Portal = () => {
       </div>
 
       {/* Date Selector */}
-      <div className="bg-white/80 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
+      <div className="bg-white/80 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-gray-200 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary-600 shadow-inner border border-blue-100/50">
             <Calendar className="h-6 w-6" />
@@ -269,7 +269,7 @@ const Portal = () => {
             <textarea name="note" value={manualFormData.note} onChange={handleManualChange} rows="2" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Any special requests..."></textarea>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+          <div className="pt-4 flex justify-end gap-3 border-t border-gray-200">
             <button type="button" onClick={() => setIsManualModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
               Cancel
             </button>

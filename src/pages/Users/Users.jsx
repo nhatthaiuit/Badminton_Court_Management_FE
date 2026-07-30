@@ -228,7 +228,7 @@ const Users = () => {
             </div>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3 border-t border-gray-100">
+          <div className="pt-4 flex justify-end gap-3 border-t border-gray-200">
             <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
               Cancel
             </button>
