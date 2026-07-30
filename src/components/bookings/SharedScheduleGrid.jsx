@@ -117,7 +117,7 @@ const SharedScheduleGrid = ({
             const courtBookings = bookings.filter(b => b.court_id === court.court_id && b.status !== 'cancelled');
             
             return (
-              <div key={court.court_id} className="flex border-b border-gray-100 group hover:bg-gray-50 transition-colors">
+              <div key={court.court_id} className="flex border-b border-gray-200 group hover:bg-gray-50 transition-colors">
                 <div className="w-32 flex-shrink-0 border-r border-gray-200 p-4 bg-white group-hover:bg-gray-50 sticky left-0 z-20 font-medium text-gray-800">
                   {court.name}
                 </div>
@@ -135,7 +135,7 @@ const SharedScheduleGrid = ({
                         key={`bg-${hour}`}
                         onMouseDown={() => !isPast && handleMouseDown(court.court_id, hour)}
                         onMouseEnter={() => !isPast && handleMouseEnter(court.court_id, hour)}
-                        className={`absolute top-0 bottom-0 border-r border-gray-100 transition-colors ${
+                        className={`absolute top-0 bottom-0 border-r border-gray-200 transition-colors ${
                           isPast 
                             ? 'bg-gray-100 cursor-not-allowed bg-pattern-diagonal opacity-60' 
                             : 'hover:bg-primary-50 cursor-crosshair'
