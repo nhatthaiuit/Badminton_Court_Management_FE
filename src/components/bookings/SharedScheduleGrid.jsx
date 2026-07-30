@@ -173,7 +173,7 @@ const SharedScheduleGrid = ({
                             <div
                               key={booking.booking_id}
                               onClick={() => !isCustomer && onBookingClick(booking)}
-                              className={`absolute top-0 bottom-0 bg-gray-200 border-l border-r border-gray-400 text-gray-600 px-2 py-1 overflow-hidden z-10 hover:brightness-95 transition flex items-center justify-center ${!isCustomer ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                              className={`absolute top-0 bottom-0 bg-gray-200 border border-gray-400 text-gray-600 px-2 py-1 overflow-hidden z-10 hover:brightness-95 transition flex items-center justify-center ${!isCustomer ? 'cursor-pointer' : 'cursor-not-allowed'}`}
                               style={styles}
                               title={`Maintenance: ${booking.start_time.slice(0,5)} - ${booking.end_time.slice(0,5)}`}
                             >
@@ -210,7 +210,7 @@ const SharedScheduleGrid = ({
                           <div
                             key={booking.booking_id}
                             onClick={() => !isCustomer && onBookingClick(booking)}
-                            className={`absolute top-0 bottom-0 border-l border-r border-y-0 px-2 py-1 overflow-hidden z-10 hover:brightness-95 transition ${isCustomer ? 'cursor-not-allowed' : 'cursor-pointer'} ${bgClass}`}
+                            className={`absolute top-0 bottom-0 border px-2 py-1 overflow-hidden z-10 hover:brightness-95 transition ${isCustomer ? 'cursor-not-allowed' : 'cursor-pointer'} ${bgClass}`}
                             style={styles}
                             title={isCustomer ? `Booked (${booking.start_time.slice(0,5)} - ${booking.end_time.slice(0,5)})` : `${booking.customer_name} (${booking.start_time.slice(0,5)} - ${booking.end_time.slice(0,5)})`}
                           >
@@ -228,7 +228,7 @@ const SharedScheduleGrid = ({
                       {/* Drag Selection Overlay */}
                       {selectionStart && selectionCurrent && selectionStart.courtId === court.court_id && (
                         <div
-                          className="absolute top-0 bottom-0 bg-primary-100 border-l-2 border-r-2 border-primary-400 opacity-60 z-20 pointer-events-none"
+                          className="absolute top-0 bottom-0 bg-primary-100 border-2 border-primary-400 opacity-60 z-20 pointer-events-none"
                           style={{
                             left: `${(Math.min(selectionStart.hour, selectionCurrent.hour) - START_HOUR) * HOUR_WIDTH}px`,
                             width: `${(Math.abs(selectionStart.hour - selectionCurrent.hour) + 1) * HOUR_WIDTH}px`
