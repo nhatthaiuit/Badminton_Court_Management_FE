@@ -209,7 +209,7 @@ const Portal = () => {
       </div>
 
       {/* Grid */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-300 overflow-hidden flex flex-col max-h-[600px]">
+      <div className="bg-white rounded-2xl shadow-sm border-2 border-gray-300 overflow-hidden flex flex-col h-fit max-h-[600px]">
         <SharedScheduleGrid 
           courts={courts}
           bookings={bookings}
