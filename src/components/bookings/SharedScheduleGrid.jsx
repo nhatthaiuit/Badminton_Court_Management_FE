@@ -173,7 +173,7 @@ const SharedScheduleGrid = ({
                             <div
                               key={booking.booking_id}
                               onClick={() => !isCustomer && onBookingClick(booking)}
-                              className={`absolute top-0 bottom-0 bg-gray-100 border-l-2 border-r-2 border-dashed border-gray-300 text-gray-500 px-2 py-1 overflow-hidden z-10 hover:brightness-95 transition flex items-center justify-center ${!isCustomer ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                              className={`absolute top-0 bottom-0 bg-gray-200 border-l border-r border-gray-400 text-gray-600 px-2 py-1 overflow-hidden z-10 hover:brightness-95 transition flex items-center justify-center ${!isCustomer ? 'cursor-pointer' : 'cursor-not-allowed'}`}
                               style={styles}
                               title={`Maintenance: ${booking.start_time.slice(0,5)} - ${booking.end_time.slice(0,5)}`}
                             >
