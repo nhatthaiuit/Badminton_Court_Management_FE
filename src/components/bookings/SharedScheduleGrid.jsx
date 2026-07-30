@@ -102,7 +102,7 @@ const SharedScheduleGrid = ({
             {HOURS.map((hour) => (
               <div
                 key={hour}
-                className="flex-shrink-0 text-center py-3 text-sm font-medium text-gray-500 border-r border-gray-300"
+                className="flex-shrink-0 text-center py-3 text-sm font-medium text-gray-500 border-r border-gray-300 last:border-r-0"
                 style={{ width: `${HOUR_WIDTH}px` }}
               >
                 {`${hour.toString().padStart(2, "0")}:00`}
@@ -117,12 +117,12 @@ const SharedScheduleGrid = ({
             const courtBookings = bookings.filter(b => b.court_id === court.court_id && b.status !== 'cancelled');
             
             return (
-              <div key={court.court_id} className="flex group hover:bg-gray-50 transition-colors">
-                <div className="w-32 flex-shrink-0 border-r border-b border-gray-300 p-4 bg-white group-hover:bg-gray-50 sticky left-0 z-20 font-medium text-gray-800">
+              <div key={court.court_id} className="flex group hover:bg-gray-50 transition-colors last:border-b-0">
+                <div className="w-32 flex-shrink-0 border-r border-b border-gray-300 p-4 bg-white group-hover:bg-gray-50 sticky left-0 z-20 font-medium text-gray-800 last:border-b-0">
                   {court.name}
                 </div>
                 
-                <div className="flex-1 relative h-16 cursor-crosshair border-b border-gray-300">
+                <div className="flex-1 relative h-16 cursor-crosshair border-b border-gray-300 last:border-b-0">
                   {/* Background hour columns (clickable for empty slots) */}
                   {HOURS.map((hour, idx) => {
                     const timeStr = `${hour.toString().padStart(2, "0")}:00`;
@@ -135,7 +135,7 @@ const SharedScheduleGrid = ({
                         key={`bg-${hour}`}
                         onMouseDown={() => !isPast && handleMouseDown(court.court_id, hour)}
                         onMouseEnter={() => !isPast && handleMouseEnter(court.court_id, hour)}
-                        className={`absolute top-0 bottom-0 border-r border-gray-300 transition-colors ${
+                        className={`absolute top-0 bottom-0 border-r border-gray-300 last:border-r-0 transition-colors ${
                           isPast 
                             ? 'bg-gray-50 cursor-not-allowed bg-pattern-diagonal' 
                             : 'hover:bg-primary-50 cursor-crosshair'
