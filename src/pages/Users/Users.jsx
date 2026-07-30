@@ -150,16 +150,16 @@ const Users = () => {
                     <div className="text-sm text-gray-500">{user.phone}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize
-                      ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 
-                        user.role === 'owner' ? 'bg-blue-100 text-blue-800' : 
-                        'bg-gray-200 text-gray-800'}`}>
+                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize border
+                      ${user.role === 'admin' ? 'bg-purple-100 text-purple-800 border-purple-200' : 
+                        user.role === 'owner' ? 'bg-blue-100 text-blue-800 border-blue-200' : 
+                        'bg-gray-200 text-gray-800 border-gray-300'}`}>
                       {user.role}
                     </span>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize ${
-                      user.status === 'inactive' ? 'bg-red-100 text-red-800' : 'bg-green-100 text-green-800'
+                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize border ${
+                      user.status === 'inactive' ? 'bg-red-100 text-red-800 border-red-200' : 'bg-green-100 text-green-800 border-green-200'
                     }`}>
                       {user.status || 'active'}
                     </span>

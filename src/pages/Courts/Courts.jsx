@@ -136,10 +136,10 @@ const Courts = () => {
                     <div className="text-sm font-bold text-gray-900">{court.name}</div>
                   </td>
                   <td className="px-6 py-4 whitespace-nowrap">
-                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full 
-                      ${court.status === 'available' ? 'bg-green-100 text-green-800' : 
-                        court.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800' : 
-                        'bg-red-100 text-red-800'}`}>
+                    <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full border
+                      ${court.status === 'available' ? 'bg-green-100 text-green-800 border-green-200' : 
+                        court.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : 
+                        'bg-red-100 text-red-800 border-red-200'}`}>
                       {court.status}
                     </span>
                   </td>

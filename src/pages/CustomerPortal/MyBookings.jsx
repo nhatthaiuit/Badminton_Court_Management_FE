@@ -40,19 +40,19 @@ const MyBookings = () => {
   const getStatusBadge = (status) => {
     switch (status) {
       case "pending":
-        return <span className="px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-semibold">Pending Payment</span>;
+        return <span className="px-3 py-1 bg-yellow-100 border border-yellow-200 text-yellow-800 rounded-full text-xs font-semibold">Pending Payment</span>;
       case "confirmed":
-        return <span className="px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-semibold">Confirmed</span>;
+        return <span className="px-3 py-1 bg-green-100 border border-green-200 text-green-800 rounded-full text-xs font-semibold">Confirmed</span>;
       case "completed":
-        return <span className="px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-xs font-semibold">Completed</span>;
+        return <span className="px-3 py-1 bg-blue-100 border border-blue-200 text-blue-800 rounded-full text-xs font-semibold">Completed</span>;
       case "cancelled":
-        return <span className="px-3 py-1 bg-red-100 text-red-800 rounded-full text-xs font-semibold">Cancelled</span>;
+        return <span className="px-3 py-1 bg-red-100 border border-red-200 text-red-800 rounded-full text-xs font-semibold">Cancelled</span>;
       case "refunding":
-        return <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">Refunding</span>;
+        return <span className="px-3 py-1 bg-purple-100 border border-purple-200 text-purple-800 rounded-full text-xs font-semibold">Refunding</span>;
       case "refunded":
-        return <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-xs font-semibold">Refunded</span>;
+        return <span className="px-3 py-1 bg-gray-200 border border-gray-300 text-gray-800 rounded-full text-xs font-semibold">Refunded</span>;
       default:
-        return <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-xs font-semibold">{status}</span>;
+        return <span className="px-3 py-1 bg-gray-200 border border-gray-300 text-gray-800 rounded-full text-xs font-semibold">{status}</span>;
     }
   };
 

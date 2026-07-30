@@ -365,16 +365,16 @@ const CourtScheduleDashboard = () => {
                   {selectedBooking.court_name || `Court ${selectedBooking.court_id}`}
                 </h3>
                 {selectedBooking.customer_name !== "Maintenance Block" ? (
-                  <span className={`px-4 py-1.5 rounded-full text-sm font-bold capitalize ${
-                    selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' 
-                    : selectedBooking.status === 'confirmed' ? 'bg-green-100 text-green-800'
-                    : selectedBooking.status === 'completed' ? 'bg-blue-100 text-blue-800'
-                    : 'bg-red-100 text-red-800'
+                  <span className={`px-4 py-1.5 rounded-full text-sm font-bold capitalize border ${
+                    selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' 
+                    : selectedBooking.status === 'confirmed' ? 'bg-green-100 text-green-800 border-green-200'
+                    : selectedBooking.status === 'completed' ? 'bg-blue-100 text-blue-800 border-blue-200'
+                    : 'bg-red-100 text-red-800 border-red-200'
                   }`}>
                     {selectedBooking.status === 'confirmed' ? 'Paid' : selectedBooking.status}
                   </span>
                 ) : (
-                  <span className="px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-gray-200 text-gray-800">
+                  <span className="px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-gray-200 text-gray-800 border border-gray-300">
                     Maintenance
                   </span>
                 )}
