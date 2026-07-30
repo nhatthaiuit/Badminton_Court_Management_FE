@@ -50,9 +50,9 @@ const MyBookings = () => {
       case "refunding":
         return <span className="px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-xs font-semibold">Refunding</span>;
       case "refunded":
-        return <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold">Refunded</span>;
+        return <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-xs font-semibold">Refunded</span>;
       default:
-        return <span className="px-3 py-1 bg-gray-100 text-gray-800 rounded-full text-xs font-semibold">{status}</span>;
+        return <span className="px-3 py-1 bg-gray-200 text-gray-800 rounded-full text-xs font-semibold">{status}</span>;
     }
   };
 

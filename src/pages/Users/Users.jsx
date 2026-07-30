@@ -153,7 +153,7 @@ const Users = () => {
                     <span className={`px-3 py-1 inline-flex text-xs leading-5 font-semibold rounded-full capitalize
                       ${user.role === 'admin' ? 'bg-purple-100 text-purple-800' : 
                         user.role === 'owner' ? 'bg-blue-100 text-blue-800' : 
-                        'bg-gray-100 text-gray-800'}`}>
+                        'bg-gray-200 text-gray-800'}`}>
                       {user.role}
                     </span>
                   </td>
