@@ -107,17 +107,17 @@ const Dashboard = () => {
         <div className="bg-white rounded-xl shadow-sm border border-gray-300 p-6 lg:col-span-1">
           <h2 className="text-lg font-bold text-gray-900 mb-4">Court Status</h2>
           <div className="space-y-4">
-            <div className="flex justify-between items-center p-3 bg-green-50 rounded-lg">
-              <span className="text-green-700 font-medium">Available</span>
-              <span className="text-green-700 font-bold">{overview.courts.available}</span>
+            <div className="flex justify-between items-center p-3 bg-green-100 rounded-lg">
+              <span className="font-semibold text-green-700">Available</span>
+              <span className="font-bold text-green-700">{overview.courts.available}</span>
             </div>
-            <div className="flex justify-between items-center p-3 bg-yellow-50 rounded-lg">
-              <span className="text-yellow-700 font-medium">Maintenance</span>
-              <span className="text-yellow-700 font-bold">{overview.courts.maintenance}</span>
+            <div className="flex justify-between items-center p-3 bg-yellow-100 rounded-lg">
+              <span className="font-semibold text-yellow-700">Maintenance</span>
+              <span className="font-bold text-yellow-700">{overview.courts.maintenance}</span>
             </div>
-            <div className="flex justify-between items-center p-3 bg-red-50 rounded-lg">
-              <span className="text-red-700 font-medium">Inactive</span>
-              <span className="text-red-700 font-bold">{overview.courts.inactive}</span>
+            <div className="flex justify-between items-center p-3 bg-red-100 rounded-lg">
+              <span className="font-semibold text-red-700">Inactive</span>
+              <span className="font-bold text-red-700">{overview.courts.inactive}</span>
             </div>
           </div>
         </div>
@@ -164,6 +164,7 @@ const Dashboard = () => {
                             booking.status === 'confirmed' ? 'bg-green-100 text-green-800' : 
                             booking.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 
                             booking.status === 'completed' ? 'bg-blue-100 text-blue-800' : 
+                            booking.status === 'cancelled' ? 'bg-red-100 text-red-800' : 
                             'bg-gray-100 text-gray-800'}`}>
                           {booking.customer_name === 'Maintenance Block' ? 'maintenance' : booking.status}
                         </span>
