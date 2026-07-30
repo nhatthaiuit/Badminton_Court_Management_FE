@@ -255,15 +255,17 @@ const CourtScheduleDashboard = () => {
       </div>
 
       {/* Grid Container */}
-      <SharedScheduleGrid 
-        courts={courts}
-        bookings={bookings}
-        loading={loading}
-        role={user?.role || "staff"}
-        selectedDate={currentDate.format("YYYY-MM-DD")}
-        onSlotSelect={handleSlotSelect}
-        onBookingClick={(booking) => setSelectedBooking(booking)}
-      />
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-300 overflow-hidden flex flex-col flex-1 min-h-[500px]">
+        <SharedScheduleGrid 
+          courts={courts}
+          bookings={bookings}
+          loading={loading}
+          role={user?.role || "staff"}
+          selectedDate={currentDate.format("YYYY-MM-DD")}
+          onSlotSelect={handleSlotSelect}
+          onBookingClick={(booking) => setSelectedBooking(booking)}
+        />
+      </div>
 
       {/* New Booking / Maintenance Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create New Block">
