@@ -43,7 +43,7 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = "max-w-md" }) => {
         aria-labelledby="modal-title"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-200">
+        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
           <h3 id="modal-title" className="text-lg font-bold text-gray-900">
             {title}
           </h3>

@@ -191,9 +191,9 @@ const CourtScheduleDashboard = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden flex flex-col max-h-[calc(100vh-8rem)]">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden flex flex-col max-h-[calc(100vh-8rem)]">
       {/* Toolbar */}
-      <div className="p-4 border-b border-gray-200 flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white z-20 sticky top-0">
+      <div className="p-4 border-b border-gray-300 flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white z-20 sticky top-0">
         <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full xl:w-auto">
           <div className="flex items-center bg-gray-100 rounded-lg p-1 w-full sm:w-auto justify-between sm:justify-start">
             <button onClick={prevDay} className="p-1.5 hover:bg-white rounded-md transition text-gray-600">
@@ -255,7 +255,7 @@ const CourtScheduleDashboard = () => {
       </div>
 
       {/* Grid Container */}
-      <div className="bg-white rounded-2xl shadow-sm border-2 border-gray-300 overflow-hidden flex flex-col h-fit max-h-[calc(100vh-250px)]">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-300 overflow-hidden flex flex-col h-fit max-h-[calc(100vh-250px)]">
         <SharedScheduleGrid 
           courts={courts}
           bookings={bookings}
@@ -270,7 +270,7 @@ const CourtScheduleDashboard = () => {
       {/* New Booking / Maintenance Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title="Create New Block">
         
-        <div className="flex mb-6 border-b border-gray-200">
+        <div className="flex mb-6 border-b border-gray-300">
           <button 
             type="button"
             className={`flex-1 pb-3 font-medium text-sm border-b-2 transition-colors ${bookingType === "booking" ? "border-primary-600 text-primary-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}
@@ -303,7 +303,7 @@ const CourtScheduleDashboard = () => {
           )}
 
           {bookingType === "maintenance" && (
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-200 text-sm text-gray-600 flex items-start gap-2 mb-4">
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-300 text-sm text-gray-600 flex items-start gap-2 mb-4">
                <Wrench className="h-5 w-5 flex-shrink-0 text-gray-500" />
                <p>Create a time-based maintenance block. Customers will not be able to book the court during this time.</p>
             </div>
@@ -340,7 +340,7 @@ const CourtScheduleDashboard = () => {
             <textarea name="note" value={formData.note} onChange={handleChange} rows="2" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder={bookingType === "maintenance" ? "Reason for maintenance..." : "Any special requests..."}></textarea>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3 border-t border-gray-200">
+          <div className="pt-4 flex justify-end gap-3 border-t border-gray-300">
             <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
               Cancel
             </button>
@@ -359,7 +359,7 @@ const CourtScheduleDashboard = () => {
           title={selectedBooking.customer_name === "Maintenance Block" ? "Maintenance Details" : "Booking Details"}
         >
           <div className="space-y-6">
-            <div className="bg-gray-50 rounded-xl p-5 border border-gray-200 shadow-sm">
+            <div className="bg-gray-50 rounded-xl p-5 border border-gray-300 shadow-sm">
               <div className="flex justify-between items-center mb-6">
                 <h3 className="text-2xl font-bold text-gray-900">
                   {selectedBooking.court_name || `Court ${selectedBooking.court_id}`}
@@ -418,7 +418,7 @@ const CourtScheduleDashboard = () => {
             {selectedBooking.note && (
               <div className="space-y-2">
                 <p className="text-gray-600 font-medium">Notes:</p>
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 text-gray-800">
+                <div className="bg-gray-50 p-4 rounded-lg border border-gray-300 text-gray-800">
                   {selectedBooking.note}
                 </div>
               </div>
@@ -435,7 +435,7 @@ const CourtScheduleDashboard = () => {
               </div>
             )}
 
-            <div className="pt-4 flex justify-end gap-3 border-t border-gray-200">
+            <div className="pt-4 flex justify-end gap-3 border-t border-gray-300">
               {selectedBooking.customer_name === "Maintenance Block" && (
                 <button 
                   onClick={handleCancelBooking} 

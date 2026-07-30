@@ -111,11 +111,11 @@ const Login = () => {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-200">
+        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-300">
           
           {/* Tabs */}
           {!isForgotView && (
-            <div className="flex mb-6 border-b border-gray-200">
+            <div className="flex mb-6 border-b border-gray-300">
               <button 
                 className={`flex-1 pb-3 font-medium text-sm border-b-2 transition-colors ${isLoginView ? "border-primary-600 text-primary-600" : "border-transparent text-gray-500 hover:text-gray-700"}`}
                 onClick={() => setIsLoginView(true)}
