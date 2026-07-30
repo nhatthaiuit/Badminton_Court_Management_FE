@@ -255,7 +255,7 @@ const CourtScheduleDashboard = () => {
       </div>
 
       {/* Grid Container */}
-      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-300 border-0 overflow-hidden flex flex-col h-fit max-h-[calc(100vh-250px)]">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-300 overflow-hidden flex flex-col h-fit max-h-[calc(100vh-250px)]">
         <SharedScheduleGrid 
           courts={courts}
           bookings={bookings}

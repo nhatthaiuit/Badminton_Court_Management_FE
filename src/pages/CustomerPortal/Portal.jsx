@@ -183,9 +183,9 @@ const Portal = () => {
       </div>
 
       {/* Date Selector */}
-      <div className="bg-white/80 backdrop-blur-md p-5 rounded-2xl shadow-sm border border-gray-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
+      <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
         <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center text-primary-600 shadow-inner border border-blue-100/50">
+          <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 shadow-inner border border-primary-200">
             <Calendar className="h-6 w-6" />
           </div>
           <div>
@@ -209,7 +209,7 @@ const Portal = () => {
       </div>
 
       {/* Grid */}
-      <div className="bg-white rounded-2xl shadow-sm ring-1 ring-gray-300 border-0 overflow-hidden flex flex-col h-fit max-h-[600px]">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-300 overflow-hidden flex flex-col h-fit max-h-[600px]">
         <SharedScheduleGrid 
           courts={courts}
           bookings={bookings}
