@@ -223,26 +223,26 @@ const Users = () => {
       {/* Add/Edit User Modal */}
       <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} title={editingUserId ? "Edit User" : "Add New User"}>
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div>
+          <div className="min-w-0">
             <label className="block text-sm font-medium text-gray-700 mb-1">Full Name <span className="text-red-500">*</span></label>
-            <input type="text" name="full_name" required value={formData.full_name} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Nguyen Van A" />
+            <input type="text" name="full_name" required value={formData.full_name} onChange={handleChange} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow" placeholder="Nguyen Van A" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-1">Email <span className="text-red-500">*</span></label>
-              <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="email@gmail.com" />
+              <input type="email" name="email" required value={formData.email} onChange={handleChange} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow" placeholder="email@gmail.com" />
             </div>
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-1">Phone <span className="text-red-500">*</span></label>
-              <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="0901234567" />
+              <input type="tel" name="phone" required value={formData.phone} onChange={handleChange} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow" placeholder="0901234567" />
             </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-1">Role <span className="text-red-500">*</span></label>
-              <select name="role" value={formData.role} onChange={handleChange} disabled={user?.role === "staff"} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none disabled:bg-gray-100 disabled:text-gray-500">
+              <select name="role" value={formData.role} onChange={handleChange} disabled={user?.role === "staff"} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none disabled:bg-gray-100 disabled:text-gray-500 transition-shadow">
                 {user?.role === "admin" && (
                   <>
                     <option value="admin">Admin</option>
@@ -255,24 +255,24 @@ const Users = () => {
                 <option value="customer">Customer</option>
               </select>
             </div>
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-1">Status <span className="text-red-500">*</span></label>
-              <select name="status" value={formData.status} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none">
+              <select name="status" value={formData.status} onChange={handleChange} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow">
                 <option value="active">Active</option>
                 <option value="inactive">Inactive</option>
               </select>
             </div>
-            <div className="sm:col-span-2">
+            <div className="sm:col-span-2 min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-1">Password {editingUserId ? "" : <span className="text-red-500">*</span>}</label>
-              <input type="password" name="password" required={!editingUserId} value={formData.password} onChange={handleChange} minLength="6" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder={editingUserId ? "Leave empty to keep" : "Min 6 chars"} />
+              <input type="password" name="password" required={!editingUserId} value={formData.password} onChange={handleChange} minLength="6" className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow" placeholder={editingUserId ? "Leave empty to keep" : "Min 6 chars"} />
             </div>
           </div>
 
           <div className="pt-4 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-gray-300">
-            <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
+            <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition text-sm">
               Cancel
             </button>
-            <button type="submit" disabled={submitting} className="px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-70">
+            <button type="submit" disabled={submitting} className="px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-70 text-sm">
               {submitting ? "Saving..." : (editingUserId ? "Save Changes" : "Create User")}
             </button>
           </div>

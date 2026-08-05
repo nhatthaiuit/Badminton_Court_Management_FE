@@ -303,19 +303,19 @@ const CourtScheduleDashboard = () => {
           
           {bookingType === "booking" && (
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
+              <div className="min-w-0">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Customer Name <span className="text-red-500">*</span></label>
-                <input type="text" name="customer_name" required value={formData.customer_name} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="John Doe" />
+                <input type="text" name="customer_name" required value={formData.customer_name} onChange={handleChange} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow" placeholder="John Doe" />
               </div>
-              <div>
+              <div className="min-w-0">
                 <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number <span className="text-red-500">*</span></label>
-                <input type="tel" name="customer_phone" required value={formData.customer_phone} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="0901234567" />
+                <input type="tel" name="customer_phone" required value={formData.customer_phone} onChange={handleChange} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow" placeholder="0901234567" />
               </div>
             </div>
           )}
 
           {bookingType === "maintenance" && (
-            <div className="bg-gray-50 p-3 rounded-lg border border-gray-300 text-sm text-gray-600 flex items-start gap-2 mb-4">
+            <div className="bg-gray-50 p-3 rounded-lg border border-gray-300 text-sm text-gray-600 flex items-start gap-2">
                <Wrench className="h-5 w-5 flex-shrink-0 text-gray-500" />
                <p>Create a time-based maintenance block. Customers will not be able to book the court during this time.</p>
             </div>
@@ -323,7 +323,7 @@ const CourtScheduleDashboard = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Select Court <span className="text-red-500">*</span></label>
-            <select name="court_id" required value={formData.court_id} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none">
+            <select name="court_id" required value={formData.court_id} onChange={handleChange} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow">
               <option value="" disabled>-- Select a court --</option>
               {courts.filter(c => c.status === "available").map(court => (
                 <option key={court.court_id} value={court.court_id}>{court.name}</option>
@@ -333,30 +333,30 @@ const CourtScheduleDashboard = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-            <input type="date" name="booking_date" required value={formData.booking_date} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 outline-none" />
+            <input type="date" name="booking_date" required value={formData.booking_date} onChange={handleChange} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-50 outline-none transition-shadow" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-1">Start Time <span className="text-red-500">*</span></label>
-              <input type="time" name="start_time" required value={formData.start_time} onChange={handleChange} min="05:00" max="23:59" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
+              <input type="time" name="start_time" required value={formData.start_time} onChange={handleChange} min="05:00" max="23:59" className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow" />
             </div>
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-1">End Time <span className="text-red-500">*</span></label>
-              <input type="time" name="end_time" required value={formData.end_time} onChange={handleChange} min="05:00" max="23:59" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
+              <input type="time" name="end_time" required value={formData.end_time} onChange={handleChange} min="05:00" max="23:59" className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow" />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Note (Optional)</label>
-            <textarea name="note" value={formData.note} onChange={handleChange} rows="2" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder={bookingType === "maintenance" ? "Reason for maintenance..." : "Any special requests..."}></textarea>
+            <textarea name="note" value={formData.note} onChange={handleChange} rows="2" className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow resize-none" placeholder={bookingType === "maintenance" ? "Reason for maintenance..." : "Any special requests..."}></textarea>
           </div>
 
           <div className="pt-4 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-gray-300">
-            <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
+            <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition text-sm">
               Cancel
             </button>
-            <button type="submit" disabled={submitting} className={`px-4 py-2 text-white rounded-lg font-medium transition disabled:opacity-70 flex items-center justify-center ${bookingType === 'maintenance' ? 'bg-gray-800 hover:bg-gray-900' : 'bg-primary-600 hover:bg-primary-700'}`}>
+            <button type="submit" disabled={submitting} className={`px-4 py-2.5 text-white rounded-lg font-medium transition disabled:opacity-70 flex items-center justify-center text-sm ${bookingType === 'maintenance' ? 'bg-gray-800 hover:bg-gray-900' : 'bg-primary-600 hover:bg-primary-700'}`}>
               {submitting ? "Saving..." : (bookingType === "maintenance" ? "Schedule Maintenance" : "Create Booking")}
             </button>
           </div>

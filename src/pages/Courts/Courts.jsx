@@ -237,7 +237,7 @@ const Courts = () => {
               required
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-shadow"
+              className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-shadow"
               placeholder="e.g., Court 1"
             />
           </div>
@@ -254,7 +254,7 @@ const Courts = () => {
               step="1000"
               value={formData.price_per_hour}
               onChange={handleChange}
-              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-shadow"
+              className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-shadow"
               placeholder="e.g., 150000"
             />
           </div>
@@ -267,7 +267,7 @@ const Courts = () => {
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
+              className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-shadow"
             >
               <option value="available">Available</option>
               <option value="inactive">Inactive</option>
@@ -278,14 +278,14 @@ const Courts = () => {
             <button
               type="button"
               onClick={closeModal}
-              className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition"
+              className="px-4 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition text-sm"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-70 flex items-center justify-center"
+              className="px-4 py-2.5 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-70 flex items-center justify-center text-sm"
             >
               {submitting ? (
                 <>

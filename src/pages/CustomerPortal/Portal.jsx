@@ -239,7 +239,7 @@ const Portal = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Select Court <span className="text-red-500">*</span></label>
-            <select name="court_id" required value={manualFormData.court_id} onChange={handleManualChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none">
+            <select name="court_id" required value={manualFormData.court_id} onChange={handleManualChange} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow">
               <option value="" disabled>-- Select a court --</option>
               {courts.filter(c => c.status === "available").map(court => (
                 <option key={court.court_id} value={court.court_id}>{court.name}</option>
@@ -249,23 +249,23 @@ const Portal = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-            <input type="text" disabled value={dayjs(selectedDate).format("MMM D, YYYY")} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 outline-none text-sm sm:text-base" />
+            <input type="text" disabled value={dayjs(selectedDate).format("MMM D, YYYY")} className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 outline-none text-sm sm:text-base transition-shadow" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-1">Start Time <span className="text-red-500">*</span></label>
-              <input type="time" name="start_time" required value={manualFormData.start_time} onChange={handleManualChange} min="05:00" max="23:59" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
+              <input type="time" name="start_time" required value={manualFormData.start_time} onChange={handleManualChange} min="05:00" max="23:59" className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow" />
             </div>
-            <div>
+            <div className="min-w-0">
               <label className="block text-sm font-medium text-gray-700 mb-1">End Time <span className="text-red-500">*</span></label>
-              <input type="time" name="end_time" required value={manualFormData.end_time} onChange={handleManualChange} min="05:00" max="23:59" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
+              <input type="time" name="end_time" required value={manualFormData.end_time} onChange={handleManualChange} min="05:00" max="23:59" className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow" />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Note (Optional)</label>
-            <textarea name="note" value={manualFormData.note} onChange={handleManualChange} rows="2" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Any special requests..."></textarea>
+            <textarea name="note" value={manualFormData.note} onChange={handleManualChange} rows="2" className="w-full min-w-0 px-3 sm:px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none transition-shadow resize-none" placeholder="Any special requests..."></textarea>
           </div>
 
           <div className="pt-4 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-gray-300">
