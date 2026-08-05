@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { bookingsApi } from "../../api/bookingsApi";
 import { useAuth } from "../../hooks/useAuth";
@@ -12,7 +12,7 @@ const MyBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  const fetchMyBookings = async () => {
+  const fetchMyBookings = useCallback(async () => {
     try {
       // In a real app, the backend should filter by the logged-in user.
       // Here we fetch all and filter by name/phone for the demo.
@@ -26,7 +26,7 @@ const MyBookings = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [user?.phone]);
 
 
   

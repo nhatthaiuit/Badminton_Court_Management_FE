@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import dayjs from "dayjs";
 import { bookingsApi } from "../../api/bookingsApi";
 import { courtsApi } from "../../api/courtsApi";
@@ -37,7 +37,7 @@ const CourtScheduleDashboard = () => {
   // View/Edit Modal State
   const [selectedBooking, setSelectedBooking] = useState(null);
 
-  const fetchScheduleData = async () => {
+  const fetchScheduleData = useCallback(async () => {
     setLoading(true);
     try {
       const [courtsRes, bookingsRes] = await Promise.all([
@@ -51,12 +51,11 @@ const CourtScheduleDashboard = () => {
     } finally {
       setLoading(false);
     }
-  };
+  }, [currentDate]);
 
   useEffect(() => {
     fetchScheduleData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [currentDate]);
+  }, [fetchScheduleData]);
 
   // Socket.io Listener
   useEffect(() => {

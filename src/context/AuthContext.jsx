@@ -35,6 +35,15 @@ export const AuthProvider = ({ children }) => {
     };
 
     loadUser();
+
+    // Listen for global unauthorized events to logout without full reload
+    const handleUnauthorized = () => {
+      setUser(null);
+      setLoading(false);
+      toast.error("Session expired. Please log in again.", { id: "session_expired" });
+    };
+    window.addEventListener("auth_unauthorized", handleUnauthorized);
+    return () => window.removeEventListener("auth_unauthorized", handleUnauthorized);
   }, []);
 
   const login = async (phone, password) => {

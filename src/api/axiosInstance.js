@@ -41,7 +41,7 @@ axiosInstance.interceptors.response.use(
     if (error.response?.status === 401 && originalRequest.url !== '/auth/login') {
       localStorage.removeItem("bcms_token");
       localStorage.removeItem("bcms_user");
-      window.location.href = "/login";
+      window.dispatchEvent(new Event("auth_unauthorized"));
     }
     return Promise.reject(error);
   }
