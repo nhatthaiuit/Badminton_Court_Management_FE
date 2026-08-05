@@ -2,14 +2,12 @@ import { useState, useEffect, useRef } from "react";
 import dayjs from "dayjs";
 import { bookingsApi } from "../../api/bookingsApi";
 import { courtsApi } from "../../api/courtsApi";
-import { ChevronLeft, ChevronRight, Calendar, Plus, PhoneCall, CheckCircle, AlertCircle, Wrench } from "lucide-react";
+import { ChevronLeft, ChevronRight, Calendar, Plus, PhoneCall, CheckCircle, AlertCircle, Wrench, ChevronDown, ChevronUp } from "lucide-react";
 import Modal from "../../components/ui/Modal";
 import SharedScheduleGrid from "../../components/bookings/SharedScheduleGrid";
 import { socket } from "../../api/socket";
 import toast from "react-hot-toast";
 import { useAuth } from "../../hooks/useAuth";
-
-const HOUR_WIDTH = 112; // 112px per hour
 
 const CourtScheduleDashboard = () => {
   const { user } = useAuth();
@@ -17,6 +15,7 @@ const CourtScheduleDashboard = () => {
   const [courts, setCourts] = useState([]);
   const [bookings, setBookings] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [showLegend, setShowLegend] = useState(false);
 
   // Create Modal State
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -191,66 +190,79 @@ const CourtScheduleDashboard = () => {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden isolate flex flex-col max-h-[calc(100vh-8rem)]">
+    <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden isolate flex flex-col max-h-[calc(100vh-7rem)] sm:max-h-[calc(100vh-8rem)]">
       {/* Toolbar */}
-      <div className="p-4 border-b border-gray-300 flex flex-col xl:flex-row xl:items-center justify-between gap-4 bg-white z-20 sticky top-0">
-        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full xl:w-auto">
-          <div className="flex items-center bg-gray-100 rounded-lg p-1 w-full sm:w-auto justify-between sm:justify-start">
-            <button onClick={prevDay} className="p-1.5 hover:bg-white rounded-md transition text-gray-600">
-              <ChevronLeft className="h-5 w-5" />
-            </button>
-            <button onClick={goToday} className="px-3 py-1.5 hover:bg-white rounded-md transition text-sm font-medium text-gray-700 mx-1">
-              Today
-            </button>
-            <button onClick={nextDay} className="p-1.5 hover:bg-white rounded-md transition text-gray-600">
-              <ChevronRight className="h-5 w-5" />
-            </button>
+      <div className="p-3 sm:p-4 border-b border-gray-300 flex flex-col gap-3 sm:gap-4 bg-white z-20 sticky top-0">
+        {/* Top Row: Navigation + Date */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 sm:gap-4 flex-wrap">
+            <div className="flex items-center bg-gray-100 rounded-lg p-0.5 sm:p-1">
+              <button onClick={prevDay} className="p-1 sm:p-1.5 hover:bg-white rounded-md transition text-gray-600">
+                <ChevronLeft className="h-4 w-4 sm:h-5 sm:w-5" />
+              </button>
+              <button onClick={goToday} className="px-2 sm:px-3 py-1 sm:py-1.5 hover:bg-white rounded-md transition text-xs sm:text-sm font-medium text-gray-700">
+                Today
+              </button>
+              <button onClick={nextDay} className="p-1 sm:p-1.5 hover:bg-white rounded-md transition text-gray-600">
+                <ChevronRight className="h-4 w-4 sm:h-5 sm:w-5" />
+              </button>
+            </div>
+            <div className="flex items-center gap-1.5 sm:gap-2 text-sm sm:text-lg font-bold text-gray-800 cursor-pointer hover:text-primary-700 transition group" onClick={handleCalendarClick}>
+              <Calendar className="h-4 w-4 sm:h-5 sm:w-5 text-primary-600 group-hover:scale-110 transition-transform" />
+              <span className="hidden sm:inline">{currentDate.format("dddd, DD MMM YYYY")}</span>
+              <span className="sm:hidden text-sm">{currentDate.format("DD/MM/YYYY")}</span>
+              <input 
+                ref={dateInputRef}
+                type="date" 
+                className="absolute w-0 h-0 opacity-0 pointer-events-none"
+                value={currentDate.format("YYYY-MM-DD")}
+                onChange={(e) => {
+                  if (e.target.value) setCurrentDate(dayjs(e.target.value));
+                }}
+              />
+            </div>
           </div>
-          <div className="flex items-center gap-2 text-lg font-bold text-gray-800 cursor-pointer hover:text-primary-700 transition group" onClick={handleCalendarClick}>
-            <Calendar className="h-5 w-5 text-primary-600 group-hover:scale-110 transition-transform" />
-            <span>{currentDate.format("dddd, DD MMM YYYY")}</span>
-            <input 
-              ref={dateInputRef}
-              type="date" 
-              className="absolute w-0 h-0 opacity-0 pointer-events-none"
-              value={currentDate.format("YYYY-MM-DD")}
-              onChange={(e) => {
-                if (e.target.value) setCurrentDate(dayjs(e.target.value));
-              }}
-            />
-          </div>
+
+          <button 
+            onClick={handleOpenModal}
+            className="flex items-center gap-1.5 sm:gap-2 bg-primary-600 text-white px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg font-medium hover:bg-primary-700 transition text-sm whitespace-nowrap"
+          >
+            <Plus className="h-4 w-4" />
+            <span className="hidden sm:inline">New Block</span>
+            <span className="sm:hidden">New</span>
+          </button>
         </div>
 
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 xl:gap-6 w-full xl:w-auto">
-          <div className="flex flex-wrap items-center gap-3 sm:gap-4 text-sm">
-             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-red-100 border border-red-400"></div>
+        {/* Bottom Row: Legend (collapsible on mobile) */}
+        <div className="flex items-center justify-between">
+          <button 
+            onClick={() => setShowLegend(!showLegend)}
+            className="md:hidden flex items-center gap-1 text-xs text-gray-500 hover:text-gray-700 transition"
+          >
+            Legend {showLegend ? <ChevronUp className="h-3 w-3" /> : <ChevronDown className="h-3 w-3" />}
+          </button>
+          <div className={`flex-wrap items-center gap-2 sm:gap-3 md:gap-4 text-xs sm:text-sm ${showLegend ? 'flex' : 'hidden md:flex'}`}>
+            <div className="flex items-center gap-1.5">
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-red-100 border border-red-400"></div>
               <span className="text-gray-600">Unpaid</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-yellow-100 border border-yellow-300"></div>
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-yellow-100 border border-yellow-300"></div>
               <span className="text-gray-600">Pending</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-green-100 border border-green-300"></div>
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-green-100 border border-green-300"></div>
               <span className="text-gray-600">Paid</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-blue-100 border border-blue-300"></div>
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-blue-100 border border-blue-300"></div>
               <span className="text-gray-600">Completed</span>
             </div>
             <div className="flex items-center gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-gray-100 border border-gray-300 border-dashed"></div>
+              <div className="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-gray-100 border border-gray-300 border-dashed"></div>
               <span className="text-gray-600">Maintenance</span>
             </div>
           </div>
-          <button 
-            onClick={handleOpenModal}
-            className="flex items-center justify-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition w-full sm:w-auto whitespace-nowrap"
-          >
-            <Plus className="h-4 w-4" />
-            New Block
-          </button>
         </div>
       </div>
 
@@ -290,14 +302,14 @@ const CourtScheduleDashboard = () => {
         <form onSubmit={handleSubmit} className="space-y-4">
           
           {bookingType === "booking" && (
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Customer Name <span className="text-red-500">*</span></label>
-                <input type="text" name="customer_name" required value={formData.customer_name} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="John Doe" />
+                <input type="text" name="customer_name" required value={formData.customer_name} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="John Doe" />
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number <span className="text-red-500">*</span></label>
-                <input type="tel" name="customer_phone" required value={formData.customer_phone} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="0901234567" />
+                <input type="tel" name="customer_phone" required value={formData.customer_phone} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="0901234567" />
               </div>
             </div>
           )}
@@ -311,7 +323,7 @@ const CourtScheduleDashboard = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Select Court <span className="text-red-500">*</span></label>
-            <select name="court_id" required value={formData.court_id} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none">
+            <select name="court_id" required value={formData.court_id} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none">
               <option value="" disabled>-- Select a court --</option>
               {courts.filter(c => c.status === "available").map(court => (
                 <option key={court.court_id} value={court.court_id}>{court.name}</option>
@@ -321,30 +333,30 @@ const CourtScheduleDashboard = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-            <input type="date" name="booking_date" required value={formData.booking_date} onChange={handleChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 outline-none" />
+            <input type="date" name="booking_date" required value={formData.booking_date} onChange={handleChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg bg-gray-50 outline-none" />
           </div>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Start Time <span className="text-red-500">*</span></label>
-              <input type="time" name="start_time" required value={formData.start_time} onChange={handleChange} min="05:00" max="23:59" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
+              <input type="time" name="start_time" required value={formData.start_time} onChange={handleChange} min="05:00" max="23:59" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">End Time <span className="text-red-500">*</span></label>
-              <input type="time" name="end_time" required value={formData.end_time} onChange={handleChange} min="05:00" max="23:59" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
+              <input type="time" name="end_time" required value={formData.end_time} onChange={handleChange} min="05:00" max="23:59" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Note (Optional)</label>
-            <textarea name="note" value={formData.note} onChange={handleChange} rows="2" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder={bookingType === "maintenance" ? "Reason for maintenance..." : "Any special requests..."}></textarea>
+            <textarea name="note" value={formData.note} onChange={handleChange} rows="2" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder={bookingType === "maintenance" ? "Reason for maintenance..." : "Any special requests..."}></textarea>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3 border-t border-gray-300">
+          <div className="pt-4 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-gray-300">
             <button type="button" onClick={() => setIsModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
               Cancel
             </button>
-            <button type="submit" disabled={submitting} className={`px-4 py-2 text-white rounded-lg font-medium transition disabled:opacity-70 flex items-center ${bookingType === 'maintenance' ? 'bg-gray-800 hover:bg-gray-900' : 'bg-primary-600 hover:bg-primary-700'}`}>
+            <button type="submit" disabled={submitting} className={`px-4 py-2 text-white rounded-lg font-medium transition disabled:opacity-70 flex items-center justify-center ${bookingType === 'maintenance' ? 'bg-gray-800 hover:bg-gray-900' : 'bg-primary-600 hover:bg-primary-700'}`}>
               {submitting ? "Saving..." : (bookingType === "maintenance" ? "Schedule Maintenance" : "Create Booking")}
             </button>
           </div>
@@ -358,14 +370,14 @@ const CourtScheduleDashboard = () => {
           onClose={() => setSelectedBooking(null)} 
           title={selectedBooking.customer_name === "Maintenance Block" ? "Maintenance Details" : "Booking Details"}
         >
-          <div className="space-y-6">
-            <div className="bg-gray-50 rounded-xl p-5 border border-gray-300 shadow-sm">
-              <div className="flex justify-between items-center mb-6">
-                <h3 className="text-2xl font-bold text-gray-900">
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-gray-50 rounded-xl p-4 sm:p-5 border border-gray-300 shadow-sm">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 sm:mb-6 gap-2">
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900">
                   {selectedBooking.court_name || `Court ${selectedBooking.court_id}`}
                 </h3>
                 {selectedBooking.customer_name !== "Maintenance Block" ? (
-                  <span className={`px-4 py-1.5 rounded-full text-sm font-bold capitalize border ${
+                  <span className={`px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-bold capitalize border ${
                     selectedBooking.status === 'pending' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' 
                     : selectedBooking.status === 'confirmed' ? 'bg-green-100 text-green-800 border-green-200'
                     : selectedBooking.status === 'completed' ? 'bg-blue-100 text-blue-800 border-blue-200'
@@ -374,38 +386,38 @@ const CourtScheduleDashboard = () => {
                     {selectedBooking.status === 'confirmed' ? 'Paid' : selectedBooking.status}
                   </span>
                 ) : (
-                  <span className="px-4 py-1.5 rounded-full text-sm font-bold uppercase tracking-wider bg-gray-200 text-gray-800 border border-gray-300">
+                  <span className="px-3 sm:px-4 py-1 sm:py-1.5 rounded-full text-xs sm:text-sm font-bold uppercase tracking-wider bg-gray-200 text-gray-800 border border-gray-300">
                     Maintenance
                   </span>
                 )}
               </div>
 
-              <div className="grid grid-cols-2 gap-y-6 gap-x-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-4 sm:gap-y-6 gap-x-4">
                 <div>
-                  <p className="text-gray-500 mb-1 text-sm">Date</p>
-                  <p className="font-semibold text-gray-900">{dayjs(selectedBooking.booking_date).format("dddd, MMM DD, YYYY")}</p>
+                  <p className="text-gray-500 mb-1 text-xs sm:text-sm">Date</p>
+                  <p className="font-semibold text-gray-900 text-sm sm:text-base">{dayjs(selectedBooking.booking_date).format("dddd, MMM DD, YYYY")}</p>
                 </div>
                 <div>
-                  <p className="text-gray-500 mb-1 text-sm">Time</p>
-                  <p className="font-semibold text-gray-900">{selectedBooking.start_time.slice(0,5)} - {selectedBooking.end_time.slice(0,5)}</p>
+                  <p className="text-gray-500 mb-1 text-xs sm:text-sm">Time</p>
+                  <p className="font-semibold text-gray-900 text-sm sm:text-base">{selectedBooking.start_time.slice(0,5)} - {selectedBooking.end_time.slice(0,5)}</p>
                 </div>
                 {selectedBooking.customer_name !== "Maintenance Block" && (
                   <>
                     <div>
-                      <p className="text-gray-500 mb-1 text-sm">Total Price</p>
-                      <p className="font-bold text-primary-600 text-lg">{parseInt(selectedBooking.total_price).toLocaleString()} VND</p>
+                      <p className="text-gray-500 mb-1 text-xs sm:text-sm">Total Price</p>
+                      <p className="font-bold text-primary-600 text-base sm:text-lg">{parseInt(selectedBooking.total_price).toLocaleString()} VND</p>
                     </div>
                     <div>
-                      <p className="text-gray-500 mb-1 text-sm">Booking ID</p>
-                      <p className="font-semibold text-gray-900">#{selectedBooking.booking_id}</p>
+                      <p className="text-gray-500 mb-1 text-xs sm:text-sm">Booking ID</p>
+                      <p className="font-semibold text-gray-900 text-sm sm:text-base">#{selectedBooking.booking_id}</p>
                     </div>
                     <div>
-                      <p className="text-gray-500 mb-1 text-sm">Customer Name</p>
-                      <p className="font-semibold text-gray-900">{selectedBooking.customer_name}</p>
+                      <p className="text-gray-500 mb-1 text-xs sm:text-sm">Customer Name</p>
+                      <p className="font-semibold text-gray-900 text-sm sm:text-base">{selectedBooking.customer_name}</p>
                     </div>
                     <div>
-                      <p className="text-gray-500 mb-1 text-sm">Phone Number</p>
-                      <div className="flex items-center gap-1.5 text-gray-900 font-semibold">
+                      <p className="text-gray-500 mb-1 text-xs sm:text-sm">Phone Number</p>
+                      <div className="flex items-center gap-1.5 text-gray-900 font-semibold text-sm sm:text-base">
                         <PhoneCall className="h-4 w-4 text-gray-500" />
                         <a href={`tel:${selectedBooking.customer_phone}`} className="hover:text-primary-600">{selectedBooking.customer_phone}</a>
                       </div>
@@ -417,29 +429,29 @@ const CourtScheduleDashboard = () => {
             
             {selectedBooking.note && (
               <div className="space-y-2">
-                <p className="text-gray-600 font-medium">Notes:</p>
-                <div className="bg-gray-50 p-4 rounded-lg border border-gray-300 text-gray-800">
+                <p className="text-gray-600 font-medium text-sm">Notes:</p>
+                <div className="bg-gray-50 p-3 sm:p-4 rounded-lg border border-gray-300 text-gray-800 text-sm">
                   {selectedBooking.note}
                 </div>
               </div>
             )}
             
-            <div className="text-right text-sm text-gray-400 font-medium pb-2">
+            <div className="text-right text-xs sm:text-sm text-gray-400 font-medium pb-2">
               Created at: {dayjs(selectedBooking.created_at).format("DD/MM/YYYY HH:mm")}
             </div>
 
             {selectedBooking.customer_name !== "Maintenance Block" && selectedBooking.status === 'pending' && dayjs(`${selectedBooking.booking_date} ${selectedBooking.start_time}`).diff(dayjs(), 'minute') <= 60 && (
               <div className="bg-red-50 border border-red-200 rounded-lg p-3 flex gap-3 text-red-800">
                 <AlertCircle className="h-5 w-5 flex-shrink-0" />
-                <p className="text-sm">This booking starts soon and is not paid. Please call the customer to confirm their arrival.</p>
+                <p className="text-xs sm:text-sm">This booking starts soon and is not paid. Please call the customer to confirm their arrival.</p>
               </div>
             )}
 
-            <div className="pt-4 flex justify-end gap-3 border-t border-gray-300">
+            <div className="pt-4 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-gray-300">
               {selectedBooking.customer_name === "Maintenance Block" && (
                 <button 
                   onClick={handleCancelBooking} 
-                  className="mr-auto px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition flex items-center gap-2"
+                  className="sm:mr-auto px-4 py-2 text-red-600 bg-red-50 hover:bg-red-100 rounded-lg font-medium transition flex items-center justify-center gap-2"
                 >
                   Remove Maintenance
                 </button>
@@ -451,7 +463,7 @@ const CourtScheduleDashboard = () => {
               {selectedBooking.customer_name !== "Maintenance Block" && selectedBooking.status === 'pending' && (
                 <button 
                   onClick={handleMarkAsPaid} 
-                  className="px-5 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition flex items-center gap-2 shadow-sm"
+                  className="px-5 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition flex items-center justify-center gap-2 shadow-sm"
                 >
                   <CheckCircle className="h-4 w-4" />
                   Mark as PAID

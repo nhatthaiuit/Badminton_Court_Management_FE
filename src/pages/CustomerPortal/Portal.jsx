@@ -170,46 +170,45 @@ const Portal = () => {
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       {/* Header Banner */}
-      <div className="bg-gradient-to-br from-primary-600 via-blue-600 to-indigo-700 rounded-3xl p-8 sm:p-10 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-gradient-to-br from-primary-600 via-blue-600 to-indigo-700 rounded-2xl sm:rounded-3xl p-5 sm:p-8 md:p-10 text-white shadow-xl relative overflow-hidden">
         <div className="relative z-10">
-          <h1 className="text-3xl sm:text-4xl font-extrabold mb-3 tracking-tight">Book Your Court</h1>
-          <p className="text-blue-100 max-w-xl text-lg">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold mb-2 sm:mb-3 tracking-tight">Book Your Court</h1>
+          <p className="text-blue-100 max-w-xl text-sm sm:text-base md:text-lg">
             Select a date, find an available court, and start playing! All bookings are subject to confirmation at the facility.
           </p>
         </div>
-        {/* Decorative elements */}
-        <div className="absolute top-0 right-0 w-64 h-64 bg-white opacity-10 rounded-full blur-3xl transform translate-x-1/4 -translate-y-1/4"></div>
-        <div className="absolute bottom-0 right-1/3 w-48 h-48 bg-indigo-300 opacity-20 rounded-full blur-2xl transform translate-y-1/3"></div>
+        <div className="absolute top-0 right-0 w-40 sm:w-64 h-40 sm:h-64 bg-white opacity-10 rounded-full blur-3xl transform translate-x-1/4 -translate-y-1/4"></div>
+        <div className="absolute bottom-0 right-1/3 w-32 sm:w-48 h-32 sm:h-48 bg-indigo-300 opacity-20 rounded-full blur-2xl transform translate-y-1/3"></div>
       </div>
 
       {/* Date Selector */}
-      <div className="bg-white p-5 rounded-2xl shadow-sm border border-gray-300 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-all hover:shadow-md">
-        <div className="flex items-center gap-4">
-          <div className="w-12 h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 shadow-inner border border-primary-200">
-            <Calendar className="h-6 w-6" />
+      <div className="bg-white p-4 sm:p-5 rounded-xl sm:rounded-2xl shadow-sm border border-gray-300 flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 transition-all hover:shadow-md">
+        <div className="flex items-center gap-3 sm:gap-4">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 shadow-inner border border-primary-200">
+            <Calendar className="h-5 w-5 sm:h-6 sm:w-6" />
           </div>
           <div>
-            <h2 className="font-bold text-gray-800 text-lg">Select Date</h2>
-            <p className="text-sm text-gray-500">Pick a day to view court availability</p>
+            <h2 className="font-bold text-gray-800 text-base sm:text-lg">Select Date</h2>
+            <p className="text-xs sm:text-sm text-gray-500">Pick a day to view availability</p>
           </div>
         </div>
-        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 w-full sm:w-auto mt-4 sm:mt-0">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3 w-full sm:w-auto">
           <input 
             type="date" 
             value={selectedDate}
             min={dayjs().format("YYYY-MM-DD")}
             onChange={(e) => setSelectedDate(e.target.value)}
-            className="px-5 py-2.5 bg-white border border-gray-300 rounded-xl font-medium text-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none shadow-sm cursor-pointer transition-shadow hover:shadow"
+            className="px-4 sm:px-5 py-2 sm:py-2.5 bg-white border border-gray-300 rounded-xl font-medium text-gray-700 focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none shadow-sm cursor-pointer transition-shadow hover:shadow"
           />
-          <button onClick={() => setIsManualModalOpen(true)} className="flex items-center gap-2 px-5 py-2.5 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition shadow-sm whitespace-nowrap">
-            <Plus className="h-5 w-5" />
+          <button onClick={() => setIsManualModalOpen(true)} className="flex items-center justify-center gap-2 px-4 sm:px-5 py-2 sm:py-2.5 bg-primary-600 text-white rounded-xl font-medium hover:bg-primary-700 transition shadow-sm whitespace-nowrap text-sm">
+            <Plus className="h-4 w-4 sm:h-5 sm:w-5" />
             Create Booking
           </button>
         </div>
       </div>
 
       {/* Grid */}
-      <div className="bg-white rounded-2xl shadow-sm border border-gray-300 overflow-hidden flex flex-col h-fit max-h-[600px]">
+      <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-300 overflow-hidden flex flex-col h-fit max-h-[400px] sm:max-h-[500px] md:max-h-[600px]">
         <SharedScheduleGrid 
           courts={courts}
           bookings={bookings}
@@ -221,10 +220,10 @@ const Portal = () => {
       </div>
 
       {/* Legend */}
-      <div className="flex gap-6 justify-center text-sm text-gray-600">
-        <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-white border border-primary-200"></span> Available</div>
-        <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-red-100 border border-red-300"></span> Booked</div>
-        <div className="flex items-center gap-2"><span className="w-4 h-4 rounded bg-gray-100 border border-dashed border-gray-300"></span> Maintenance</div>
+      <div className="flex flex-wrap gap-3 sm:gap-6 justify-center text-xs sm:text-sm text-gray-600">
+        <div className="flex items-center gap-1.5 sm:gap-2"><span className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-white border border-primary-200"></span> Available</div>
+        <div className="flex items-center gap-1.5 sm:gap-2"><span className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-red-100 border border-red-300"></span> Booked</div>
+        <div className="flex items-center gap-1.5 sm:gap-2"><span className="w-3 h-3 sm:w-4 sm:h-4 rounded bg-gray-100 border border-dashed border-gray-300"></span> Maintenance</div>
       </div>
 
       {/* Manual Booking Modal */}
@@ -253,7 +252,7 @@ const Portal = () => {
             <input type="text" disabled value={dayjs(selectedDate).format("dddd, MMMM D, YYYY")} className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 outline-none" />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Start Time <span className="text-red-500">*</span></label>
               <input type="time" name="start_time" required value={manualFormData.start_time} onChange={handleManualChange} min="05:00" max="23:59" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
@@ -269,7 +268,7 @@ const Portal = () => {
             <textarea name="note" value={manualFormData.note} onChange={handleManualChange} rows="2" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Any special requests..."></textarea>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3 border-t border-gray-300">
+          <div className="pt-4 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-gray-300">
             <button type="button" onClick={() => setIsManualModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
               Cancel
             </button>

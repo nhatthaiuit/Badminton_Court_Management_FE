@@ -97,12 +97,12 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8">
+    <div className="min-h-screen min-h-[100dvh] bg-gray-50 flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8">
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="flex justify-center -mt-8 mb-4">
-          <img src="/logo2.png" alt="BCMS Logo" className="h-48 w-48 object-contain animate-in zoom-in duration-500 hover:scale-105 transition-transform" />
+        <div className="flex justify-center -mt-4 sm:-mt-8 mb-2 sm:mb-4">
+          <img src="/logo2.png" alt="BCMS Logo" className="h-32 w-32 sm:h-40 sm:w-40 md:h-48 md:w-48 object-contain animate-in zoom-in duration-500 hover:scale-105 transition-transform" />
         </div>
-        <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
+        <h2 className="mt-4 sm:mt-6 text-center text-2xl sm:text-3xl font-extrabold text-gray-900">
           {isLoginView ? "Sign in to BCMS" : "Create Customer Account"}
         </h2>
         <p className="mt-2 text-center text-sm text-gray-600">
@@ -111,7 +111,7 @@ const Login = () => {
       </div>
 
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div className="bg-white py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-300">
+        <div className="bg-white py-6 sm:py-8 px-4 shadow sm:rounded-lg sm:px-10 border border-gray-300 rounded-xl">
           
           {/* Tabs */}
           {!isForgotView && (

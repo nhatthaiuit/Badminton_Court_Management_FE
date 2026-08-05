@@ -107,16 +107,16 @@ const Payment = () => {
   const isWarning = timeLeft < 300; // Less than 5 mins
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 animate-in fade-in duration-500">
-      <div className="text-center space-y-2">
-        <h1 className="text-2xl font-bold text-gray-900">Complete Your Payment</h1>
-        <p className="text-gray-500">Secure your booking by completing the payment within the time limit.</p>
+    <div className="max-w-3xl mx-auto space-y-4 sm:space-y-6 animate-in fade-in duration-500">
+      <div className="text-center space-y-1 sm:space-y-2">
+        <h1 className="text-xl sm:text-2xl font-bold text-gray-900">Complete Your Payment</h1>
+        <p className="text-gray-500 text-sm sm:text-base">Secure your booking by completing the payment within the time limit.</p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
         {/* Order Summary */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6 space-y-6 h-fit">
-          <h2 className="text-lg font-bold text-gray-900 border-b pb-4">Order Summary</h2>
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-300 p-4 sm:p-6 space-y-4 sm:space-y-6 h-fit">
+          <h2 className="text-base sm:text-lg font-bold text-gray-900 border-b pb-3 sm:pb-4">Order Summary</h2>
           
           <div className="space-y-4">
             <div className="flex justify-between items-start">
@@ -141,14 +141,14 @@ const Payment = () => {
             </div>
           </div>
           
-          <div className="border-t border-gray-300 pt-4 flex justify-between items-center">
-            <span className="font-medium text-gray-600">Total Amount</span>
-            <span className="text-2xl font-bold text-primary-600">{Number(booking?.total_price || 0).toLocaleString()} VND</span>
+          <div className="border-t border-gray-300 pt-3 sm:pt-4 flex justify-between items-center">
+            <span className="font-medium text-gray-600 text-sm sm:text-base">Total Amount</span>
+            <span className="text-xl sm:text-2xl font-bold text-primary-600">{Number(booking?.total_price || 0).toLocaleString()} VND</span>
           </div>
         </div>
 
         {/* Payment Action */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-300 p-6 space-y-6">
+        <div className="bg-white rounded-xl sm:rounded-2xl shadow-sm border border-gray-300 p-4 sm:p-6 space-y-4 sm:space-y-6">
           <div className={`rounded-xl p-4 flex items-center justify-between border ${isWarning ? 'bg-red-50 border-red-200' : 'bg-orange-50 border-orange-200'}`}>
             <div className="flex items-center gap-3">
               <Clock className={`h-5 w-5 ${isWarning ? 'text-red-500 animate-pulse' : 'text-orange-500'}`} />
@@ -171,15 +171,15 @@ const Payment = () => {
             </div>
           </div>
           
-          <div className="bg-gray-50 rounded-xl p-4 flex flex-col items-center justify-center border border-dashed border-gray-300">
-            <div className="w-56 h-56 bg-white rounded-xl shadow-sm border border-gray-300 flex items-center justify-center mb-4 overflow-hidden p-2">
+          <div className="bg-gray-50 rounded-xl p-3 sm:p-4 flex flex-col items-center justify-center border border-dashed border-gray-300">
+            <div className="w-40 h-40 sm:w-56 sm:h-56 bg-white rounded-xl shadow-sm border border-gray-300 flex items-center justify-center mb-3 sm:mb-4 overflow-hidden p-1 sm:p-2">
                <img 
                  src={`https://img.vietqr.io/image/vcb-0123456789-compact2.png?amount=${Number(booking?.total_price || 0)}&addInfo=Thanh toan booking ${bookingId}&accountName=NGUYEN VAN A`} 
                  alt="VietQR Code" 
                  className="w-full h-full object-contain"
                />
             </div>
-            <p className="text-sm text-gray-600 text-center">Scan with any banking app (Momo, ZaloPay, Vietcombank...).</p>
+            <p className="text-xs sm:text-sm text-gray-600 text-center">Scan with any banking app (Momo, ZaloPay, Vietcombank...).</p>
           </div>
 
           <button

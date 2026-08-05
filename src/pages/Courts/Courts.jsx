@@ -105,21 +105,23 @@ const Courts = () => {
   return (
     <>
       <div className="bg-white rounded-xl shadow-sm border border-gray-300 overflow-hidden">
-        <div className="p-6 border-b border-gray-300 flex justify-between items-center bg-gray-50">
-          <div>
-            <h2 className="text-xl font-bold text-gray-900">Court List</h2>
-            <p className="text-sm text-gray-500 mt-1">Manage badminton courts and their status</p>
+        <div className="p-4 sm:p-6 border-b border-gray-300 flex justify-between items-center bg-gray-50 gap-3">
+          <div className="min-w-0">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">Court List</h2>
+            <p className="text-xs sm:text-sm text-gray-500 mt-1 hidden sm:block">Manage badminton courts and their status</p>
           </div>
           <button 
             onClick={openAddModal}
-            className="flex items-center gap-2 bg-primary-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition"
+            className="flex items-center gap-2 bg-primary-600 text-white px-3 sm:px-4 py-2 rounded-lg font-medium hover:bg-primary-700 transition text-sm whitespace-nowrap"
           >
             <Plus className="h-4 w-4" />
-            Add Court
+            <span className="hidden sm:inline">Add Court</span>
+            <span className="sm:hidden">Add</span>
           </button>
         </div>
         
-        <div className="overflow-x-auto">
+        {/* Desktop Table */}
+        <div className="hidden md:block overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-white">
               <tr>
@@ -174,6 +176,48 @@ const Courts = () => {
             </tbody>
           </table>
         </div>
+
+        {/* Mobile Card Layout */}
+        <div className="md:hidden divide-y divide-gray-200">
+          {(courts || []).length === 0 ? (
+            <div className="p-8 text-center text-gray-500">
+              No courts found. Tap "Add" to create one.
+            </div>
+          ) : (
+            (courts || []).map((court) => (
+              <div key={court.court_id} className="p-4 flex items-center justify-between gap-3 hover:bg-gray-50 transition-colors">
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-center gap-2 mb-1.5">
+                    <h3 className="text-sm font-bold text-gray-900 truncate">{court.name}</h3>
+                    <span className={`px-2 py-0.5 text-[10px] font-semibold rounded-full border flex-shrink-0
+                      ${court.status === 'available' ? 'bg-green-100 text-green-800 border-green-200' : 
+                        court.status === 'maintenance' ? 'bg-yellow-100 text-yellow-800 border-yellow-200' : 
+                        'bg-red-100 text-red-800 border-red-200'}`}>
+                      {court.status}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 font-medium">
+                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(court.price_per_hour || 0)}/hour
+                  </p>
+                </div>
+                <div className="flex items-center gap-3 flex-shrink-0">
+                  <button 
+                    onClick={() => openEditModal(court)}
+                    className="p-2 text-blue-600 hover:bg-blue-50 rounded-lg transition-colors"
+                  >
+                    <Edit2 className="h-4 w-4" />
+                  </button>
+                  <button 
+                    onClick={() => handleDelete(court.court_id)}
+                    className="p-2 text-red-600 hover:bg-red-50 rounded-lg transition-colors"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
       </div>
 
       {/* Add/Edit Court Modal */}
@@ -193,7 +237,7 @@ const Courts = () => {
               required
               value={formData.name}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-shadow"
+              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-shadow"
               placeholder="e.g., Court 1"
             />
           </div>
@@ -210,7 +254,7 @@ const Courts = () => {
               step="1000"
               value={formData.price_per_hour}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-shadow"
+              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none transition-shadow"
               placeholder="e.g., 150000"
             />
           </div>
@@ -223,14 +267,14 @@ const Courts = () => {
               name="status"
               value={formData.status}
               onChange={handleChange}
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
+              className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-primary-500 outline-none"
             >
               <option value="available">Available</option>
               <option value="inactive">Inactive</option>
             </select>
           </div>
 
-          <div className="pt-4 flex justify-end gap-3 border-t border-gray-300">
+          <div className="pt-4 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-gray-300">
             <button
               type="button"
               onClick={closeModal}
@@ -241,7 +285,7 @@ const Courts = () => {
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-70 flex items-center"
+              className="px-4 py-2 bg-primary-600 text-white rounded-lg font-medium hover:bg-primary-700 transition disabled:opacity-70 flex items-center justify-center"
             >
               {submitting ? (
                 <>

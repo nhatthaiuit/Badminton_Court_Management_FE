@@ -28,23 +28,25 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = "max-w-md" }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 md:p-6">
       {/* Backdrop with glassmorphism */}
       <div 
-        className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity duration-300"
+        className="absolute inset-0 bg-gray-900/40 backdrop-blur-sm transition-opacity duration-300 animate-fade-in"
         onClick={onClose}
       ></div>
 
-      {/* Modal Panel */}
+      {/* Modal Panel - bottom sheet on mobile, centered on desktop */}
       <div 
-        className={`relative w-full ${maxWidth} bg-white rounded-2xl shadow-2xl flex flex-col max-h-[90vh] animate-in fade-in zoom-in-95 duration-200`}
+        className={`relative w-full ${maxWidth} bg-white sm:rounded-2xl rounded-t-2xl shadow-2xl flex flex-col max-h-[85vh] sm:max-h-[90vh] animate-slide-up sm:animate-fade-in`}
         role="dialog"
         aria-modal="true"
         aria-labelledby="modal-title"
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-4 border-b border-gray-300">
-          <h3 id="modal-title" className="text-lg font-bold text-gray-900">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-300 flex-shrink-0">
+          {/* Drag handle for mobile */}
+          <div className="absolute top-2 left-1/2 -translate-x-1/2 w-10 h-1 bg-gray-300 rounded-full sm:hidden"></div>
+          <h3 id="modal-title" className="text-base sm:text-lg font-bold text-gray-900 mt-1 sm:mt-0">
             {title}
           </h3>
           <button
@@ -56,7 +58,7 @@ const Modal = ({ isOpen, onClose, title, children, maxWidth = "max-w-md" }) => {
         </div>
 
         {/* Content */}
-        <div className="p-6 overflow-y-auto custom-scrollbar">
+        <div className="p-4 sm:p-6 overflow-y-auto custom-scrollbar pb-safe">
           {children}
         </div>
       </div>

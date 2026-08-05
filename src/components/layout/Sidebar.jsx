@@ -29,12 +29,12 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
       )}
       <aside className={`w-64 bg-[#1e293b] text-white flex flex-col h-screen fixed left-0 top-0 z-50 transform transition-transform duration-300 ease-in-out md:translate-x-0 ${isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}`}>
       {/* Logo Area */}
-      <div className="h-20 flex items-center px-6 border-b border-gray-800 font-bold tracking-wider">
+      <div className="h-16 sm:h-20 flex items-center px-4 sm:px-6 border-b border-gray-800 font-bold tracking-wider">
         <div className="flex items-center gap-3">
           <div className="bg-white rounded-full p-1 shadow-sm">
-            <img src="/logo2.png" alt="BCMS Logo" className="h-12 w-12 object-contain" />
+            <img src="/logo2.png" alt="BCMS Logo" className="h-10 w-10 sm:h-12 sm:w-12 object-contain" />
           </div>
-          <span className="text-2xl text-blue-400">BCMS</span>
+          <span className="text-xl sm:text-2xl text-blue-400">BCMS</span>
         </div>
       </div>
 
@@ -65,7 +65,7 @@ const Sidebar = ({ isMobileMenuOpen, setIsMobileMenuOpen }) => {
       </nav>
 
       {/* Footer Area */}
-      <div className="p-4 border-t border-gray-800">
+      <div className="p-4 border-t border-gray-800 pb-safe">
         <button
           onClick={logout}
           className="w-full flex items-center gap-3 px-4 py-3 text-sm font-medium text-gray-300 rounded-lg hover:bg-gray-800 hover:text-white transition-colors"

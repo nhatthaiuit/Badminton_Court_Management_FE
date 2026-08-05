@@ -19,11 +19,11 @@ const MainLayout = () => {
   };
 
   return (
-    <div className="flex min-h-screen bg-gray-50">
+    <div className="flex min-h-screen min-h-[100dvh] bg-gray-50">
       <Sidebar isMobileMenuOpen={isMobileMenuOpen} setIsMobileMenuOpen={setIsMobileMenuOpen} />
       <div className="flex-1 ml-0 md:ml-64 flex flex-col min-w-0">
         <Header title={getPageTitle()} onMenuClick={() => setIsMobileMenuOpen(true)} />
-        <main className="flex-1 p-4 sm:p-8 overflow-auto">
+        <main className="flex-1 p-3 sm:p-4 md:p-6 lg:p-8 overflow-auto">
           <Outlet />
         </main>
       </div>
