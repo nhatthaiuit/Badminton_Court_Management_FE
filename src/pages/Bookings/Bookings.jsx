@@ -369,6 +369,7 @@ const CourtScheduleDashboard = () => {
           isOpen={!!selectedBooking} 
           onClose={() => setSelectedBooking(null)} 
           title={selectedBooking.customer_name === "Maintenance Block" ? "Maintenance Details" : "Booking Details"}
+          maxWidth="max-w-lg"
         >
           <div className="space-y-4 sm:space-y-6">
             <div className="bg-gray-50 rounded-xl p-4 sm:p-5 border border-gray-300 shadow-sm">

@@ -136,36 +136,36 @@ const MyBookings = () => {
       {/* View Booking Details Modal */}
       {viewBooking && (
         <Modal isOpen={!!viewBooking} onClose={() => setViewBooking(null)} title="Booking Details">
-          <div className="space-y-6">
-            <div className="bg-gray-50 rounded-lg p-4 border border-gray-300">
-              <div className="flex justify-between items-start mb-4">
-                <h3 className="text-xl font-bold text-gray-900">{viewBooking.court_name}</h3>
+          <div className="space-y-4 sm:space-y-6">
+            <div className="bg-gray-50 rounded-lg p-3 sm:p-4 border border-gray-300">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-3 sm:mb-4 gap-2">
+                <h3 className="text-lg sm:text-xl font-bold text-gray-900">{viewBooking.court_name}</h3>
                 {getStatusBadge(viewBooking.status)}
               </div>
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4 text-sm">
                 <div>
-                  <p className="text-gray-500 mb-1">Date</p>
-                  <p className="font-semibold text-gray-900">{dayjs(viewBooking.booking_date).format("dddd, MMM D, YYYY")}</p>
+                  <p className="text-gray-500 mb-1 text-xs sm:text-sm">Date</p>
+                  <p className="font-semibold text-gray-900 text-sm sm:text-base">{dayjs(viewBooking.booking_date).format("MMM D, YYYY")}</p>
                 </div>
                 <div>
-                  <p className="text-gray-500 mb-1">Time</p>
-                  <p className="font-semibold text-gray-900">{viewBooking.start_time.slice(0,5)} - {viewBooking.end_time.slice(0,5)}</p>
+                  <p className="text-gray-500 mb-1 text-xs sm:text-sm">Time</p>
+                  <p className="font-semibold text-gray-900 text-sm sm:text-base">{viewBooking.start_time.slice(0,5)} - {viewBooking.end_time.slice(0,5)}</p>
                 </div>
                 <div>
-                  <p className="text-gray-500 mb-1">Total Price</p>
-                  <p className="font-bold text-primary-600 text-lg">{parseInt(viewBooking.total_price).toLocaleString()} VND</p>
+                  <p className="text-gray-500 mb-1 text-xs sm:text-sm">Total Price</p>
+                  <p className="font-bold text-primary-600 text-base sm:text-lg">{parseInt(viewBooking.total_price).toLocaleString()} VND</p>
                 </div>
                 <div>
-                  <p className="text-gray-500 mb-1">Booking ID</p>
-                  <p className="font-semibold text-gray-900">#{viewBooking.booking_id}</p>
+                  <p className="text-gray-500 mb-1 text-xs sm:text-sm">Booking ID</p>
+                  <p className="font-semibold text-gray-900 text-sm sm:text-base">#{viewBooking.booking_id}</p>
                 </div>
               </div>
             </div>
 
             {viewBooking.note && (
-              <div className="text-sm border-t border-gray-300 pt-4">
-                <p className="text-gray-500 mb-1">Notes:</p>
-                <p className="text-gray-800 bg-gray-50 p-3 rounded-lg border border-gray-300">{viewBooking.note}</p>
+              <div className="text-sm border-t border-gray-300 pt-3 sm:pt-4">
+                <p className="text-gray-500 mb-1 text-xs sm:text-sm">Notes:</p>
+                <p className="text-gray-800 bg-gray-50 p-3 rounded-lg border border-gray-300 text-xs sm:text-sm">{viewBooking.note}</p>
               </div>
             )}
             
@@ -173,8 +173,8 @@ const MyBookings = () => {
                Created at: {dayjs(viewBooking.created_at).format("DD/MM/YYYY HH:mm")}
             </div>
 
-            <div className="pt-4 flex justify-end gap-3 border-t border-gray-300">
-              <button type="button" onClick={() => setViewBooking(null)} className="px-6 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
+            <div className="pt-3 sm:pt-4 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-gray-300">
+              <button type="button" onClick={() => setViewBooking(null)} className="px-6 py-2.5 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition text-sm">
                 Close
               </button>
             </div>

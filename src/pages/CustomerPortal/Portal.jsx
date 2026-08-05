@@ -229,17 +229,17 @@ const Portal = () => {
       {/* Manual Booking Modal */}
       <Modal isOpen={isManualModalOpen} onClose={() => setIsManualModalOpen(false)} title="Create Booking">
         <form onSubmit={handleManualSubmit} className="space-y-4">
-          <div className="bg-yellow-50 rounded-lg p-4 border border-yellow-200 flex gap-3 mb-4">
+          <div className="bg-yellow-50 rounded-lg p-3 sm:p-4 border border-yellow-200 flex gap-2 sm:gap-3 mb-4">
              <AlertCircle className="h-5 w-5 text-yellow-600 flex-shrink-0 mt-0.5" />
-             <div className="text-sm text-yellow-800 space-y-1">
-               <p><strong>Payment Required:</strong> You will be redirected to the payment page. Please complete your payment within 15 minutes to secure your slot.</p>
-               <p><strong>Strict Policy:</strong> Bookings are strictly non-refundable once confirmed.</p>
+             <div className="text-xs sm:text-sm text-yellow-800 space-y-1">
+               <p><strong>Payment Required:</strong> You will be redirected to the payment page. Complete payment within 15 minutes to secure your slot.</p>
+               <p><strong>Strict Policy:</strong> Bookings are non-refundable once confirmed.</p>
              </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Select Court <span className="text-red-500">*</span></label>
-            <select name="court_id" required value={manualFormData.court_id} onChange={handleManualChange} className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none">
+            <select name="court_id" required value={manualFormData.court_id} onChange={handleManualChange} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none">
               <option value="" disabled>-- Select a court --</option>
               {courts.filter(c => c.status === "available").map(court => (
                 <option key={court.court_id} value={court.court_id}>{court.name}</option>
@@ -249,30 +249,30 @@ const Portal = () => {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Date</label>
-            <input type="text" disabled value={dayjs(selectedDate).format("dddd, MMMM D, YYYY")} className="w-full px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 outline-none" />
+            <input type="text" disabled value={dayjs(selectedDate).format("MMM D, YYYY")} className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg bg-gray-100 text-gray-500 outline-none text-sm sm:text-base" />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Start Time <span className="text-red-500">*</span></label>
-              <input type="time" name="start_time" required value={manualFormData.start_time} onChange={handleManualChange} min="05:00" max="23:59" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
+              <input type="time" name="start_time" required value={manualFormData.start_time} onChange={handleManualChange} min="05:00" max="23:59" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
             </div>
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">End Time <span className="text-red-500">*</span></label>
-              <input type="time" name="end_time" required value={manualFormData.end_time} onChange={handleManualChange} min="05:00" max="23:59" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
+              <input type="time" name="end_time" required value={manualFormData.end_time} onChange={handleManualChange} min="05:00" max="23:59" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" />
             </div>
           </div>
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">Note (Optional)</label>
-            <textarea name="note" value={manualFormData.note} onChange={handleManualChange} rows="2" className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Any special requests..."></textarea>
+            <textarea name="note" value={manualFormData.note} onChange={handleManualChange} rows="2" className="w-full px-3 sm:px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 outline-none" placeholder="Any special requests..."></textarea>
           </div>
 
           <div className="pt-4 flex flex-col-reverse sm:flex-row justify-end gap-3 border-t border-gray-300">
             <button type="button" onClick={() => setIsManualModalOpen(false)} className="px-4 py-2 text-gray-700 bg-gray-100 hover:bg-gray-200 rounded-lg font-medium transition">
               Cancel
             </button>
-            <button type="submit" disabled={manualSubmitting} className="px-6 py-2 text-white bg-primary-600 hover:bg-primary-700 rounded-lg font-medium transition disabled:opacity-70 flex items-center gap-2">
+            <button type="submit" disabled={manualSubmitting} className="px-5 sm:px-6 py-2.5 text-white bg-primary-600 hover:bg-primary-700 rounded-lg font-medium transition disabled:opacity-70 flex items-center justify-center gap-2 text-sm">
               <CheckCircle className="h-4 w-4" />
               {manualSubmitting ? "Creating..." : "Create Booking"}
             </button>
